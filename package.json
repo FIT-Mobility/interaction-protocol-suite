@@ -2,7 +2,7 @@
   "name": "omp-schema",
   "version": "1.0.0",
   "description": "OMP API schemata",
-  "repository": "https://github.com/FIT-Mobility/dimo-tool-suite",
+  "repository": "https://github.com/FIT-Mobility/interaction-protocol-suite",
   "types": "./index.d.ts",
   "author": "Fraunhofer FIT",
   "license": "Apache-2.0",
