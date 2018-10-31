@@ -2,7 +2,8 @@
 
 This project comprises a set of tools supporting specification, documentation, development and validation of interaction protocols and their implementations.
 
-
+## Checkout
+When checking out this repository, activate the `--recurse-submodules` option, e.g. by calling `git clone --recurse-submodules git@github.com:FIT-Mobility/dimo-tool-suite.git` or `git clone --recurse-submodules https://github.com/FIT-Mobility/dimo-tool-suite.git`
 
 ## Preparation of the environment settings
 Adjust .env files in `server/api` and `main` folders.
