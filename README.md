@@ -1,4 +1,4 @@
-# DiMo Tool Suite
+# Interaction Protocol Specification And Validation Tool Suite
 
 This project comprises a set of tools supporting specification, documentation, development and validation of interaction protocols and their implementations.
 
