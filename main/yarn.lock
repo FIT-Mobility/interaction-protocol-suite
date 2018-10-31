@@ -4909,9 +4909,9 @@ omggif@^1.0.9:
   resolved "https://registry.yarnpkg.com/omggif/-/omggif-1.0.9.tgz#dcb7024dacd50c52b4d303f04802c91c057c765f"
   integrity sha1-3LcCTazVDFK00wPwSALJHAV8dl8=
 
-"omp-schema@git://github.com/FIT-Mobility/dimo-tool-suite.git#56b800c":
+"omp-schema@git://github.com/FIT-Mobility/interaction-protocol-suite.git#56b800c":
   version "1.0.0"
-  resolved "git://github.com/FIT-Mobility/dimo-tool-suite.git#56b800ca6bfb2163c5f6fd3759e1e066c54160a2"
+  resolved "git://github.com/FIT-Mobility/interaction-protocol-suite.git#56b800ca6bfb2163c5f6fd3759e1e066c54160a2"
 
 on-finished@~2.3.0:
   version "2.3.0"

@@ -2366,9 +2366,9 @@ object.omit@^2.0.0:
     for-own "^0.1.4"
     is-extendable "^0.1.1"
 
-"omp-schema@git://github.com/FIT-Mobility/dimo-tool-suite.git#56b800c":
+"omp-schema@git://github.com/FIT-Mobility/interaction-protocol-suite.git#56b800c":
   version "1.0.0"
-  resolved "git://github.com/FIT-Mobility/dimo-tool-suite.git#56b800ca6bfb2163c5f6fd3759e1e066c54160a2"
+  resolved "git://github.com/FIT-Mobility/interaction-protocol-suite.git#56b800ca6bfb2163c5f6fd3759e1e066c54160a2"
 
 on-finished@^2.3.0, on-finished@~2.3.0:
   version "2.3.0"
