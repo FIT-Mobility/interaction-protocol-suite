@@ -1,4 +1,4 @@
-# DiMo tool suite JavaScript backend
+# DiMo tool suite backend
 
 This is the DiMo tool suite backend server that handles user authentication, file storage and report generation. The current implementation is based on `docker-compose`.
 
