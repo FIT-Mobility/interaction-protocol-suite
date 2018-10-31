@@ -1,0 +1,9 @@
+<CreateUser xmlns="http://booking.com">
+    <CreateUserRequest xmlns="http://booking.com">
+        <FirstName>Lars</FirstName>
+        <LastName>Stindel</LastName>
+    </CreateUserRequest>
+    <CreateUserResponse xmlns="http://booking.com">
+        <UserID>13</UserID>
+    </CreateUserResponse>
+</CreateUser>

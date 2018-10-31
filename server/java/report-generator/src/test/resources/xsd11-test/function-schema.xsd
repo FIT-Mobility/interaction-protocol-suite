@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:fn="http://www.w3.org/2005/xpath-functions"
+        targetNamespace="http://www.dimo-omp.de"
+        xmlns:tns="http://www.dimo-omp.de"
+        elementFormDefault="qualified"
+        xpathDefaultNamespace="http://www.dimo-omp.de"
+        xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+        vc:minVersion="1.1"
+>
+    <include schemaLocation="datatype-schema.xsd"/>
+
+    <complexType name="GetBookingsFunctionType">
+        <sequence>
+            <element ref="tns:GetBookingsRequest"/>
+            <element ref="tns:GetBookingsResponse"/>
+        </sequence>
+        <assert test="not(boolean(GetBookingsRequest/Equals) and GetBookingsRequest/Filter eq 'UserId') or GetBookingsResponse/UserId eq xs:int(GetBookingsRequest/Equals)"/>
+    </complexType>
+    <element name="GetBookingsFunction" type="tns:GetBookingsFunctionType"/>
+
+    <complexType name="ChoiceFunctionType">
+        <sequence>
+            <element ref="tns:ChoiceRequest"/>
+            <element ref="tns:ChoiceResponse"/>
+        </sequence>
+        <assert test="not(ChoiceRequest/Requested eq 'OptionA') or boolean(ChoiceResponse/OptionA)"/>
+        <assert test="not(ChoiceRequest/Requested eq 'OptionB') or boolean(ChoiceResponse/OptionB)"/>
+    </complexType>
+    <element name="ChoiceFunction" type="tns:ChoiceFunctionType"/>
+
+    <complexType name="CountFunctionType">
+        <sequence>
+            <element ref="tns:CountRequest"/>
+            <element ref="tns:CountResponse"/>
+        </sequence>
+        <assert test="CountRequest/MaxAnswers ge fn:count(CountResponse/Answer)"/>
+    </complexType>
+    <element name="CountFunction" type="tns:CountFunctionType"/>
+
+    <complexType name="FutureRfidFunctionType">
+        <sequence>
+            <element ref="tns:FutureRfidRequest"/>
+            <element ref="tns:FutureRfidResponse"/>
+        </sequence>
+        <assert test="every $tag in FutureRfidResponse/RfidTag satisfies $tag/Expiry ge fn:current-dateTime()"/>
+    </complexType>
+    <element name="FutureRfidFunction" type="tns:FutureRfidFunctionType"/>
+
+    <complexType name="SortingFunctionType">
+        <sequence>
+            <element ref="tns:SortingRequest"/>
+            <element ref="tns:SortingResponse"/>
+        </sequence>
+        <assert test="not(SortingRequest/Order eq 'ASC') or (every $i in 1 to fn:count(SortingResponse/Answer)-1 satisfies SortingResponse/Answer[$i] le SortingResponse/Answer[$i+1])"/>
+        <assert test="not(SortingRequest/Order eq 'DESC') or (every $i in 1 to fn:count(SortingResponse/Answer)-1 satisfies SortingResponse/Answer[$i] ge SortingResponse/Answer[$i+1])"/>
+    </complexType>
+    <element name="SortingFunction" type="tns:SortingFunctionType"/>
+</schema>

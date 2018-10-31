@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://dimo.de/test-monitor-configuration"
+           targetNamespace="http://dimo.de/test-monitor-configuration"
+           elementFormDefault="qualified"
+           version="1.0">
+    <xs:element name="Configuration">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="MQTT" type="MqttConfiguration"/>
+                    <xs:element name="HTTP" type="HttpConfiguration"/>
+                    <xs:element name="VAAS" type="VaasConfiguration"/>
+                    <xs:element name="SOAP" type="SoapConfiguration"/>
+                </xs:choice>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="UniqueNameConstraint">
+            <xs:selector xpath="*"/>
+            <xs:field xpath="@name"/>
+        </xs:unique>
+    </xs:element>
+    <xs:simpleType name="SimpleNameType">
+        <xs:restriction base="xs:normalizedString">
+            <xs:pattern value="([a-zA-Z0-9.\-_])+"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="ConfigurationBase">
+        <xs:sequence>
+            <xs:element name="databaseConfig">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="hostname" type="xs:normalizedString"/>
+                        <xs:element name="port" type="xs:int" default="5432"/>
+                        <xs:element name="dbname" type="xs:normalizedString"/>
+                        <xs:element name="schema" type="xs:normalizedString" default="public"/>
+                        <xs:element name="user" type="xs:string"/>
+                        <xs:element name="password" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" use="required" type="SimpleNameType"/>
+    </xs:complexType>
+    <xs:complexType name="MqttConfiguration">
+        <xs:complexContent>
+            <xs:extension base="ConfigurationBase">
+                <xs:sequence>
+                    <xs:element name="mqttBrokerHostString" type="xs:normalizedString"/>
+                    <xs:element name="xsdDirectory" type="xs:normalizedString"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="VaasConfiguration">
+        <xs:complexContent>
+            <xs:extension base="ConfigurationBase">
+                <xs:sequence>
+                    <xs:element name="jsonURI" type="xs:anyURI"/>
+                    <xs:element name="localHost" type="xs:normalizedString"/>
+                    <xs:element name="localPort" type="xs:int"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="HttpConfiguration">
+        <xs:complexContent>
+            <xs:extension base="VaasConfiguration">
+                <xs:sequence>
+                    <xs:element name="wsURI" type="xs:normalizedString"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SoapConfiguration">
+        <xs:complexContent>
+            <xs:extension base="HttpConfiguration"/>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>

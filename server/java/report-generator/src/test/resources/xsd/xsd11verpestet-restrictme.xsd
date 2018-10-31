@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.dimo.de/omp"
+        xpathDefaultNamespace="http://www.dimo.de/omp"
+        elementFormDefault="qualified"
+        attributeFormDefault="qualified">
+    <complexType name="ElementAndAttributeNamespaceThingy1">
+        <sequence>
+            <element name="Lala1" type="string"/>
+            <element name="Lala2" type="string"/>
+            <element name="Lala3" type="string" minOccurs="0"/>
+        </sequence>
+    </complexType>
+    <complexType name="ElementAndAttributeNamespaceThingy2">
+        <sequence>
+            <any namespace="http://www.dimo.de/omp"/>
+        </sequence>
+        <anyAttribute namespace="http://www.dimo.de/omp"/>
+    </complexType>
+</schema>

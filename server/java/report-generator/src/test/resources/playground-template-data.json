@@ -1,0 +1,35 @@
+{
+  "document": {
+    "title": "OMP JSON Test"
+  },
+  "part": {
+    "title": "part 1"
+  },
+  "authors": [
+    {
+      "fullname": "Dr.-Ing. Heribert Herrmann",
+      "association": "Edeka GmbH"
+    },
+    {
+      "fullname": "Dipl.-Math. Sandy Sanchez",
+      "association": "Rewe Ltd"
+    }
+  ],
+  "functions": [
+    {
+      "name": "Op1",
+      "requestDatatype": "Op1ReqDT",
+      "responseDatatype": "Op1RespDT"
+    },
+    {
+      "name": "Op2",
+      "requestDatatype": "Op2ReqDT",
+      "responseDatatype": "Op2RespDT"
+    },
+    {
+      "name": "Op3",
+      "requestDatatype": "Op3ReqDT",
+      "responseDatatype": "Op3RespDT"
+    }
+  ]
+}

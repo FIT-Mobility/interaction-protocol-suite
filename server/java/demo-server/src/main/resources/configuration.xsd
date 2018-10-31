@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://dimo.de/demo-server-configuration"
+           targetNamespace="http://dimo.de/demo-server-configuration"
+           elementFormDefault="qualified"
+           version="1.0">
+    <xs:complexType name="hostConfig">
+        <xs:all>
+            <xs:element name="hostname" type="xs:normalizedString"/>
+            <xs:element name="port" type="xs:int"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:element name="Configuration">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="localHostConfig" type="hostConfig"/>
+                <xs:element name="validationHost" type="xs:normalizedString"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "outDir": "./build",
+    "module": "commonjs",
+    "target": "es2017",
+    "lib": ["es2016", "dom"],
+    "typeRoots": ["node_modules/@types"],
+    "sourceMap": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": false,
+    "experimentalDecorators": true,
+    "skipLibCheck": true
+  },
+  "files": [
+    "src/index.ts"
+  ],
+  "types": [
+    "typePatches"
+  ]
+}

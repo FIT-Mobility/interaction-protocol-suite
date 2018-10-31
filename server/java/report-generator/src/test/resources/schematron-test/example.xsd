@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.dimo-omp.de"
+        xmlns:tns="http://www.dimo-omp.de"
+        xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+
+    <annotation>
+        <appinfo>
+            <sch:ns uri="http://www.dimo-omp.de" prefix="dimo"/>
+            <sch:ns uri="http://www.w3.org/2005/xpath-functions" prefix="fn"/>
+            <sch:ns uri="http://www.w3.org/2001/XMLSchema" prefix="xs"/>
+        </appinfo>
+    </annotation>
+
+    <import schemaLocation="https://raw.githubusercontent.com/oxygenxml/sqf/master/schemas/iso-schematron.xsd"
+            namespace="http://purl.oclc.org/dsdl/schematron"/>
+
+    <complexType name="GetBookingsFunctionType">
+        <sequence>
+            <element name="GetBookingsRequest" type="tns:GetBookingsRequestType"/>
+            <element name="GetBookingsResponse" type="tns:GetBookingsResponseType"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="GetBookingsRequestType">
+        <sequence>
+            <element name="Filter" type="tns:FilterEnum"/>
+            <choice>
+                <element name="Equals" type="anyType"/>
+                <element name="NotEquals" type="anyType"/>
+                <!--<element name="InList" type="anyType"/>-->
+                <element name="IsNull" type="anyType"/>
+                <element name="IsNotNull" type="anyType"/>
+                <element name="GreaterThan" type="anyType"/>
+                <element name="LessThan" type="anyType"/>
+            </choice>
+        </sequence>
+    </complexType>
+
+    <complexType name="GetBookingsResponseType">
+        <sequence>
+            <element name="UserId" type="int"/>
+            <element name="BookingId" type="string"/>
+            <element name="BookingFrom" type="dateTime"/>
+            <element name="BookingTo" type="dateTime"/>
+        </sequence>
+    </complexType>
+
+    <simpleType name="FilterEnum">
+        <restriction base="string">
+            <enumeration value="UserId"/>
+            <enumeration value="UserIdUserId"/>
+            <enumeration value="BookingFrom"/>
+            <enumeration value="BookingTo"/>
+        </restriction>
+    </simpleType>
+
+    <element name="GetBookingsFunction" type="tns:GetBookingsFunctionType">
+        <annotation>
+            <appinfo>
+                <sch:pattern>
+                    <sch:rule context="dimo:GetBookingsFunction">
+                        <sch:assert
+                                test="not(boolean(dimo:GetBookingsRequest/dimo:Equals) and dimo:GetBookingsRequest/dimo:Filter = 'UserId') or dimo:GetBookingsResponse/dimo:UserId = dimo:GetBookingsRequest/dimo:Equals">
+                            Requested UserId was <sch:value-of select="dimo:GetBookingsRequest/dimo:Equals"/>, but the response contained UserID <sch:value-of select="dimo:GetBookingsResponse/dimo:UserId"/>!
+                        </sch:assert>
+                    </sch:rule>
+                </sch:pattern>
+            </appinfo>
+        </annotation>
+    </element>
+
+
+    <complexType name="ChoiceRequestType">
+        <sequence>
+            <element name="Requested" type="string"/>
+        </sequence>
+    </complexType>
+    <complexType name="ChoiceResponseType">
+        <choice>
+            <element name="OptionA" type="int"/>
+            <element name="OptionB" type="string"/>
+        </choice>
+    </complexType>
+    <complexType name="ChoiceFunctionType">
+        <sequence>
+            <element name="ChoiceRequest" type="tns:ChoiceRequestType"/>
+            <element name="ChoiceResponse" type="tns:ChoiceResponseType"/>
+        </sequence>
+    </complexType>
+    <element name="ChoiceFunction" type="tns:ChoiceFunctionType">
+        <annotation>
+            <appinfo>
+                <sch:pattern>
+                    <sch:rule context="dimo:ChoiceFunction">
+                        <sch:assert test="not(dimo:ChoiceRequest/dimo:Requested eq 'OptionA') or boolean(dimo:ChoiceResponse/dimo:OptionA)"/>
+                        <sch:assert test="not(dimo:ChoiceRequest/dimo:Requested eq 'OptionB') or boolean(dimo:ChoiceResponse/dimo:OptionB)"/>
+                    </sch:rule>
+                </sch:pattern>
+            </appinfo>
+        </annotation>
+    </element>
+
+
+    <complexType name="CountRequestType">
+        <sequence>
+            <element name="MaxAnswers" type="int"/>
+        </sequence>
+    </complexType>
+    <complexType name="CountResponseType">
+        <sequence>
+            <element name="Answer" type="string" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <complexType name="CountFunctionType">
+        <sequence>
+            <element name="CountRequest" type="tns:CountRequestType"/>
+            <element name="CountResponse" type="tns:CountResponseType"/>
+        </sequence>
+    </complexType>
+    <element name="CountFunction" type="tns:CountFunctionType">
+        <annotation>
+            <appinfo>
+                <sch:pattern>
+                    <sch:rule context="dimo:CountFunction">
+                        <sch:assert test="round(dimo:CountRequest/dimo:MaxAnswers) ge fn:count(dimo:CountResponse/dimo:Answer)"/>
+                    </sch:rule>
+                </sch:pattern>
+            </appinfo>
+        </annotation>
+    </element>
+
+    <complexType name="FutureRfidRequestType">
+        <sequence>
+        </sequence>
+    </complexType>
+    <complexType name="FutureRfidResponseType">
+        <sequence>
+            <element name="RfidTag" type="tns:RfidType" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <complexType name="RfidType">
+        <sequence>
+            <element name="Identifier" type="NMTOKEN"/>
+            <element name="Expiry" type="dateTime"/>
+        </sequence>
+    </complexType>
+    <complexType name="FutureRfidFunctionType">
+        <sequence>
+            <element name="FutureRfidRequest" type="tns:FutureRfidRequestType"/>
+            <element name="FutureRfidResponse" type="tns:FutureRfidResponseType"/>
+        </sequence>
+    </complexType>
+    <element name="FutureRfidFunction" type="tns:FutureRfidFunctionType">
+        <annotation>
+            <appinfo>
+                <sch:pattern>
+                    <sch:rule context="dimo:FutureRfidFunction">
+                        <sch:assert test="every $tag in dimo:FutureRfidResponse/dimo:RfidTag satisfies ($tag/dimo:Expiry cast as xs:dateTime) ge fn:current-dateTime()"/>
+                    </sch:rule>
+                </sch:pattern>
+            </appinfo>
+        </annotation>
+    </element>
+
+    <complexType name="SortingRequestType">
+        <sequence>
+            <element name="Order" type="tns:SortOrderType"/>
+        </sequence>
+    </complexType>
+    <simpleType name="SortOrderType">
+        <restriction base="string">
+            <enumeration value="ASC"/>
+            <enumeration value="DESC"/>
+        </restriction>
+    </simpleType>
+    <complexType name="SortingResponseType">
+        <sequence>
+            <element name="Answer" type="int" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <complexType name="SortingFunctionType">
+        <sequence>
+            <element name="SortingRequest" type="tns:SortingRequestType"/>
+            <element name="SortingResponse" type="tns:SortingResponseType"/>
+        </sequence>
+    </complexType>
+    <element name="SortingFunction" type="tns:SortingFunctionType">
+        <annotation>
+            <appinfo>
+                <sch:pattern>
+                    <sch:rule context="dimo:SortingFunction">
+                        <sch:assert test="not(dimo:SortingRequest/dimo:Order eq 'ASC') or (every $i in 1 to fn:count(dimo:SortingResponse/dimo:Answer)-1 satisfies dimo:SortingResponse/dimo:Answer[$i] le dimo:SortingResponse/dimo:Answer[$i+1])"/>
+                        <sch:assert test="not(dimo:SortingRequest/dimo:Order eq 'DESC') or (every $i in 1 to fn:count(dimo:SortingResponse/dimo:Answer)-1 satisfies dimo:SortingResponse/dimo:Answer[$i] ge dimo:SortingResponse/dimo:Answer[$i+1])"/>
+                    </sch:rule>
+                </sch:pattern>
+            </appinfo>
+        </annotation>
+    </element>
+</schema>

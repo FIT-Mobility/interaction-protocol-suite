@@ -1,0 +1,34 @@
+version: '3'
+services:
+  api:
+    build: ./api
+    links:
+      - mongo
+      - report_generator
+    volumes:
+      - "./data/leveldb:/opt/server/db"
+      - "./data/uploads:/opt/server/uploads"
+    restart: on-failure
+
+  mongo:
+    image: mongo:3
+    volumes:
+      - "./data/mongo:/data/db"
+    ports:
+      - "27017:27017"
+    restart: on-failure
+
+  report_generator:
+    build: ./java
+    restart: on-failure
+    volumes:
+      - "./data/fonts:/root/.fonts"
+
+  web:
+    build:
+      context: ../main
+      args:
+        - COMMIT_ID
+    ports:
+      - "8081:80"
+    restart: on-failure

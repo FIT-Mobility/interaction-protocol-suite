@@ -1,0 +1,15 @@
+<GetBookingsFunction
+        xmlns="http://www.dimo-omp.de"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.dimo-omp.de example.xsd">
+    <GetBookingsRequest>
+        <Filter>UserId</Filter>
+        <Equals>4</Equals>
+    </GetBookingsRequest>
+    <GetBookingsResponse>
+        <UserId>4</UserId>
+        <BookingId>fgdf</BookingId>
+        <BookingFrom>2007-10-26T08:36:28</BookingFrom>
+        <BookingTo>2004-02-14T19:44:14</BookingTo>
+    </GetBookingsResponse>
+</GetBookingsFunction>

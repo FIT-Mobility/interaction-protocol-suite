@@ -1,0 +1,11 @@
+<ChoiceFunction
+        xmlns="http://www.dimo-omp.de"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.dimo-omp.de function-schema.xsd">
+    <ChoiceRequest>
+        <Requested>OptionB</Requested>
+    </ChoiceRequest>
+    <ChoiceResponse>
+        <OptionB>29</OptionB>
+    </ChoiceResponse>
+</ChoiceFunction>

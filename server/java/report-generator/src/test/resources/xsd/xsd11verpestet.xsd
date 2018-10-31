@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.dimo.de"
+        xmlns:tns="http://www.dimo.de"
+        xpathDefaultNamespace="http://www.dimo.de"
+        xmlns:omp="http://www.dimo.de/omp"
+        xmlns:fn="http://www.w3.org/2005/xpath-functions"
+        elementFormDefault="qualified"
+        attributeFormDefault="qualified">
+    <import namespace="http://www.dimo.de/omp" schemaLocation="xsd11verpestet-restrictme.xsd"/>
+
+    <!-- The override given here is supported in XSD1.1 only -->
+    <override schemaLocation="xsd11verpestet-overrideme.xsd">
+        <complexType name="MyBase">
+            <sequence>
+                <element name="MyNewElement1" type="int"/>
+                <element name="MyNewElement2" type="double"/>
+            </sequence>
+        </complexType>
+    </override>
+
+    <!-- The defaultOpenContent given here is supported in XSD1.1 only -->
+    <defaultOpenContent>
+        <any namespace="##other" processContents="skip"/>
+    </defaultOpenContent>
+    <!-- The attribute xpathDefaultNamespace given here is supported in XSD1.1 only -->
+    <complexType name="SomeRandomType">
+        <openContent>
+            <!-- The openContent given here is supported in XSD1.1 only -->
+            <any processContents="skip" namespace="##other"/>
+        </openContent>
+        <sequence>
+            <element name="StringElement" type="string"/>
+            <element name="IntElement" type="int"/>
+            <element name="DoubleElement" type="double"/>
+        </sequence>
+        <!-- The attribute notNamespace given here is supported in XSD1.1 only -->
+        <anyAttribute notNamespace="http://www.dimo.de/omp http://www.dimo.de/fuh"/>
+    </complexType>
+    <complexType name="OpenContentContainer">
+        <openContent mode="none"/>
+    </complexType>
+    <complexType name="OpenContentContainer2">
+        <openContent mode="suffix">
+            <any/>
+        </openContent>
+    </complexType>
+    <attribute name="GlobAttr1" type="string"/>
+    <attribute name="GlobAttr2" type="string"/>
+    <complexType name="Asd">
+        <complexContent>
+            <restriction base="omp:ElementAndAttributeNamespaceThingy1">
+                <openContent mode="none"/>
+                <sequence>
+                    <!-- The attribute targetNamespace given here is supported in XSD1.1 only -->
+                    <element name="Lala1" type="string" targetNamespace="http://www.dimo.de/omp"/>
+                    <!-- The attribute targetNamespace given here is supported in XSD1.1 only -->
+                    <element name="Lala2" type="string" targetNamespace="http://www.dimo.de/omp"/>
+                </sequence>
+                <!--<assert test="omp:Lala1 eq 'Joseph'"/>-->
+            </restriction>
+        </complexContent>
+    </complexType>
+    <complexType name="Stuff">
+        <sequence>
+            <element name="Lala" type="string"/>
+            <element name="Lala2" type="string"/>
+            <!-- The attribute notQName given here is supported in XSD1.1 only -->
+            <any notQName="tns:Lala tns:Lala2"/>
+            <!-- The attribute notNamespace given here is supported in XSD1.1 only -->
+            <any notNamespace="http://www.dimo.de/omp http://www.dimo.de/fuh"/>
+        </sequence>
+        <assert test="Lala eq 'Joseph'"/>
+    </complexType>
+    <element name="SGroupName1" abstract="true"/>
+    <element name="SGroupName2" abstract="true"/>
+    <!-- The attribute substitutionGroup given here can only contain a single item in XSD1.0 -->
+    <element name="Substitutor" substitutionGroup="tns:SGroupName1 tns:SGroupName2">
+        <complexType>
+            <sequence>
+                <element name="SElement1" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+    <complexType name="SGroupTarget">
+        <sequence>
+            <element ref="tns:SGroupName1"/>
+            <element ref="tns:SGroupName2"/>
+        </sequence>
+    </complexType>
+    <simpleType name="ContentTypeEnum">
+        <restriction base="string">
+            <enumeration value="INT"/>
+            <enumeration value="DOUBLE"/>
+        </restriction>
+    </simpleType>
+    <complexType name="GeneralWrapper" mixed="true">
+        <sequence>
+            <any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="contentType" type="tns:ContentTypeEnum"/>
+        <anyAttribute processContents="skip"/>
+    </complexType>
+    <element name="AlternativeTest" type="tns:GeneralWrapper">
+        <alternative test="@contentType ='INT'">
+            <complexType mixed="true">
+                <simpleContent>
+                    <restriction base="tns:GeneralWrapper">
+                        <simpleType>
+                            <restriction base="integer"/>
+                        </simpleType>
+                    </restriction>
+                </simpleContent>
+            </complexType>
+        </alternative>
+        <alternative test="@contentType ='DOUBLE'">
+            <complexType mixed="true">
+                <simpleContent>
+                    <restriction base="tns:GeneralWrapper">
+                        <simpleType>
+                            <restriction base="double"/>
+                        </simpleType>
+                    </restriction>
+                </simpleContent>
+            </complexType>
+        </alternative>
+    </element>
+    <!-- The attribute defaultAttributesApply given here is supported in XSD1.1 only -->
+    <complexType name="DefaultAttributes" defaultAttributesApply="false">
+        <sequence>
+            <element name="A" type="int"/>
+        </sequence>
+        <!-- The assert given here is supported in XSD1.1 only -->
+        <assert test="A > 5"/>
+    </complexType>
+    <complexType name="SimpleContentBase">
+        <simpleContent>
+            <extension base="int"/>
+        </simpleContent>
+    </complexType>
+    <complexType name="SimpleContentTest">
+        <simpleContent>
+            <restriction base="tns:SimpleContentBase">
+                <!-- The assertion given here is supported in XSD1.1 only -->
+                <assertion test="$value != 0"/>
+                <!-- The assert given here is supported in XSD1.1 only -->
+                <assert test="5 = 5"/>
+            </restriction>
+        </simpleContent>
+    </complexType>
+    <complexType name="SimpleContentTest2">
+        <simpleContent>
+            <extension base="int">
+                <!-- The assert given here is supported in XSD1.1 only -->
+                <assert test="5 = 5"/>
+            </extension>
+        </simpleContent>
+    </complexType>
+    <complexType name="ComplexContentTest">
+        <complexContent>
+            <restriction base="tns:SomeRandomType">
+                <openContent>
+                    <any processContents="skip" namespace="##other"/>
+                </openContent>
+                <sequence>
+                    <element name="StringElement" type="string"/>
+                    <element name="IntElement" type="int"/>
+                    <element name="DoubleElement" type="double"/>
+                </sequence>
+                <!-- The attribute notNamespace given here is supported in XSD1.1 only -->
+                <anyAttribute notNamespace="http://www.dimo.de/omp http://www.dimo.de/fuh"/>
+                <assert test="DoubleElement != 0.0"/>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <complexType name="ComplexContentTest2">
+        <complexContent>
+            <extension base="tns:SomeRandomType">
+                <sequence>
+                    <!-- The type dateTimeStamp is supported in XSD1.1 only -->
+                    <element name="DateTimeStampElement" type="xs:dateTimeStamp"/>
+                    <!-- The type anyAtomicType is supported in XSD1.1 only -->
+                    <element name="AnyAtomicTypeElement" type="anyAtomicType"/>
+                    <!-- The type dayTimeDuration is supported in XSD1.1 only -->
+                    <element name="DayTimeDurationElement" type="dayTimeDuration"/>
+                    <!-- The type yearMonthDuration is supported in XSD1.1 only -->
+                    <element name="YearMonthDurationElement" type="yearMonthDuration"/>
+                </sequence>
+                <assert test="DoubleElement > 0.0"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    <group name="MyGroup">
+        <all>
+            <element name="ElementInMyGroup" type="string"/>
+        </all>
+    </group>
+    <element name="AllTester">
+        <complexType>
+            <all>
+                <group ref="tns:MyGroup"/>
+                <any processContents="skip" namespace="##other"/>
+            </all>
+        </complexType>
+    </element>
+    <simpleType name="SimpleTypeRestrictrionFTester">
+        <restriction base="dateTime">
+            <!-- The assertion given here is supported in XSD1.1 only -->
+            <assertion test="$value gt fn:current-dateTime()"/>
+            <!-- The explicitTimezone given here is supported in XSD1.1 only -->
+            <explicitTimezone value="required"/>
+        </restriction>
+    </simpleType>
+
+    <!--<element name="SimpleElement">-->
+    <!--<complexType>-->
+    <!--<sequence>-->
+    <!--<element name="A" type="string"/>-->
+    <!--</sequence>-->
+    <!--</complexType>-->
+    <!--</element>-->
+    <!--<element name="SimpleElementList1">-->
+    <!--<complexType>-->
+    <!--<sequence>-->
+    <!--<element ref="tns:SimpleElement"/>-->
+    <!--</sequence>-->
+    <!--</complexType>-->
+    <!--<key name="SimpleElementKey">-->
+    <!--<selector xpath="./SimpleElement"/>-->
+    <!--<field xpath="A"/>-->
+    <!--</key>-->
+    <!--</element>-->
+    <!--<element name="SimpleElementList2">-->
+    <!--<complexType>-->
+    <!--<sequence>-->
+    <!--<element ref="tns:SimpleElement"/>-->
+    <!--</sequence>-->
+    <!--</complexType>-->
+    <!--&lt;!&ndash; The attribute ref on keys is supported in XSD1.1 only (same for ref on unique and keyref) &ndash;&gt;-->
+    <!--<key ref="tns:SimpleElementKey"/>-->
+    <!--</element>-->
+
+
+    <complexType name="PriceType">
+        <simpleContent>
+            <extension base="decimal">
+                <attribute name="currency" type="token"/>
+            </extension>
+        </simpleContent>
+    </complexType>
+    <complexType name="ProductType">
+        <sequence>
+            <element name="number" type="integer"/>
+            <element name="name" type="string"/>
+            <element name="price" type="tns:PriceType"/>
+        </sequence>
+        <attribute name="effDate" type="date"/>
+    </complexType>
+    <complexType name="DepartmentType">
+        <sequence>
+            <element name="product" type="tns:ProductType" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="number" type="int"/>
+    </complexType>
+    <complexType name="CatalogType">
+        <sequence>
+            <element name="department" type="tns:DepartmentType" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="catalog" type="tns:CatalogType">
+        <unique name="dateAndProdNumKey">
+            <selector xpath="department/product"/>
+            <field xpath="number"/>
+            <field xpath="@effDate"/>
+        </unique>
+    </element>
+    <!--<element name="discontinuedProductList" type="tns:CatalogType">-->
+    <!--&lt;!&ndash; The attribute ref on unique is supported in XSD1.1 only (same for ref on key and keyref) &ndash;&gt;-->
+    <!--<unique ref="dateAndProdNumKey"/>-->
+    <!--</element>-->
+</schema>

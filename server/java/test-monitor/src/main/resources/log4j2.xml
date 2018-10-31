@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Properties>
+        <Property name="logPattern">[%-5p] %d %c (%t) - %m%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="${logPattern}" charset="UTF-8"/>
+        </Console>
+        <RollingRandomAccessFile name="FILE"
+                                 fileName="${sys:user.home}/logs/test-monitor.log"
+                                 filePattern="${sys:user.home}/logs/test-monitor-%d{yyyy-MM-dd}-%i.log.gz"
+                                 immediateFlush="false"
+                                 append="true">
+            <PatternLayout pattern="${logPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="TRACEFILE"
+                                 fileName="${sys:user.home}/logs/test-monitor-trace.log"
+                                 filePattern="${sys:user.home}/logs/test-monitor-trace-%d{yyyy-MM-dd}-%i.log.gz"
+                                 immediateFlush="false"
+                                 append="true">
+            <PatternLayout pattern="${logPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <!--<AsyncLogger name="fr.opensagres.xdocreport" level="INFO"/>-->
+
+        <AsyncRoot level="TRACE">
+            <AppenderRef ref="CONSOLE" level="INFO"/>
+            <AppenderRef ref="FILE" level="INFO"/>
+            <AppenderRef ref="TRACEFILE"  level="TRACE"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>

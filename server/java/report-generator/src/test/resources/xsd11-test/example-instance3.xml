@@ -1,0 +1,16 @@
+<CountFunction
+        xmlns="http://www.dimo-omp.de"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.dimo-omp.de function-schema.xsd">
+    <CountRequest>
+        <MaxAnswers>6</MaxAnswers>
+    </CountRequest>
+    <CountResponse>
+        <Answer>A</Answer>
+        <Answer>A</Answer>
+        <Answer>A</Answer>
+        <Answer>A</Answer>
+        <Answer>A</Answer>
+        <Answer>A</Answer>
+    </CountResponse>
+</CountFunction>

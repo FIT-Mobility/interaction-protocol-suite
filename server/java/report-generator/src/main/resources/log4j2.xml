@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Properties>
+        <Property name="logPattern">[%-5p] %d %c (%t) - %exTo1{%m}%n</Property>
+        <!--<Property name="logPattern">[%-5p] %d %c (%t) - %m%n</Property>-->
+    </Properties>
+
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="${logPattern}" charset="UTF-8"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+
+        <AsyncLogger name="fr.opensagres.xdocreport" level="INFO"/>
+
+        <!-- Keep these in INFO, otherwise excessive logging -->
+        <AsyncLogger name="fr.opensagres.xdocreport.document.preprocessor.AbstractXDocPreprocessor" level="INFO"/>
+        <AsyncLogger name="fr.opensagres.xdocreport.template.AbstractTemplateEngine" level="INFO"/>
+        <AsyncLogger name="fr.opensagres.xdocreport.document.textstyling" level="INFO"/>
+
+        <AsyncRoot level="INFO">
+            <AppenderRef ref="CONSOLE"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>

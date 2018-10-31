@@ -1,0 +1,66 @@
+{
+    "project": {
+        "title": "ProjectTitle",
+        "documentation": "ProjectDocumentation"
+    },
+    "services": [
+        {
+            "name": "ServiceName1",
+            "documentation": "ServiceDocumentation1",
+            "sequences": [
+                "sequence1",
+                "sequence2"
+            ],
+            "functions": [
+                "function1",
+                "function2"
+            ]
+        },
+        {
+            "name": "ServiceName2",
+            "documentation": "ServiceDocumentation2",
+            "sequences": [
+                "sequence1",
+                "sequence2"
+            ],
+            "functions": [
+                "function1",
+                "function2"
+            ]
+        }
+    ],
+    "sequences": [
+        {
+            "name": "SequenceName1",
+            "documentation": "SequenceDocumentation1"
+        },
+        {
+            "name": "SequenceName2",
+            "documentation": "SequenceDocumentation2"
+        }
+    ],
+    "functions": [
+        {
+            "name": "FunctionName1",
+            "documentation": "FunctionDocumentation1",
+            "requestDatatype": "requestDatatype",
+            "responseDatatype": "responseDatatype"
+        },
+        {
+            "name": "FunctionName2",
+            "documentation": "FunctionDocumentation2",
+            "requestDatatype": "requestDatatype",
+            "responseDatatype": "responseDatatype"
+        }
+    ],
+    "datatypes": [
+        {
+            "name": "DatatypeName1",
+            "documentation": "DatatypeDocumentation1"
+        },
+        {
+            "name": "DatatypeName2",
+            "documentation": "DatatypeDocumentation2"
+        }
+    ]
+}

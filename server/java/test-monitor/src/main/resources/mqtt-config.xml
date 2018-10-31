@@ -1,0 +1,14 @@
+<Configuration xmlns="http://dimo.de/test-monitor-configuration">
+    <MQTT name="mqtt-test">
+        <databaseConfig>
+            <hostname>localhost</hostname>
+            <port/>
+            <dbname>test-monitor</dbname>
+            <schema/>
+            <user>jooq</user>
+            <password>jooq</password>
+        </databaseConfig>
+        <mqttBrokerHostString>tcp://127.0.0.1:1883&amp;connectWaitInSeconds=2592000</mqttBrokerHostString>
+        <xsdDirectory>/Users/ohler/fit/Projekte/FuH/fit-git/XSDs/FuH</xsdDirectory>
+    </MQTT>
+</Configuration>

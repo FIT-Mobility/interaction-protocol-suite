@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Open mobility platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Open mobility platform API specification toolset">
+    <meta name="keywords" content="OMP, Open Mobility Platform, offene Mobilitätsplattform">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Root styles -->
+    <style>
+        @import "https://fonts.googleapis.com/css?family=Roboto:300,400,500";
+
+        html, body, #react-root {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+        }
+    </style>
+
+    <!-- Styles for Quill -->
+    <style>
+        @import "/node_modules/quill/dist/quill.core.css";
+        @import "/node_modules/quill/dist/quill.snow.css";
+
+        .ql-container.ql-snow,
+        .ql-toolbar.ql-snow {
+            border: none !important;
+        }
+
+        button.ql-ref {
+            background-size: cover !important;
+            background: url("/node_modules/material-design-icons/editor/svg/production/ic_insert_comment_18px.svg") no-repeat center !important;
+        }
+
+        .ql-editor p, .ql-editor ol, .ql-editor ul, .ql-editor h1, .ql-editor h2, .ql-editor h3, .ql-editor h4, .ql-editor h5, .ql-editor h6 {
+            margin-bottom: 12pt;
+        }
+    </style>
+
+    <!-- React Virtualized -->
+    <style>
+        @import "/node_modules/react-virtualized/styles.css";
+    </style>
+
+    <!-- jss-insertion-point -->
+</head>
+<body>
+    <div id="react-root"></div>
+</body>
+</html>

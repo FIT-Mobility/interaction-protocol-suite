@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>omp-demo-server</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <parent>
+        <groupId>de.fraunhofer.fit</groupId>
+        <artifactId>omp-tool-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <!--<json-project.uri>http://127.0.0.1:8081/api/content/json/4b83950d-262e-4cb0-9c69-e84da8a1ce92</json-project.uri>-->
+        <json-project.uri>file:///${project.basedir}/src/main/resources/plugfest-test.json</json-project.uri>
+        <hostname-in-wsdl>http://localhost:8080</hostname-in-wsdl>
+
+        <mainClass>de.fraunhofer.fit.omp.demoserver.Application</mainClass>
+        <apache-camel.version>2.21.1</apache-camel.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.14.0</version>
+                <executions>
+                    <execution>
+                        <id>configuration</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <schemaDirectory>${project.basedir}/src/main/resources</schemaDirectory>
+                            <schemaIncludes>
+                                <include>configuration.xsd</include>
+                            </schemaIncludes>
+                            <generatePackage>de.fraunhofer.fit.omp.demoserver.configuration</generatePackage>
+                            <generateDirectory>${project.build.directory}/generated-sources/xjc-configuration
+                            </generateDirectory>
+
+                            <!--<bindingDirectory>${project.basedir}/src/main/resources</bindingDirectory>-->
+                            <removeOldOutput>true</removeOldOutput>
+                            <extension>true</extension>
+                            <!--<bindingIncludes>-->
+                            <!--<include>binding.xml</include>-->
+                            <!--</bindingIncludes>-->
+                            <args>
+                                <arg>-XtoString</arg>
+                                <arg>-Xdefault-value</arg>
+                                <arg>-Xvisitor</arg>
+                                <arg>-Xvisitor-package:de.fraunhofer.fit.omp.demoserver.configuration.visitor</arg>
+                            </args>
+
+                            <plugins>
+                                <plugin>
+                                    <groupId>javax.annotation</groupId>
+                                    <artifactId>javax.annotation-api</artifactId>
+                                </plugin>
+                                <plugin>
+                                    <groupId>com.massfords</groupId>
+                                    <artifactId>jaxb-visitor</artifactId>
+                                    <version>2.7</version>
+                                </plugin>
+                                <plugin>
+                                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                                    <artifactId>jaxb2-basics</artifactId>
+                                    <version>0.12.0</version>
+                                </plugin>
+                                <plugin>
+                                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                                    <artifactId>jaxb2-fluent-api</artifactId>
+                                    <version>3.0</version>
+                                </plugin>
+                                <!--https://mvnrepository.com/artifact/org.jvnet.jaxb2_commons/jaxb2-default-value-->
+                                <dependency>
+                                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                                    <artifactId>jaxb2-default-value</artifactId>
+                                    <version>1.1</version>
+                                </dependency>
+                                <!--https://github.com/HamletDRC/JaxbNullablePlugin-->
+                                <plugin>
+                                    <groupId>com.github.HamletDRC</groupId>
+                                    <artifactId>JaxbNullablePlugin</artifactId>
+                                    <version>c947d8600c1da27b3d400b052c24ebcf9ae561ec</version>
+                                </plugin>
+                            </plugins>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <!-- https://mvnrepository.com/artifact/com.sun.xml.bind.mvn/jaxb-codemodel-parent -->
+                    <dependency>
+                        <groupId>com.sun.xml.bind.mvn</groupId>
+                        <artifactId>jaxb-codemodel-parent</artifactId>
+                        <version>2.3.0.1</version>
+                        <type>pom</type>
+                    </dependency>
+                    <!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/codemodel -->
+                    <dependency>
+                        <groupId>org.glassfish.jaxb</groupId>
+                        <artifactId>codemodel</artifactId>
+                        <version>2.3.0.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.glassfish.jaxb</groupId>
+                        <artifactId>jaxb-xjc</artifactId>
+                        <version>2.3.0.1</version>
+                    </dependency>
+                    <!-- Needed for the annotation processing -->
+                    <!--<dependency>-->
+                    <!--<groupId>com.google.code.findbugs</groupId>-->
+                    <!--<artifactId>jsr305</artifactId>-->
+                    <!--<version>3.0.1</version>-->
+                    <!--<scope>compile</scope>-->
+                    <!--</dependency>-->
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <groupId>de.fraunhofer.fit</groupId>
+                <artifactId>omp-project2wsdl-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+
+                <executions>
+                    <execution>
+                        <id>project2wsdl</id>
+                        <goals>
+                            <goal>project2wsdl</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jsonProject>${json-project.uri}</jsonProject>
+                    <hostname>${hostname-in-wsdl}</hostname>
+                    <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <version>${cxf.version}</version>
+                <configuration>
+                    <sourceRoot>${project.build.directory}/generated-sources/cxf-service</sourceRoot>
+                    <wsdlRoot>${project.build.directory}/generated-resources</wsdlRoot>
+                    <defaultOptions>
+                        <bindingFiles>
+                            <bindingFile>${basedir}/src/main/resources/binding.xml</bindingFile>
+                        </bindingFiles>
+                        <extraargs>
+                            <extraarg>-xjc-Xfluent-api</extraarg>
+                            <!--<extraarg>-xjc-Xdv</extraarg>-->
+                            <extraarg>-xjc-Xts</extraarg>
+                            <extraarg>-exsh</extraarg>
+                            <extraarg>true</extraarg>
+                        </extraargs>
+                    </defaultOptions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>wsdl2java</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.java.dev.jaxb2-commons</groupId>
+                        <artifactId>jaxb-fluent-api</artifactId>
+                        <version>2.1.8</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.cxf.xjcplugins</groupId>
+                        <artifactId>cxf-xjc-dv</artifactId>
+                        <version>${cxf-xjc.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.cxf.xjcplugins</groupId>
+                        <artifactId>cxf-xjc-ts</artifactId>
+                        <version>${cxf-xjc.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <useBaseVersion>false</useBaseVersion>
+                    <overWriteReleases>false</overWriteReleases>
+                    <overWriteSnapshots>true</overWriteSnapshots>
+                    <includeScope>runtime</includeScope>
+                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>true</addMavenDescriptor>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>${mainClass}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-bom</artifactId>
+                <version>${log4j.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.fraunhofer.fit</groupId>
+            <artifactId>omp-vaas-info</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>javax.activation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.jws</groupId>
+            <artifactId>jsr181-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.cxf.xjc-utils</groupId>
+            <artifactId>cxf-xjc-runtime</artifactId>
+            <version>${cxf-xjc.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.6</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-transports-http-jetty -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http-jetty</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>${cxf.version}</version>
+            <!--<exclusions>-->
+            <!--<exclusion>-->
+            <!--<artifactId>jaxb-impl</artifactId>-->
+            <!--<groupId>com.sun.xml.bind</groupId>-->
+            <!--</exclusion>-->
+            <!--<exclusion>-->
+            <!--<groupId>org.slf4j</groupId>-->
+            <!--<artifactId>slf4j-jdk14</artifactId>-->
+            <!--</exclusion>-->
+            <!--</exclusions>-->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics-runtime</artifactId>
+            <version>0.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.migesok</groupId>
+            <artifactId>jaxb-java-time-adapters</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+            <classifier>xqj</classifier>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.opengis.cite.xerces/xercesImpl-xsd11 -->
+        <dependency>
+            <groupId>org.opengis.cite.xerces</groupId>
+            <artifactId>xercesImpl-xsd11</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <!--&lt;!&ndash; Server &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--<groupId>org.eclipse.jetty</groupId>-->
+        <!--<artifactId>jetty-server</artifactId>-->
+        <!--<version>${jetty.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.eclipse.jetty</groupId>-->
+        <!--<artifactId>jetty-servlet</artifactId>-->
+        <!--<version>${jetty.version}</version>-->
+        <!--</dependency>-->
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.19</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.19</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Others -->
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.72</version>
+        </dependency>
+    </dependencies>
+</project>

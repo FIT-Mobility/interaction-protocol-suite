@@ -1,0 +1,16 @@
+<Configuration xmlns="http://dimo.de/test-monitor-configuration">
+    <HTTP name="http-test">
+        <databaseConfig>
+            <hostname>localhost</hostname>
+            <port/>
+            <dbname>test-monitor</dbname>
+            <schema/>
+            <user>jooq</user>
+            <password>jooq</password>
+        </databaseConfig>
+        <jsonURI>http://127.0.0.1:8081/api/content/json/afbcec0d-cfc0-4720-8736-10c989c2a5a7</jsonURI>
+        <localHost>0.0.0.0</localHost>
+        <localPort>8080</localPort>
+        <wsURI>http://localhost:9090</wsURI>
+    </HTTP>
+</Configuration>

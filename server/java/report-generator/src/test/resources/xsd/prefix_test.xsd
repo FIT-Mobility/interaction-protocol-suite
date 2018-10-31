@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://dimo-omp.de" xmlns:blub="http://dimo-omp.de" xmlns:lalala="http://www.ixsi-schnittstelle.de/">
+    <import schemaLocation="https://raw.githubusercontent.com/RWTH-i5-IDSG/ixsi/econnect/xml/IXSI.xsd"
+            namespace="http://www.ixsi-schnittstelle.de/" />
+    <simpleType name="mySimpleType">
+        <restriction base="integer">
+            <minInclusive value="0"/>
+            <maxInclusive value="100"/>
+        </restriction>
+    </simpleType>
+    <group name="groupType">
+        <sequence>
+            <element name="blaasd" type="string"/>
+            <element name="simpleStuff" type="blub:mySimpleType"/>
+        </sequence>
+    </group>
+    <complexType name="tyep232">
+        <sequence>
+            <element name="asd" type="string"/>
+            <element name="testimportedtype" type="lalala:ProviderIDType"/>
+        </sequence>
+    </complexType>
+    <complexType name="myjComplexType">
+        <sequence>
+            <element name="element1" type="string"/>
+            <group ref="blub:groupType"/>
+        </sequence>
+    </complexType>
+</schema>

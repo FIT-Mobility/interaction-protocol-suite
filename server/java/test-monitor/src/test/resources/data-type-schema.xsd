@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://booking.com"
+        xmlns:here="http://booking.com"
+        xpathDefaultNamespace="##targetNamespace"
+        xmlns:fn="http://www.w3.org/2005/xpath-functions"
+        elementFormDefault="qualified">
+    <complexType name="CreateBookingRequestStructure">
+        <annotation>
+            <documentation>Structure to create a booking.</documentation>
+        </annotation>
+        <sequence>
+            <element name="userID" type="integer">
+                <annotation>
+                    <documentation>user ID to create the booking for</documentation>
+                </annotation>
+            </element>
+            <element name="vehicleID" type="integer">
+                <annotation>
+                    <documentation>ID of the vehicle to be used</documentation>
+                </annotation>
+            </element>
+            <element name="from" type="string">
+                <annotation>
+                    <documentation>starting location</documentation>
+                </annotation>
+            </element>
+            <element name="to" type="string">
+                <annotation>
+                    <documentation>destination location</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+    <complexType name="CreateBookingResponseStructure">
+        <sequence>
+            <element name="ResponseCode" type="here:ResponseCodeEnumeration"/>
+            <element name="BookingID" type="integer"/>
+        </sequence>
+    </complexType>
+    <complexType name="CancelBookingRequestStructure">
+        <annotation/>
+    </complexType>
+    <complexType name="CancelBookingResponseStructure"/>
+    <simpleType name="ResponseCodeEnumeration">
+        <restriction base="string">
+            <enumeration value="Success"/>
+            <enumeration value="Failure"/>
+        </restriction>
+    </simpleType>
+    <complexType name="CreateUserRequestStructure">
+        <annotation>
+            <documentation>Structure of the request to create a new user</documentation>
+        </annotation>
+        <sequence>
+            <element name="FirstName" type="string">
+                <annotation>
+                    <documentation>First name of the user to be created</documentation>
+                </annotation>
+            </element>
+            <element name="LastName" type="string">
+                <annotation>
+                    <documentation>Last name of the user to be created</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+    <complexType name="CreateUserResponseStructure">
+        <annotation>
+            <documentation>Response structure of the request to create a new user</documentation>
+        </annotation>
+        <sequence>
+            <element name="UserID" type="nonNegativeInteger">
+                <annotation>
+                    <documentation>ID of the newly created user</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+    <complexType name="CreateStationRequestStructure">
+        <annotation>
+            <documentation>Structure of the request to create a new station</documentation>
+        </annotation>
+        <sequence>
+            <element name="NumSlots" type="nonNegativeInteger">
+                <annotation>
+                    <documentation>Number of slots of the station</documentation>
+                </annotation>
+            </element>
+            <element name="Longitude" type="double">
+                <annotation>
+                    <documentation>Longitude of the position of the station</documentation>
+                </annotation>
+            </element>
+            <element name="Latitude" type="double">
+                <annotation>
+                    <documentation>Latitude of the position of the station</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+    <complexType name="CreateStationResponseStructure">
+        <annotation>
+            <documentation>Structure of the response to create a new station</documentation>
+        </annotation>
+        <sequence>
+            <element name="ID" type="nonNegativeInteger"/>
+        </sequence>
+    </complexType>
+    <element name="CreateBookingRequest" type="here:CreateBookingRequestStructure"/>
+    <element name="CreateBookingResponse" type="here:CreateBookingResponseStructure"/>
+    <element name="CancelBookingRequest" type="here:CancelBookingRequestStructure"/>
+    <element name="CancelBookingResponse" type="here:CancelBookingResponseStructure"/>
+    <element name="CreateUserRequest" type="here:CreateUserRequestStructure"/>
+    <element name="CreateUserResponse" type="here:CreateUserResponseStructure"/>
+    <element name="CreateStationRequest" type="here:CreateStationRequestStructure"/>
+    <element name="CreateStationResponse" type="here:CreateStationResponseStructure"/>
+</schema>

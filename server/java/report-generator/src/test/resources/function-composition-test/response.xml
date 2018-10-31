@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:GetBookingsResponse xmlns:b="http://www.dimo-omp.de">
+    <b:UserId>4</b:UserId>
+    <b:BookingId>fgdf</b:BookingId>
+    <b:BookingFrom>2007-10-26T08:36:28</b:BookingFrom>
+    <b:BookingTo>2004-02-14T19:44:14</b:BookingTo>
+</b:GetBookingsResponse>

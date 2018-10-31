@@ -1,0 +1,10 @@
+/build/
+/target
+/.idea
+/.settings
+/tomcat
+*.iml
+.DS_Store
+.classpath
+.project
+src/test/jsonTestOutput/

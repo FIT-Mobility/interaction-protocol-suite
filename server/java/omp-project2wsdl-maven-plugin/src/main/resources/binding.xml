@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<jaxb:bindings jaxb:version="1.0"
+               xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+               jaxb:extensionBindingPrefixes="xjc">
+    <jaxb:globalBindings generateIsSetMethod="true" underscoreBinding="asCharInWord">
+        <xjc:simple/>
+    </jaxb:globalBindings>
+</jaxb:bindings>

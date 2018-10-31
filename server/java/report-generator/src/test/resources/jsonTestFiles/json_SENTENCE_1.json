@@ -1,0 +1,38 @@
+{
+  "datatypes": [
+    {
+      "documentation": "Voluptatem est amet voluptatem quaerat.",
+      "name": "Datatype 1"
+    }
+  ],
+  "functions": [
+    {
+      "documentation": "Porro est est dolorem.",
+      "name": "Function 1",
+      "requestDatatype": "requestDatatype",
+      "responseDatatype": "responseDatatype"
+    }
+  ],
+  "project": {
+    "documentation": "Est sit labore est modi.",
+    "title": "OMP JSON Test"
+  },
+  "sequences": [
+    {
+      "documentation": "Neque velit quiquia voluptatem non labore.",
+      "name": "Sequence 1"
+    }
+  ],
+  "services": [
+    {
+      "documentation": "Quaerat etincidunt est consectetur.",
+      "functions": [
+        "Function 1"
+      ],
+      "name": "Service 1",
+      "sequences": [
+        "Sequence 1"
+      ]
+    }
+  ]
+}

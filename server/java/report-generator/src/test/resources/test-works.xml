@@ -1,0 +1,7 @@
+<test
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xsi:noNamespaceSchemaLocation='test.xsd'>
+    <number>7</number>
+    <name>Tester</name>
+    <size>1</size>
+</test>

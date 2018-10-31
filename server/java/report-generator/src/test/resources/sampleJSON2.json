@@ -1,0 +1,183 @@
+{
+  "project": {
+    "title": "Fahrradverleihprojekt",
+    "documentation": {
+      "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\">Dies ist ein Demo-Projekt im Kontext Fahrradverleihsysteme.</p>",
+      "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\">This is a demonstration project in the context of bike rental systems.</p>"
+    }
+  },
+  "functions": [
+    {
+      "ncname": "CreateBooking",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\">This function offers functionality to create a booking.</p>"
+      },
+      "inputElementName": {
+        "namespaceuri": "http://booking.com",
+        "ncname": "CreateBookingRequest"
+      },
+      "outputElementName": {
+        "namespaceuri": "http://booking.com",
+        "ncname": "CreateBookingResponse"
+      },
+      "assertions": []
+    },
+    {
+      "ncname": "CancelBooking",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\">This function offers functionality to cancel a booking.</p>"
+      },
+      "inputElementName": {
+        "namespaceuri": "http://booking.com",
+        "ncname": "CancelBookingRequest"
+      },
+      "outputElementName": {
+        "namespaceuri": "http://booking.com",
+        "ncname": "CancelBookingResponse"
+      },
+      "assertions": []
+    },
+    {
+      "ncname": "CreateUser",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\">This function offers functionality to create a user.</p>"
+      },
+      "inputElementName": {
+        "namespaceuri": "http://booking.com",
+        "ncname": "CreateUserRequest"
+      },
+      "outputElementName": {
+        "namespaceuri": "http://booking.com",
+        "ncname": "CreateUserResponse"
+      },
+      "assertions": []
+    },
+    {
+      "ncname": "CreateStation",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\">This function offers functionality to create a station.</p>"
+      },
+      "inputElementName": {
+        "namespaceuri": "http://booking.com",
+        "ncname": "CreateStationRequest"
+      },
+      "outputElementName": {
+        "namespaceuri": "http://booking.com",
+        "ncname": "CreateStationResponse"
+      },
+      "assertions": []
+    }
+  ],
+  "elements": [
+    {
+      "ncname": "CreateBookingRequest",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>"
+      }
+    },
+    {
+      "ncname": "CreateBookingResponse",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>"
+      }
+    },
+    {
+      "ncname": "CancelBookingRequest",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>"
+      }
+    },
+    {
+      "ncname": "CancelBookingResponse",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>"
+      }
+    },
+    {
+      "ncname": "CreateUserRequest",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>"
+      }
+    },
+    {
+      "ncname": "CreateUserResponse",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>"
+      }
+    },
+    {
+      "ncname": "CreateStationRequest",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>"
+      }
+    },
+    {
+      "ncname": "CreateStationResponse",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>"
+      }
+    }
+  ],
+  "sequences": [],
+  "services": [
+    {
+      "name": "Booking Service",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\">Der Buchungsdienst bietet zwei Funktionen:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Buchung</li><li>Stornierunng</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\">The Booking service offers two functions:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Booking</li><li>Cancellation</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>"
+      },
+      "functions": [
+        "CreateBooking",
+        "CancelBooking"
+      ],
+      "sequences": []
+    },
+    {
+      "name": "Station Management Service",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\">Dieser Dienst erlaubt die Verwaltung der Stationen des Fahrradverleihsystems.</p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\">This service allows to manage the stations of the bike rental service.</p>"
+      },
+      "functions": [
+        "CreateStation"
+      ],
+      "sequences": []
+    },
+    {
+      "name": "User Management Service",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\">Dieser Dienst ermöglicht die Verwaltung der Benutzer des Systems.</p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\">This service allows for management of users.</p>"
+      },
+      "functions": [
+        "CreateUser"
+      ],
+      "sequences": []
+    },
+    {
+      "name": "Information Service",
+      "documentation": {
+        "german": "<p xmlns=\"http://www.w3.org/1999/xhtml\">Dieser Dienst dient der Beauskunftung von nutzungrelevanten Informationen dem Kunden gegenüber.</p>",
+        "english": "<p xmlns=\"http://www.w3.org/1999/xhtml\">This service offers information relevant to using the bike sharing system to the user.</p>"
+      },
+      "functions": [],
+      "sequences": []
+    }
+  ],
+  "schema":{
+    "xsd": "<?xml version=\"1.0\"?>\n<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://booking.com\" xmlns:here=\"http://booking.com\" xpathDefaultNamespace=\"##targetNamespace\" xmlns:fn=\"http://www.w3.org/2005/xpath-functions\" elementFormDefault=\"qualified\">\n    <complexType name=\"CreateBookingRequestStructure\">\n    <annotation>\n      <documentation>Structure to create a booking.</documentation>\n    </annotation>\n    <sequence>\n      <element name=\"userID\" type=\"integer\">\n        <annotation>\n          <documentation>user ID to create the booking for</documentation>\n        </annotation>\n      </element>\n      <element name=\"vehicleID\" type=\"integer\">\n        <annotation>\n          <documentation>ID of the vehicle to be used</documentation>\n        </annotation>\n      </element>\n      <element name=\"from\" type=\"string\">\n        <annotation>\n          <documentation>starting location</documentation>\n        </annotation>\n      </element>\n      <element name=\"to\" type=\"string\">\n        <annotation>\n          <documentation>destination location</documentation>\n        </annotation>\n      </element>\n    </sequence>\n  </complexType>\n  <complexType name=\"CreateBookingResponseStructure\">\n    <sequence>\n      <element name=\"ResponseCode\" type=\"here:ResponseCodeEnumeration\"/>\n      <element name=\"BookingID\" type=\"integer\"/>\n    </sequence>\n  </complexType>\n  <complexType name=\"CancelBookingRequestStructure\">\n    <annotation/>\n  </complexType>\n  <complexType name=\"CancelBookingResponseStructure\"/>\n  <simpleType name=\"ResponseCodeEnumeration\">\n    <restriction base=\"string\">\n      <enumeration value=\"Success\"/>\n      <enumeration value=\"Failure\"/>\n    </restriction>\n  </simpleType>\n  <complexType name=\"CreateUserRequestStructure\">\n    <annotation>\n      <documentation>Structure of the request to create a new user</documentation>\n    </annotation>\n    <sequence>\n      <element name=\"FirstName\" type=\"string\">\n        <annotation>\n          <documentation>First name of the user to be created</documentation>\n        </annotation>\n      </element>\n      <element name=\"LastName\" type=\"string\">\n        <annotation>\n          <documentation>Last name of the user to be created</documentation>\n        </annotation>\n      </element>\n    </sequence>\n  </complexType>\n  <complexType name=\"CreateUserResponseStructure\">\n    <annotation>\n      <documentation>Response structure of the request to create a new user</documentation>\n    </annotation>\n    <sequence>\n      <element name=\"UserID\" type=\"nonNegativeInteger\">\n        <annotation>\n          <documentation>ID of the newly created user</documentation>\n        </annotation>\n      </element>\n    </sequence>\n  </complexType>\n  <complexType name=\"CreateStationRequestStructure\">\n    <annotation>\n      <documentation>Structure of the request to create a new station</documentation>\n    </annotation>\n    <sequence>\n      <element name=\"NumSlots\" type=\"nonNegativeInteger\">\n        <annotation>\n          <documentation>Number of slots of the station</documentation>\n        </annotation>\n      </element>\n      <element name=\"Longitude\" type=\"double\">\n        <annotation>\n          <documentation>Longitude of the position of the station</documentation>\n        </annotation>\n      </element>\n      <element name=\"Latitude\" type=\"double\">\n        <annotation>\n          <documentation>Latitude of the position of the station</documentation>\n        </annotation>\n      </element>\n    </sequence>\n  </complexType>\n  <complexType name=\"CreateStationResponseStructure\">\n    <annotation>\n      <documentation>Structure of the response to create a new station</documentation>\n    </annotation>\n    <sequence>\n      <element name=\"ID\" type=\"nonNegativeInteger\"/>\n    </sequence>\n  </complexType>\n  <element name=\"CreateBookingRequest\" type=\"here:CreateBookingRequestStructure\"/>\n  <element name=\"CreateBookingResponse\" type=\"here:CreateBookingResponseStructure\"/>\n  <element name=\"CancelBookingRequest\" type=\"here:CancelBookingRequestStructure\"/>\n  <element name=\"CancelBookingResponse\" type=\"here:CancelBookingResponseStructure\"/>\n  <element name=\"CreateUserRequest\" type=\"here:CreateUserRequestStructure\"/>\n  <element name=\"CreateUserResponse\" type=\"here:CreateUserResponseStructure\"/>\n  <element name=\"CreateStationRequest\" type=\"here:CreateStationRequestStructure\"/>\n  <element name=\"CreateStationResponse\" type=\"here:CreateStationResponseStructure\"/>\n</schema>",
+    "baseURI": "../report-generator/src/test/resources/"
+  }
+}

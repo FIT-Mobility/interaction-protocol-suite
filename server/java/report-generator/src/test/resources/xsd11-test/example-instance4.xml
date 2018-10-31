@@ -1,0 +1,16 @@
+<FutureRfidFunction
+        xmlns="http://www.dimo-omp.de"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.dimo-omp.de function-schema.xsd">
+    <FutureRfidRequest/>
+    <FutureRfidResponse>
+        <RfidTag>
+            <Identifier>N24</Identifier>
+            <Expiry>2019-10-26T08:36:28</Expiry>
+        </RfidTag>
+        <RfidTag>
+            <Identifier>D75</Identifier>
+            <Expiry>2020-10-26T08:36:28</Expiry>
+        </RfidTag>
+    </FutureRfidResponse>
+</FutureRfidFunction>

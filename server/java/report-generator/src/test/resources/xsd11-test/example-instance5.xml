@@ -1,0 +1,13 @@
+<SortingFunction
+        xmlns="http://www.dimo-omp.de"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.dimo-omp.de function-schema.xsd">
+    <SortingRequest>
+        <Order>ASC</Order>
+    </SortingRequest>
+    <SortingResponse>
+        <Answer>1</Answer>
+        <Answer>2</Answer>
+        <Answer>3</Answer>
+    </SortingResponse>
+</SortingFunction>

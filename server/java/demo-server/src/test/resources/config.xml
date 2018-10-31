@@ -1,0 +1,7 @@
+<Configuration xmlns="http://dimo.de/demo-server-configuration">
+    <localHostConfig>
+        <hostname>0.0.0.0</hostname>
+        <port>9876</port>
+    </localHostConfig>
+    <validationHost>http://127.0.0.1:9986</validationHost>
+</Configuration>
