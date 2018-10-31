@@ -1,0 +1,7 @@
+node_modules/
+backend.ts
+yarn-error.log
+
+*.d.ts
+*.js
+*.js.map

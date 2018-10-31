@@ -1,0 +1,264 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "OMP Interface Tool Project Schema",
+    "type": "object",
+    "properties": {
+        "project": {
+            "$ref": "#/definitions/project"
+        },
+        "services": {
+            "type": "array",
+            "description": "This list contains exactly the services defined in the tool including their rich-text documentation.",
+            "items": {
+                "$ref": "#/definitions/service"
+            }
+        },
+        "sequences": {
+            "type": "array",
+            "description": "This list contains exactly the sequences defined in the tool including their rich-text documentation.",
+            "items": {
+                "$ref": "#/definitions/sequence"
+            }
+        },
+        "functions": {
+            "type": "array",
+            "description": "This list contains exactly the functions defined in the tool including their rich-text documentation.",
+            "items": {
+                "$ref": "#/definitions/function"
+            }
+        },
+        "datatypes": {
+            "type": "array",
+            "description": "This list contains exactly the data types specified in the XSD (thus belonging to the namespace given there as target namespace) including their rich-text documentation.",
+            "items": {
+                "$ref": "#/definitions/datatype"
+            }
+        },
+        "elements": {
+            "type": "array",
+            "description": "This list contains exactly the top level elements specified in the XSD (thus belonging to the namespace given there as target namespace) including their rich-text documentation.",
+            "items": {
+                "$ref": "#/definitions/element"
+            }
+        },
+        "schema": {
+            "$ref": "#/definitions/schema"
+        }
+    },
+    "definitions": {
+        "doc": {
+            "type": "object",
+            "properties": {
+                "english": {
+                    "description": "",
+                    "type": "string"
+                },
+                "german": {
+                    "description": "",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "english",
+                "german"
+            ]
+        },
+        "function": {
+            "type": "object",
+            "properties": {
+                "ncname": {
+                    "description": "",
+                    "type": "string"
+                },
+                "documentation": {
+                    "$ref": "#/definitions/doc"
+                },
+                "inputElementName": {
+                    "description": "",
+                    "$ref": "#/definitions/qname"
+                },
+                "outputElementName": {
+                    "description": "",
+                    "$ref": "#/definitions/qname"
+                },
+                "assertions": {
+                    "type": "array",
+                    "description": "",
+                    "items": {
+                        "$ref": "#/definitions/assertion"
+                    }
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "ncname",
+                "documentation",
+                "assertions"
+            ]
+        },
+        "assertion": {
+            "type": "object",
+            "properties": {
+                "test": {
+                    "description": "",
+                    "type": "string"
+                },
+                "xpathDefaultNamespace": {
+                    "description": "",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "test"
+            ]
+        },
+        "project": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "description": "",
+                    "type": "string"
+                },
+                "documentation": {
+                    "$ref": "#/definitions/doc"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "title",
+                "documentation"
+            ]
+        },
+        "sequence": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "",
+                    "type": "string"
+                },
+                "documentation": {
+                    "$ref": "#/definitions/doc"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "name"
+            ]
+        },
+        "service": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "",
+                    "type": "string"
+                },
+                "documentation": {
+                    "$ref": "#/definitions/doc"
+                },
+                "functions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "sequences": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "name",
+                "documentation",
+                "functions",
+                "sequences"
+            ]
+        },
+        "qname": {
+            "type": "object",
+            "javaType": "de.fraunhofer.fit.omp.model.json.QName",
+            "properties": {
+                "namespaceuri": {
+                    "description": "URI of the namespace.",
+                    "type": "string",
+                    "format": "uri"
+                },
+                "ncname": {
+                    "description": "Non-colonized name = local part of the name.",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "namespaceuri",
+                "ncname"
+            ]
+        },
+        "datatype": {
+            "type": "object",
+            "properties": {
+                "ncname": {
+                    "description": "",
+                    "type": "string"
+                },
+                "documentation": {
+                    "$ref": "#/definitions/doc"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "ncname",
+                "documentation"
+            ]
+        },
+        "element": {
+            "type": "object",
+            "properties": {
+                "ncname": {
+                    "description": "",
+                    "type": "string"
+                },
+                "documentation": {
+                    "$ref": "#/definitions/doc"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "ncname",
+                "documentation"
+            ]
+        },
+        "schema": {
+            "type": "object",
+            "properties": {
+                "xsd": {
+                    "description": "This field contains a string representation of the XML Schema Definition created by the user.",
+                    "type": "string"
+                },
+                "baseURI": {
+                    "description": "This field represents a base URI that will be used to resolve relative paths within the xsd.",
+                    "type": "string",
+                    "format": "uri"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "xsd"
+            ]
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "project",
+        "services",
+        "sequences",
+        "functions",
+        "datatypes",
+        "elements",
+        "schema"
+    ]
+}
