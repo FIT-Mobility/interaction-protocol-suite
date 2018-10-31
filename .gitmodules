@@ -1,4 +1,4 @@
 [submodule "schema"]
 	path = server/java/json-schema/src/main/resources/model-json
-	url = ./
+	url = .
 	branch = schema
