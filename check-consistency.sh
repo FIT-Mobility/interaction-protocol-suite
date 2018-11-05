@@ -6,7 +6,7 @@ cd $DIR
 
 RETVAL=0
 
-MAIN_VERSION=`grep "resolved.*OMP-schema.git\#" main/yarn.lock | grep -o 'OMP-schema.git#[^"]*' | cut -d'#' -f2`
+MAIN_VERSION=`grep "resolved.*interaction-protocol-suite.git\#" main/yarn.lock | grep -o 'interaction-protocol-suite.git#[^"]*' | cut -d'#' -f2`
 
 while IFS= read -r result
 do
@@ -28,7 +28,7 @@ do
 	fi
 done < <(git submodule status)
 
-API_VERSION=`grep "resolved.*OMP-schema.git\#" server/api/yarn.lock | grep -o 'OMP-schema.git#[^"]*' | cut -d'#' -f2`
+API_VERSION=`grep "resolved.*interaction-protocol-suite.git\#" server/api/yarn.lock | grep -o 'interaction-protocol-suite.git#[^"]*' | cut -d'#' -f2`
 
 if [ "$MAIN_VERSION" != "$API_VERSION" ]; then
 	echo "main version ($MAIN_VERSION) differs from api version ($API_VERSION)"
