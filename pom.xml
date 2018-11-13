@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.fraunhofer.fit</groupId>
-    <artifactId>omp-tool-parent</artifactId>
+    <artifactId>interaction-protocol-suite-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -38,11 +38,11 @@
     </properties>
 
     <modules>
-        <module>test-monitor</module>
-        <module>demo-server</module>
-        <module>omp-project2wsdl-maven-plugin</module>
+        <module>monitor-test</module>
+        <module>server-demo</module>
+        <module>maven-plugin-project2wsdl</module>
         <module>json-schema</module>
-        <module>report-generator</module>
+        <module>server-report</module>
         <module>vaas-info</module>
     </modules>
 

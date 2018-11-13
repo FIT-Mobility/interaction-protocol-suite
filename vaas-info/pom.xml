@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>omp-tool-parent</artifactId>
+        <artifactId>interaction-protocol-suite-parent</artifactId>
         <groupId>de.fraunhofer.fit</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>omp-vaas-info</artifactId>
+    <artifactId>vaas-info</artifactId>
 </project>

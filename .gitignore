@@ -71,3 +71,7 @@ build/
 !.env.example
 
 .vscode
+
+# Container files
+/data/
+
