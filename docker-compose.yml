@@ -1,10 +1,10 @@
 version: '3'
 services:
-  api:
-    build: ./api
+  server-js:
+    build: ./server-js
     links:
       - mongo
-      - report_generator
+      - server-report
     volumes:
       - "./data/leveldb:/opt/server/db"
       - "./data/uploads:/opt/server/uploads"
@@ -18,15 +18,15 @@ services:
       - "27017:27017"
     restart: on-failure
 
-  report_generator:
-    build: ./java
+  server-report:
+    build: ./
     restart: on-failure
     volumes:
       - "./data/fonts:/root/.fonts"
 
-  web:
+  frontend:
     build:
-      context: ../main
+      context: ./frontend
       args:
         - COMMIT_ID
     ports:

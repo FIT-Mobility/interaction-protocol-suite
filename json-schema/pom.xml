@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>de.fraunhofer.fit</groupId>
-        <artifactId>omp-tool-parent</artifactId>
+        <artifactId>interaction-protocol-suite-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
