@@ -2,7 +2,7 @@
 FROM maven:3-jdk-10-slim
 WORKDIR /usr/src/omp/server/java
 COPY . .
-RUN mvn -B -V -e -T 1C clean package -pl server-report -am
+RUN mvn -B -V -e -T 1C clean package -DskipTests -pl server-report -am
 
 # fyi for the mvn flags:
 # -B     batch mode (non-interactive)
