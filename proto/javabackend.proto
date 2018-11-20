@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package de.fraunhofer.fit.ips.proto.javabackend;
+
+option java_outer_classname = "Protobuf";
+option java_multiple_files = true;
+
+import "structure.proto";
+import "xsd.proto";
+
+message SchemaAndProjectStructure {
+    structure.Project project = 1;
+    xsd.Schema schema = 2;
+}
+
+enum ReportType {
+    REPORT_TYPE_UNSET = 0;
+    REPORT_TYPE_DOCX = 1;
+    REPORT_TYPE_PDF = 2;
+}
+
+message CreateReportRequest {
+    // reporting configuration options
+    message Configuration {
+        repeated string languages = 1;
+        string xsd_prefix = 2;
+        string local_prefix_if_missing = 3;
+        bool print_inheritance_in_extensions = 4;
+        bool prevent_inlining_enums = 5;
+        bool prevent_expanding_attribute_groups = 6;
+        bool prevent_expanding_element_groups = 7;
+    }
+    message Metadata {
+//        repeated string authors;
+//        string documentIdentifier;
+    }
+
+    SchemaAndProjectStructure schema_and_project_structure = 1;
+    repeated ReportType report_types = 2;
+    Configuration configuration = 3;
+    Metadata metadata = 4;
+}
+
+message CreateReportResponse {
+    message Report {
+        ReportType report_type = 1;
+        bytes report = 2;
+    }
+    repeated Report reports = 1;
+}
+
+message AssignTypesRequest {
+    SchemaAndProjectStructure schema_and_project_structure = 1;
+}
+
+message AssignTypesResponse {
+    message TargetIdentifierAndTypes {
+        string identifier = 1;
+        repeated structure.QName q_name = 2;
+    }
+    repeated TargetIdentifierAndTypes target_identifier_and_types = 1;
+}
+
+message ValidationRequest {
+    xsd.Schema schema = 1;
+}
+
+message ValidationResponse {
+    message Error {
+        int32 line = 1;
+        int32 column = 2;
+        string message = 3;
+    }
+    repeated Error errors = 1;
+}
+
+service JavaBackend {
+    rpc CreateReport (CreateReportRequest) returns (CreateReportResponse);
+    rpc AssignTypes (AssignTypesRequest) returns (AssignTypesResponse);
+    rpc Validate (ValidationRequest) returns (ValidationResponse);
+}

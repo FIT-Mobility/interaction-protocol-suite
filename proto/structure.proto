@@ -1,0 +1,135 @@
+syntax = "proto3";
+
+package de.fraunhofer.fit.ips.proto.structure;
+
+option java_outer_classname = "Protobuf";
+option java_multiple_files = true;
+
+message MultilingualRichtext {
+    // a map containing entries of language (key) and rich-text content (value)
+    map<string, string> language_to_richtext = 1;
+}
+
+message MultilingualPlaintext {
+    // a map containing entries of language (key) and plain-text content (value)
+    map<string, string> language_to_plaintext = 1;
+}
+
+message QName {
+    // the local part of the name (nc = non-colonized)
+    string nc_name = 1;
+    // the uri of the namespace
+    string namespace_uri = 2;
+}
+
+message Text {
+    // the (multilingual) rich-text content
+    MultilingualRichtext rt_content = 1;
+}
+
+message Particle {
+    // the qualified name of the particle
+    QName q_name = 1;
+}
+
+message Level {
+    message LevelChild {
+        oneof child {
+            Text text = 1;
+            Particle particle = 2;
+            Level level = 3;
+            // may occur within a function at most once
+            Request request = 4;
+            // may occur within a function at most once
+            Response response = 5;
+            Function function = 6;
+            Service service = 7;
+        }
+    }
+    string identifier = 1;
+    repeated LevelChild children = 2;
+    MultilingualPlaintext heading_title = 3;
+    bool suppressNumbering = 4;
+}
+
+message Request {
+    message RequestResponseChild {
+        oneof child {
+            Text text = 1;
+            Particle particle = 2;
+            Level level = 3;
+        }
+    }
+    string identifier = 1;
+    repeated RequestResponseChild children = 2;
+    // the qualified name of the request data type / element
+    QName q_name = 3;
+    // the (multilingual) heading title of the section corresponding to the request
+    MultilingualPlaintext heading_title = 4;
+}
+
+message Response {
+    string identifier = 1;
+    repeated Request.RequestResponseChild children = 2;
+    // the qualified name of the response data type / element
+    QName q_name = 3;
+    // the (multilingual) heading title of the section corresponding to the response
+    MultilingualPlaintext heading_title = 4;
+}
+
+message Assertion {
+    // the actual test expression in xpath
+    string test = 1;
+    // the xpath default namespace to be used for the test in case it should differ from the one of the schema
+    string xpath_default_namespace = 2;
+    // a title given to the test (targeted at humans)
+    MultilingualPlaintext heading_title = 3;
+    // a description for the test (targeted at humans)
+    MultilingualRichtext description = 4;
+}
+
+message Function {
+    message FunctionChild {
+        oneof child {
+            Text text = 1;
+            Particle particle = 2;
+            Level level = 3;
+            // may occur within a function at most once
+            Request request = 4;
+            // may occur within a function at most once
+            Response response = 5;
+            Assertion assertion = 6;
+        }
+    }
+    string identifier = 1;
+    repeated FunctionChild children = 2;
+    string name = 3;
+    MultilingualPlaintext heading_title = 4;
+}
+
+message Service {
+    message ServiceChild {
+        oneof child {
+            Text text = 1;
+            Particle particle = 2;
+            Level level = 3;
+            Function function = 4;
+        }
+    }
+    string identifier = 1;
+    repeated ServiceChild children = 2;
+    string name = 3;
+    MultilingualPlaintext heading_title = 4;
+}
+
+message Project {
+    message ProjectChild {
+        oneof child {
+            Level level = 1;
+            Service service = 2;
+        }
+    }
+    string identifier = 1;
+    repeated ProjectChild children = 2;
+    string title = 3;
+}
