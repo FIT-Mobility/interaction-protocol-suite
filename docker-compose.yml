@@ -1,6 +1,6 @@
 version: '3'
 services:
-  server-js:
+  server_js:
     build: ./server-js
     links:
       - mongo
@@ -18,7 +18,7 @@ services:
       - "27017:27017"
     restart: on-failure
 
-  server-report:
+  server_report:
     build: ./
     restart: on-failure
     volumes:
