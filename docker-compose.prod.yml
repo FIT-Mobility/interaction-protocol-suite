@@ -5,7 +5,7 @@ services:
     volumes:
       - "./data/ssl:/opt/server/ssl"
     links:
-      - web
+      - frontend
     ports:
       - "80:80"
       - "443:443"
