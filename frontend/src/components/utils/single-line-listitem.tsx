@@ -4,7 +4,7 @@ import { createStyles } from '@material-ui/core/es/styles';
 import { attachStyles } from './styles-attached';
 
 const styles = createStyles({
-    children: {
+    primary: {
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
