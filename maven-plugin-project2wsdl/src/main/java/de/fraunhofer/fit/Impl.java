@@ -1,13 +1,13 @@
 package de.fraunhofer.fit;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import de.fraunhofer.fit.omp.model.json.Function;
-import de.fraunhofer.fit.omp.model.json.OmpToolProjectSchema;
-import de.fraunhofer.fit.omp.model.json.Schema;
-import de.fraunhofer.fit.omp.model.json.Service;
+import de.fraunhofer.fit.ips.model.Converter;
+import de.fraunhofer.fit.ips.model.IllegalDocumentStructureException;
+import de.fraunhofer.fit.ips.model.simple.Function;
+import de.fraunhofer.fit.ips.model.simple.Project;
+import de.fraunhofer.fit.ips.model.simple.Service;
+import de.fraunhofer.fit.ips.proto.javabackend.SchemaAndProjectStructure;
+import de.fraunhofer.fit.ips.proto.xsd.Schema;
 import lombok.RequiredArgsConstructor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,9 +36,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -57,25 +57,30 @@ public class Impl {
     private static final String PORT_PREFIX = "port_";
     private static final String SOAP_PREFIX = "soap_";
 
-    public static void createWSDL(final URL jsonFilePath, final String hostname, final File outputDirectory)
-            throws IOException, TransformerException, ParserConfigurationException {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        final OmpToolProjectSchema ompToolProjectSchema = objectMapper.readValue(jsonFilePath, OmpToolProjectSchema.class);
+    public static void createWSDL(final URL protoFilePath, final String hostname, final File outputDirectory)
+            throws IOException, TransformerException, ParserConfigurationException, IllegalDocumentStructureException {
+        final Project project;
+        final Schema schema;
+        try (final InputStream inputStream = protoFilePath.openStream()) {
+            final SchemaAndProjectStructure createReportRequest = SchemaAndProjectStructure.parseFrom(inputStream);
+            project = Converter.convert(createReportRequest.getProject());
+            schema = createReportRequest.getSchema();
+        }
 
-        // FIXME: integrate BASEURI into import/include schemaLocation
-        final Schema schema = ompToolProjectSchema.getSchema();
         final String xsd10 = downgradeXSD(schema.getXsd());
         final String targetNamespace = determineTargetNamespace(xsd10);
 
-        final String projectTitle = ompToolProjectSchema.getProject().getTitle();
+        final String projectTitle = project.getTitle();
 
-        final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        final NamespaceManager namespaceManager = new NamespaceManager(targetNamespace, TNS);
-        final DocumentWrapper document = new DocumentWrapper(documentBuilder.newDocument(), namespaceManager);
-
-        final ImmutableMap<String, Function> functionLookup = Maps.uniqueIndex(ompToolProjectSchema.getFunctions(), Function::getNcname);
+        final NamespaceManager namespaceManager;
+        final DocumentWrapper document;
+        {
+            final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setNamespaceAware(true);
+            final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            namespaceManager = new NamespaceManager(targetNamespace, TNS);
+            document = new DocumentWrapper(documentBuilder.newDocument(), namespaceManager);
+        }
 
         final DocumentWrapper.ElementWrapper wsdlDefinitions = document.addChild(WSDL11Constants.EL_DEFINITIONS)
                                                                        .addPlainAttribute(QNAME_TARGET_NAMESPACE, targetNamespace)
@@ -85,9 +90,9 @@ public class Impl {
 
         final LinkedHashSet<QName> elements = new LinkedHashSet<>();
 
-        for (final Service jsonService : ompToolProjectSchema.getServices()) {
+        for (final Service protoService : project.getServices()) {
             // FIXME convert name to be a valid ncname!!!
-            final String jsonServiceName = jsonService.getName().replaceAll("\\s", "");
+            final String protoServiceName = protoService.getName().replaceAll("\\s", "");
             /*
             <port name="portDienst1" binding="tns:SoapDienst1">
                 <soap12:address location="http://localhost:9876/Dienst1"/>
@@ -96,14 +101,14 @@ public class Impl {
 
             // create port (under service), binding, and portType
             final DocumentWrapper.ElementWrapper wsdlPort = wsdlService.addChild(WSDL11Constants.EL_PORT)
-                                                                       .addPlainAttribute(WSDL11Constants.ATT_NAME, PORT_PREFIX + jsonServiceName)
-                                                                       .addPrefixedAttribute(WSDL11Constants.ATT_BINDING, new QName(targetNamespace, SOAP_PREFIX + jsonServiceName));
+                                                                       .addPlainAttribute(WSDL11Constants.ATT_NAME, PORT_PREFIX + protoServiceName)
+                                                                       .addPrefixedAttribute(WSDL11Constants.ATT_BINDING, new QName(targetNamespace, SOAP_PREFIX + protoServiceName));
             wsdlPort.addChild(SOAP12BindingConstants.EL_ADDRESS)
-                    .addPlainAttribute(SOAP12BindingConstants.ATT_LOCATION, hostname + "/" + jsonServiceName);
+                    .addPlainAttribute(SOAP12BindingConstants.ATT_LOCATION, hostname + "/" + protoServiceName);
 
             final DocumentWrapper.ElementWrapper wsdlBinding = wsdlDefinitions.addChild(WSDL11Constants.EL_BINDING)
-                                                                              .addPlainAttribute(WSDL11Constants.ATT_NAME, SOAP_PREFIX + jsonServiceName)
-                                                                              .addPrefixedAttribute(WSDL11Constants.ATT_TYPE, new QName(targetNamespace, jsonServiceName));
+                                                                              .addPlainAttribute(WSDL11Constants.ATT_NAME, SOAP_PREFIX + protoServiceName)
+                                                                              .addPrefixedAttribute(WSDL11Constants.ATT_TYPE, new QName(targetNamespace, protoServiceName));
 
             /*
             <binding name="SoapDienst1" type="tns:Dienst1">
@@ -133,17 +138,18 @@ public class Impl {
             */
 
             final DocumentWrapper.ElementWrapper wsdlPortType = wsdlDefinitions.addChild(WSDL11Constants.EL_PORT_TYPE)
-                                                                               .addPlainAttribute(WSDL11Constants.ATT_NAME, jsonServiceName);
+                                                                               .addPlainAttribute(WSDL11Constants.ATT_NAME, protoServiceName);
 
-            for (final String jsonFunctionName : jsonService.getFunctions()) {
-                final Function jsonFunction = functionLookup.get(jsonFunctionName);
-                final QName jsonFunctionInputElementName = convert(jsonFunction.getInputElementName());
-                final QName jsonFunctionOutputElementName = convert(jsonFunction.getOutputElementName());
+            for (final Function protoFunction : protoService.getFunctions()) {
+                final String protoFunctionName = protoFunction.getName();
+                // FIXME !!! TYPE != ELEMENT
+                final QName jsonFunctionInputElementName = protoFunction.getRequestType();
+                final QName jsonFunctionOutputElementName = protoFunction.getResponseType();
 
                 final DocumentWrapper.ElementWrapper wsdlBindingOperation = wsdlBinding.addChild(WSDL11Constants.EL_OPERATION)
-                                                                                       .addPlainAttribute(WSDL11Constants.ATT_NAME, jsonFunctionName);
+                                                                                       .addPlainAttribute(WSDL11Constants.ATT_NAME, protoFunctionName);
                 wsdlBindingOperation.addChild(SOAP12BindingConstants.EL_OPERATION)
-                                    .addPlainAttribute(SOAP12BindingConstants.ATT_SOAP_ACTION, "/" + jsonFunctionName)
+                                    .addPlainAttribute(SOAP12BindingConstants.ATT_SOAP_ACTION, "/" + protoFunction)
                                     .addPlainAttribute(SOAP12BindingConstants.ATT_STYLE, SOAP12BindingConstants.STYLE_DOCUMENT);
                 wsdlBindingOperation.addChild(WSDL11Constants.EL_INPUT)
                                     .addChild(SOAP12BindingConstants.EL_BODY)
@@ -153,16 +159,19 @@ public class Impl {
                                     .addPlainAttribute(SOAP12BindingConstants.ATT_USE, SOAP12BindingConstants.USE_LITERAL);
 
                 final DocumentWrapper.ElementWrapper wsdlPortTypeOperation = wsdlPortType.addChild(WSDL11Constants.EL_OPERATION)
-                                                                                         .addPlainAttribute(WSDL11Constants.ATT_NAME, jsonFunctionName);
-                wsdlPortTypeOperation.addChild(WSDL11Constants.EL_INPUT).addPrefixedAttribute(WSDL11Constants.ATT_MESSAGE,
-                        distinguishLocalFromImported(namespaceManager, targetNamespace, jsonFunctionInputElementName)
-                );
-                wsdlPortTypeOperation.addChild(WSDL11Constants.EL_OUTPUT).addPrefixedAttribute(WSDL11Constants.ATT_MESSAGE,
-                        distinguishLocalFromImported(namespaceManager, targetNamespace, jsonFunctionOutputElementName)
-                );
-
-                elements.add(jsonFunctionInputElementName);
-                elements.add(jsonFunctionOutputElementName);
+                                                                                         .addPlainAttribute(WSDL11Constants.ATT_NAME, protoFunctionName);
+                if (null != jsonFunctionInputElementName) {
+                    wsdlPortTypeOperation.addChild(WSDL11Constants.EL_INPUT).addPrefixedAttribute(WSDL11Constants.ATT_MESSAGE,
+                            distinguishLocalFromImported(namespaceManager, targetNamespace, jsonFunctionInputElementName)
+                    );
+                    elements.add(jsonFunctionInputElementName);
+                }
+                if (null != jsonFunctionOutputElementName) {
+                    wsdlPortTypeOperation.addChild(WSDL11Constants.EL_OUTPUT).addPrefixedAttribute(WSDL11Constants.ATT_MESSAGE,
+                            distinguishLocalFromImported(namespaceManager, targetNamespace, jsonFunctionOutputElementName)
+                    );
+                    elements.add(jsonFunctionOutputElementName);
+                }
             }
         }
 
@@ -199,11 +208,6 @@ public class Impl {
                 new QName(targetNamespace, namespaceManager.getPrefix(namespaceURI) + "_" + jsonFunctionXElementName.getLocalPart());
     }
 
-    private static QName convert(final de.fraunhofer.fit.omp.model.json.QName qName) {
-        final URI namespaceuri = qName.getNamespaceuri();
-        return new QName(namespaceuri == null ? null : namespaceuri.toString(), qName.getNcname());
-    }
-
     private static String determineTargetNamespace(final String xsd10) {
         try {
             final XMLEventReader xmlEventReader = XMLInputFactory.newFactory().createXMLEventReader(new StringReader(xsd10));
@@ -229,7 +233,6 @@ public class Impl {
         } catch (final XMLStreamException e) {
             throw new IllegalArgumentException(e);
         }
-
     }
 
     private static String downgradeXSD(final String xsd11) throws TransformerException {

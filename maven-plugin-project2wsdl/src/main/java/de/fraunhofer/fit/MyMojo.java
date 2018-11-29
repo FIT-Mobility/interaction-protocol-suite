@@ -1,6 +1,7 @@
 package de.fraunhofer.fit;
 
 
+import de.fraunhofer.fit.ips.model.IllegalDocumentStructureException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -40,7 +41,7 @@ public class MyMojo extends AbstractMojo {
         outputDirectory.mkdirs();
         try {
             Impl.createWSDL(getUrl(), hostname, outputDirectory);
-        } catch (final IOException | TransformerException | ParserConfigurationException e) {
+        } catch (final IOException | TransformerException | ParserConfigurationException | IllegalDocumentStructureException e) {
             throw new MojoExecutionException("error", e);
         }
     }

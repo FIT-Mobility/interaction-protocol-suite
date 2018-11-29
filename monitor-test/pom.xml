@@ -21,7 +21,7 @@
         <db.user>jooq</db.user>
         <db.password>jooq</db.password>
 
-        <mainClass>de.fraunhofer.fit.omp.testmonitor.Application</mainClass>
+        <mainClass>de.fraunhofer.fit.ips.testmonitor.Application</mainClass>
 
         <apache-camel.version>2.21.1</apache-camel.version>
 
@@ -63,7 +63,7 @@
                                 <include>configuration.xsd</include>
                             </schemaIncludes>
                             <generateDirectory>${project.build.directory}/generated-sources/xjc-configuration</generateDirectory>
-                            <generatePackage>de.fraunhofer.fit.omp.testmonitor.configuration</generatePackage>
+                            <generatePackage>de.fraunhofer.fit.ips.testmonitor.configuration</generatePackage>
 
                             <!--<bindingDirectory>${project.basedir}/src/main/resources</bindingDirectory>-->
                             <removeOldOutput>true</removeOldOutput>
@@ -75,7 +75,7 @@
                                 <arg>-XtoString</arg>
                                 <arg>-Xdefault-value</arg>
                                 <arg>-Xvisitor</arg>
-                                <arg>-Xvisitor-package:de.fraunhofer.fit.omp.testmonitor.configuration.visitor</arg>
+                                <arg>-Xvisitor-package:de.fraunhofer.fit.ips.testmonitor.configuration.visitor</arg>
                             </args>
 
                             <plugins>
@@ -290,12 +290,12 @@
 
         <dependency>
             <groupId>de.fraunhofer.fit</groupId>
-            <artifactId>json-schema</artifactId>
+            <artifactId>proto-beans</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.fraunhofer.fit</groupId>
-            <artifactId>omp-vaas-info</artifactId>
+            <artifactId>vaas-info</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

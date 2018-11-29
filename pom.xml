@@ -26,15 +26,16 @@
         <java.version>10</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <lombok.version>1.18.2</lombok.version>
+        <lombok.version>1.18.4</lombok.version>
         <jetty.version>9.4.7.v20170914</jetty.version>
         <log4j.version>2.10.0</log4j.version>
         <saxon-he.version>9.6.0-4</saxon-he.version>
         <jackson.version>2.9.5</jackson.version>
-        <cxf.version>3.2.6</cxf.version>
+        <cxf.version>3.3.0-SNAPSHOT</cxf.version>
         <cxf-xjc.version>3.2.2</cxf-xjc.version>
         <junit-jupiter.version>5.2.0</junit-jupiter.version>
         <junit-platform.version>1.2.0</junit-platform.version>
+        <grpc.version>1.16.1</grpc.version>
     </properties>
 
     <modules>
@@ -44,6 +45,9 @@
         <module>json-schema</module>
         <module>server-report</module>
         <module>vaas-info</module>
+        <module>proto-beans</module>
+        <module>xsd-validator</module>
+        <module>grpc-server</module>
     </modules>
 
     <repositories>
@@ -54,6 +58,14 @@
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>apache-snapshots</id>
+            <name>Apache SNAPSHOT Repository</name>
+            <url>http://repository.apache.org/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -165,6 +177,32 @@
                 <artifactId>jaxb-runtime</artifactId>
                 <version>2.3.0</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>3.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty-shaded</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-testing</artifactId>
+                <version>${grpc.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -247,7 +285,10 @@
             <scope>test</scope>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>

@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <mainClass>de.fraunhofer.fit.omp.reportgenerator.Application</mainClass>
+        <mainClass>de.fraunhofer.fit.ips.reportgenerator.Application</mainClass>
 
         <xdocreport.groupId>com.github.FIT-Mobility.xdocreport</xdocreport.groupId>
         <xdocreport.version>c5cd1401b5</xdocreport.version>
@@ -220,7 +220,13 @@
     <dependencies>
         <dependency>
             <groupId>de.fraunhofer.fit</groupId>
-            <artifactId>json-schema</artifactId>
+            <artifactId>proto-beans</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.fraunhofer.fit</groupId>
+            <artifactId>xsd-validator</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
