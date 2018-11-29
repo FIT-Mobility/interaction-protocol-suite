@@ -77,18 +77,17 @@ message Response {
     MultilingualPlaintext heading_title = 4;
 }
 
-message Assertion {
-    // the actual test expression in xpath
-    string test = 1;
-    // the xpath default namespace to be used for the test in case it should differ from the one of the schema
-    string xpath_default_namespace = 2;
-    // a title given to the test (targeted at humans)
-    MultilingualPlaintext heading_title = 3;
-    // a description for the test (targeted at humans)
-    MultilingualRichtext description = 4;
-}
-
 message Function {
+    message Assertion {
+        // the actual test expression in xpath
+        string test = 1;
+        // the xpath default namespace to be used for the test in case it should differ from the one of the schema
+        string xpath_default_namespace = 2;
+        // a title given to the test (targeted at humans)
+        MultilingualPlaintext heading_title = 3;
+        // a description for the test (targeted at humans)
+        MultilingualRichtext description = 4;
+    }
     message FunctionChild {
         oneof child {
             Text text = 1;
