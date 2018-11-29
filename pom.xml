@@ -42,7 +42,6 @@
         <module>monitor-test</module>
         <module>server-demo</module>
         <module>maven-plugin-project2wsdl</module>
-        <module>json-schema</module>
         <module>server-report</module>
         <module>vaas-info</module>
         <module>proto-beans</module>
