@@ -28,7 +28,7 @@
 
         <lombok.version>1.18.4</lombok.version>
         <jetty.version>9.4.7.v20170914</jetty.version>
-        <log4j.version>2.10.0</log4j.version>
+        <log4j.version>2.11.1</log4j.version>
         <saxon-he.version>9.6.0-4</saxon-he.version>
         <jackson.version>2.9.5</jackson.version>
         <cxf.version>3.3.0-SNAPSHOT</cxf.version>
