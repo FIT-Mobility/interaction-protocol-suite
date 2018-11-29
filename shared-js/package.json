@@ -1,14 +1,17 @@
 {
-  "name": "omp-schema",
+  "name": "@ips/shared-js",
   "version": "1.0.0",
-  "description": "OMP API schemata",
+  "description": "IPS API schemata",
   "repository": "https://github.com/FIT-Mobility/interaction-protocol-suite",
   "types": "./index.d.ts",
   "author": "Fraunhofer FIT",
   "license": "Apache-2.0",
-  "private": true,
+  "private": false,
   "module": "./index.js",
   "main": "./commonjs/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "postinstall": "npm run clean && npm run build:schema && npm run build:ts",
     "build:schema": "npx --package json-schema-to-typescript json2ts ./omp-tool-project-schema.json backend.ts && mkdir commonjs && cp backend.* commonjs",

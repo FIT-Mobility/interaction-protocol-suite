@@ -1,0 +1,29 @@
+matrix:
+  include:
+    # nodejs proto files
+    - language: node_js
+      node_js: "node"
+      before_script:
+        - cd proto-node
+        - yarn install
+      script:
+        - yarn build
+      #deploy:
+      #  skip_cleanup: true
+      #  provider: npm
+      #  email: $NPM_DPL_EMAIL
+      #  api_key: $NPM_DPL_TOKEN
+
+    # shared JS
+    - language: node_js
+      node_js: "node"
+      before_script:
+        - cd shared-js
+        - yarn install
+      script:
+        - yarn build
+      #deploy:
+      #  skip_cleanup: true
+      #  provider: npm
+      #  email: $NPM_DPL_EMAIL
+      #  api_key: $NPM_DPL_TOKEN
