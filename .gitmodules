@@ -1,4 +1,0 @@
-[submodule "schema"]
-	path = json-schema/src/main/resources/model-json
-	url = git@github.com:FIT-Mobility/interaction-protocol-suite.git
-	branch = schema
