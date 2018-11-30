@@ -6,10 +6,12 @@ import de.fraunhofer.fit.ips.proto.javabackend.CreateReportResponse;
 import de.fraunhofer.fit.ips.proto.javabackend.JavaBackendGrpc;
 import de.fraunhofer.fit.ips.proto.javabackend.ReportType;
 import de.fraunhofer.fit.ips.proto.javabackend.SchemaAndProjectStructure;
+import de.fraunhofer.fit.ips.proto.structure.Function;
 import de.fraunhofer.fit.ips.proto.structure.Level;
 import de.fraunhofer.fit.ips.proto.structure.MultilingualPlaintext;
 import de.fraunhofer.fit.ips.proto.structure.MultilingualRichtext;
 import de.fraunhofer.fit.ips.proto.structure.Project;
+import de.fraunhofer.fit.ips.proto.structure.Service;
 import de.fraunhofer.fit.ips.proto.structure.Text;
 import de.fraunhofer.fit.ips.proto.xsd.Schema;
 import io.grpc.inprocess.InProcessChannelBuilder;
@@ -101,6 +103,47 @@ public class SimpleTest {
                                                     .newBuilder()
                                                     .putLanguageToRichtext(PRIMARY_LANGUAGE, "<p xmlns=\"http://www.w3.org/1999/xhtml\">Der Buchungsdienst bietet zwei Funktionen:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Buchung</li><li>Stornierung</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>")
                                                     .putLanguageToRichtext(ADDITIONAL_LANGUAGE, "<p xmlns=\"http://www.w3.org/1999/xhtml\">The Booking service offers two functions:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Booking</li><li>Cancellation</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>")
+                                                    .build())
+                                            .build())
+                                    .build())
+                            .build())
+                    .build());
+            projectBuilder.addChildren(Project.ProjectChild
+                    .newBuilder()
+                    .setService(Service
+                            .newBuilder()
+                            .setIdentifier(UUID.randomUUID().toString())
+                            .setName("ExampleService")
+                            .setHeadingTitle(MultilingualPlaintext.newBuilder()
+                                                                  .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Beispieldienst")
+                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "example service")
+                                                                  .build())
+                            .addChildren(Service.ServiceChild
+                                    .newBuilder()
+                                    .setFunction(Function
+                                            .newBuilder()
+                                            .setIdentifier(UUID.randomUUID().toString())
+                                            .setName("ExampleFunction")
+                                            .setHeadingTitle(MultilingualPlaintext.newBuilder()
+                                                                                  .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Beispielfunktion")
+                                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "example function")
+                                                                                  .build())
+                                            .addChildren(Function.FunctionChild
+                                                    .newBuilder()
+                                                    .setAssertion(Function.Assertion
+                                                            .newBuilder()
+                                                            .setHeadingTitle(MultilingualPlaintext.newBuilder()
+                                                                                                  .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Beispielzusicherung")
+                                                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "example assertion")
+                                                                                                  .build())
+                                                            .setTest("every $offer in GetOffersResponse/offer satisfies $offer/ArrivalTime/Deviation le GetOffersRequest/TimeFlexibility")
+//                                                            .setXpathDefaultNamespace("##targetNamespace")
+                                                            .setDescription(MultilingualRichtext
+                                                                    .newBuilder()
+                                                                    .putLanguageToRichtext(PRIMARY_LANGUAGE, "Erklärung zur Zusicherung")
+                                                                    .putLanguageToRichtext(ADDITIONAL_LANGUAGE, "Explanation of the assertion")
+                                                                    .build())
+                                                            .build())
                                                     .build())
                                             .build())
                                     .build())
