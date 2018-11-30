@@ -23,12 +23,13 @@ message CreateReportRequest {
     // reporting configuration options
     message Configuration {
         repeated string languages = 1;
-        string xsd_prefix = 2;
-        string local_prefix_if_missing = 3;
-        bool print_inheritance_in_extensions = 4;
-        bool prevent_inlining_enums = 5;
-        bool prevent_expanding_attribute_groups = 6;
-        bool prevent_expanding_element_groups = 7;
+        string xsd_documentation_language = 2;
+        string xsd_prefix = 3;
+        string local_prefix_if_missing = 4;
+        bool print_inheritance_in_extensions = 5;
+        bool prevent_inlining_enums = 6;
+        bool prevent_expanding_attribute_groups = 7;
+        bool prevent_expanding_element_groups = 8;
     }
     message Metadata {
 //        repeated string authors;
