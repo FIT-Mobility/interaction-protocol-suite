@@ -12,7 +12,7 @@
     <artifactId>proto-beans</artifactId>
 
     <properties>
-        <protoc.version>3.6.1</protoc.version>
+        <protoc.version>${protobuf.version}</protoc.version>
     </properties>
 
     <build>
