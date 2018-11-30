@@ -20,6 +20,7 @@ public class Assertion implements StructureBase {
     @Nullable final String xpathDefaultNamespace;
     @Nonnull final MultilingualPlaintext headingTitle;
     @Nonnull final MultilingualRichtext description;
+    final boolean suppressNumbering;
 
     @Override
     public void accept(final StructureVisitor visitor) {

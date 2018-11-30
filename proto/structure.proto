@@ -87,6 +87,8 @@ message Function {
         MultilingualPlaintext heading_title = 3;
         // a description for the test (targeted at humans)
         MultilingualRichtext description = 4;
+        // suppress heading numbering
+        bool suppressNumbering = 5;
     }
     message FunctionChild {
         oneof child {

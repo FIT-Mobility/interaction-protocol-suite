@@ -134,6 +134,7 @@ public class Converter {
                 .test(assertion.getTest())
                 .headingTitle(convert(assertion.getHeadingTitle()))
                 .description(convert(assertion.getDescription()))
+                .suppressNumbering(assertion.getSuppressNumbering())
                 .build();
     }
 
