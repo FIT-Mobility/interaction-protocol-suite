@@ -28,6 +28,13 @@ public class CaptionHelper {
                 stringBeforeConceptWithTrailingSpace, bookmarkHelper, stringAfterConceptWithLeadingSpace);
     }
 
+    public void createAssertionCaption(final String stringBeforeConceptWithTrailingSpace,
+                                       final BookmarkHelper bookmarkHelper,
+                                       final String stringAfterConceptWithLeadingSpace) {
+        createAssertionCaption(cursorHelper, bookmarkRegistry,
+                stringBeforeConceptWithTrailingSpace, bookmarkHelper, stringAfterConceptWithLeadingSpace);
+    }
+
     public static void createTableCaption(final CursorHelper cursorHelper, final BookmarkRegistry bookmarkRegistry,
                                           final String stringBeforeConceptWithTrailingSpace,
                                           final BookmarkHelper bookmarkHelper,
@@ -46,6 +53,15 @@ public class CaptionHelper {
                 "Figure ", "Abbildung", VdvStyle.GRAFIKTITEL);
     }
 
+    public static void createAssertionCaption(final CursorHelper cursorHelper, final BookmarkRegistry bookmarkRegistry,
+                                              final String stringBeforeConceptWithTrailingSpace,
+                                              final BookmarkHelper bookmarkHelper,
+                                              final String stringAfterConceptWithLeadingSpace) {
+        createFloatCaption(cursorHelper, bookmarkRegistry,
+                stringBeforeConceptWithTrailingSpace, bookmarkHelper, stringAfterConceptWithLeadingSpace,
+                "Assertion ", "Assertion", VdvStyle.CAPTION);
+    }
+
     public static void createFloatCaption(final CursorHelper cursorHelper,
                                           final BookmarkRegistry bookmarkRegistry,
                                           final String stringBeforeConceptWithTrailingSpace,
@@ -56,8 +72,7 @@ public class CaptionHelper {
                                           final VdvStyle style) {
         final XWPFParagraph paragraph = cursorHelper.createParagraph();
         style.applyTo(paragraph);
-        try (final BookmarkRegistry.Helper ignored = bookmarkRegistry.createBookmark(paragraph, bookmarkHelper
-                .toFloatLabel())) {
+        try (final BookmarkRegistry.Helper ignored = bookmarkRegistry.createBookmark(paragraph, bookmarkHelper.toFloatLabel())) {
             paragraph.createRun().setText(floatTypeNameWithTrailingSpace);
             paragraph.createRun().getCTR().addNewFldChar().setFldCharType(STFldCharTypeImpl.BEGIN);
             {
@@ -70,8 +85,7 @@ public class CaptionHelper {
             paragraph.createRun().getCTR().addNewFldChar().setFldCharType(STFldCharTypeImpl.END);
         }
         paragraph.createRun().setText(": " + stringBeforeConceptWithTrailingSpace);
-        try (final BookmarkRegistry.Helper ignored = bookmarkRegistry.createBookmark(paragraph, bookmarkHelper
-                .toConceptLabel())) {
+        try (final BookmarkRegistry.Helper ignored = bookmarkRegistry.createBookmark(paragraph, bookmarkHelper.toConceptLabel())) {
             paragraph.createRun().setText(bookmarkHelper.getOriginalName());
         }
         paragraph.createRun().setText(stringAfterConceptWithLeadingSpace);

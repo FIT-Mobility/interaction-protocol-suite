@@ -5,6 +5,7 @@ import com.google.common.collect.Iterators;
 import de.fraunhofer.fit.ips.model.template.Assertion;
 import de.fraunhofer.fit.ips.model.template.Function;
 import de.fraunhofer.fit.ips.model.template.Level;
+import de.fraunhofer.fit.ips.model.template.MultilingualRichtext;
 import de.fraunhofer.fit.ips.model.template.Particle;
 import de.fraunhofer.fit.ips.model.template.Project;
 import de.fraunhofer.fit.ips.model.template.Request;
@@ -28,6 +29,7 @@ import de.fraunhofer.fit.ips.reportgenerator.reporter.poi.ParagraphHelper;
 import de.fraunhofer.fit.ips.reportgenerator.reporter.poi.VdvStyle;
 import de.fraunhofer.fit.ips.reportgenerator.reporter.poi.VdvTables;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.PositionInParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -35,11 +37,15 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.UUID;
+import java.util.function.BiConsumer;
 
 /**
  * @author Fabian Ohler <fabian.ohler1@rwth-aachen.de>
  */
+@Slf4j
 public class StructureEmbedder {
     public static Reporter.RichtextMarkerManager embed(final Schema schema, final Project project,
                                                        final ReportConfiguration reportConfiguration,
@@ -69,8 +75,9 @@ public class StructureEmbedder {
 
     private static void replaceParagraphWithMainPart(final Context context, final XWPFParagraph paragraph) {
         try (final CursorHelper cursorHelper = context.newCursorHelper(paragraph)) {
+            final MyStructureVisitor structureVisitor = new MyStructureVisitor(context, cursorHelper, new ParagraphHelper(cursorHelper), 1);
             for (final StructureBase child : context.getProject().getChildren()) {
-                child.accept(new MyStructureVisitor(context, cursorHelper, 1));
+                child.accept(structureVisitor);
             }
         } finally {
             context.getDocument().removeBodyElement(context.getDocument().getPosOfParagraph(paragraph));
@@ -81,36 +88,47 @@ public class StructureEmbedder {
     private static class MyStructureVisitor implements StructureVisitor {
         final Context context;
         final CursorHelper cursorHelper;
+        final ParagraphHelper paragraphHelper;
         final int oneBasedDepth;
+
+        interface SpecialPartEmbedder {
+            void embed(final String language, final boolean primary);
+        }
 
         private <T extends InnerNode> void createHeadingAndHandleChildren(final T innerNode,
                                                                           final boolean suppressNumbering,
-                                                                          final Runnable specialPart) {
-            final ParagraphHelper paragraphHelper = new ParagraphHelper(cursorHelper);
-
+                                                                          final SpecialPartEmbedder specialPart) {
             final List<String> languages = context.getReportConfiguration().getLanguages();
             final Map<String, String> languageToHeading = innerNode.getHeadingTitle().getLanguageToPlaintext();
 
             final Iterator<String> setLanguages = Iterators.filter(languages.iterator(), languageToHeading::containsKey);
             if (!setLanguages.hasNext()) {
                 // FIXME log / warn ?!
+                log.error("no heading set for element " + innerNode.toString());
                 return;
             }
             final String primaryLanguage = setLanguages.next();
 
             paragraphHelper.createHeading(VdvStyle.getHeadingLevel(oneBasedDepth, true), languageToHeading.get(primaryLanguage), suppressNumbering);
 
-            specialPart.run();
+            specialPart.embed(primaryLanguage, true);
 
             final PrimaryLanguageVisitor primaryLanguageVisitor = new PrimaryLanguageVisitor(context, cursorHelper, paragraphHelper, primaryLanguage);
-            final Iterator<StructureBase> childIterator = innerNode.getChildren().iterator();
-            while (childIterator.hasNext() && !primaryLanguageVisitor.innerNodeFound) {
+            final ListIterator<StructureBase> childIterator = innerNode.getChildren().listIterator();
+            while (childIterator.hasNext()) {
                 childIterator.next().accept(primaryLanguageVisitor);
+                if (primaryLanguageVisitor.innerNodeFound) {
+                    childIterator.previous();
+                    break;
+                }
             }
             final List<StructureBase> leavesFound = primaryLanguageVisitor.leavesFound;
             while (setLanguages.hasNext()) {
                 final String additionalLanguage = setLanguages.next();
                 paragraphHelper.createEnHeading(VdvStyle.getHeadingLevel(oneBasedDepth, false), languageToHeading.get(additionalLanguage), suppressNumbering);
+
+                specialPart.embed(additionalLanguage, false);
+
                 final AdditionalLanguageVisitor additionalLanguageVisitor = new AdditionalLanguageVisitor(context, cursorHelper, paragraphHelper, additionalLanguage);
                 for (final StructureBase structureBase : leavesFound) {
                     structureBase.accept(additionalLanguageVisitor);
@@ -118,7 +136,7 @@ public class StructureEmbedder {
             }
             // iterate over the rest
             if (childIterator.hasNext()) {
-                final MyStructureVisitor oneDeeper = new MyStructureVisitor(context, cursorHelper, 1 + oneBasedDepth);
+                final MyStructureVisitor oneDeeper = new MyStructureVisitor(context, cursorHelper, paragraphHelper, 1 + oneBasedDepth);
                 while (childIterator.hasNext()) {
                     childIterator.next().accept(oneDeeper);
                 }
@@ -127,7 +145,35 @@ public class StructureEmbedder {
 
         @Override
         public void visit(final Assertion assertion) {
-            // FIXME render assertions
+            final String assertionID = UUID.randomUUID().toString();
+            createHeadingAndHandleChildren(assertion, assertion.isSuppressNumbering(), (language, primary) -> {
+                // render ml-doc
+                placeMarkerForRichtext(context, paragraphHelper, assertion.getDescription(), language);
+                if (primary) {
+                    // render test as referencable float
+
+                    // FIXME implement rendering test as referencable float
+
+                    final ParagraphHelper.RunHelper runHelper = paragraphHelper.createRunHelper(VdvStyle.BLOCK_TEXT);
+                    runHelper.code(assertion.getTest());
+                    if (null != assertion.getXpathDefaultNamespace()) {
+                        runHelper.lineBreak();
+                        runHelper.code("xpathDefaultNamespace: ").code(assertion.getXpathDefaultNamespace());
+                    }
+                    final BookmarkHelper bookmarkHelper = new BookmarkHelper(assertionID, assertion.getHeadingTitle().getLanguageToPlaintext().get(language));
+                    final CaptionHelper captionHelper = new CaptionHelper(cursorHelper, context.getBookmarkRegistry());
+                    captionHelper.createAssertionCaption("", bookmarkHelper, "");
+                } else {
+                    // render reference to test-float
+                    // FIXME: strings should be language-dependent
+                    final BookmarkHelper bookmarkHelper = new BookmarkHelper(assertionID);
+                    paragraphHelper.createRunHelper(VdvStyle.NORMAL)
+                                   .text("Assertion ")
+                                   .bookmarkRef(bookmarkHelper, BookmarkHelper::toConceptLabel)
+                                   .text(" is defined in ")
+                                   .bookmarkRef(bookmarkHelper, BookmarkHelper::toFloatLabel);
+                }
+            });
         }
 
         @Override
@@ -136,14 +182,14 @@ public class StructureEmbedder {
 
         @Override
         public void visit(final Function function) {
-            createHeadingAndHandleChildren(function, false, () -> {
+            createHeadingAndHandleChildren(function, false, (language, primary) -> {
                 // TODO are there special function parts? if yes, print here
             });
         }
 
         @Override
         public void visit(final Level level) {
-            createHeadingAndHandleChildren(level, level.isSuppressNumbering(), () -> {
+            createHeadingAndHandleChildren(level, level.isSuppressNumbering(), (language, primary) -> {
             });
         }
 
@@ -153,21 +199,21 @@ public class StructureEmbedder {
 
         @Override
         public void visit(final Request request) {
-            createHeadingAndHandleChildren(request, false, () -> {
+            createHeadingAndHandleChildren(request, false, (language, primary) -> {
                 // TODO are there special request parts? if yes, print here
             });
         }
 
         @Override
         public void visit(final Response response) {
-            createHeadingAndHandleChildren(response, false, () -> {
+            createHeadingAndHandleChildren(response, false, (language, primary) -> {
                 // TODO are there special response parts? if yes, print here
             });
         }
 
         @Override
         public void visit(final Service service) {
-            createHeadingAndHandleChildren(service, false, () -> {
+            createHeadingAndHandleChildren(service, false, (language, primary) -> {
                 // TODO are there special service parts? if yes, print here
             });
         }
@@ -179,7 +225,12 @@ public class StructureEmbedder {
 
     private static void placeMarkerForRichtext(final Context context, final ParagraphHelper paragraphHelper,
                                                final Text text, final String language) {
-        final String richtext = text.getRtContent().getLanguageToRichtext().get(language);
+        placeMarkerForRichtext(context, paragraphHelper, text.getRtContent(), language);
+    }
+
+    private static void placeMarkerForRichtext(final Context context, final ParagraphHelper paragraphHelper,
+                                               final MultilingualRichtext multilingualRichtext, final String language) {
+        final String richtext = multilingualRichtext.getLanguageToRichtext().get(language);
         final String marker = context.getRichtextMarkerManager().newMarkerForRichtext(richtext);
         paragraphHelper.createRunHelper(VdvStyle.NORMAL).mergefield(marker);
     }
@@ -200,12 +251,12 @@ public class StructureEmbedder {
         }
 
         @Override
-        public void visit(final Particle datatype) {
-            leavesFound.add(datatype);
+        public void visit(final Particle particle) {
+            leavesFound.add(particle);
             final CaptionHelper captionHelper = new CaptionHelper(cursorHelper, context.getBookmarkRegistry());
-            final NamedConceptWithOrigin concept = context.getConcept(datatype.getName());
+            final NamedConceptWithOrigin concept = context.getConcept(particle.getName());
             if (null == concept) {
-                throw new RuntimeException("could not find datatype " + datatype.getName());
+                throw new RuntimeException("could not find particle " + particle.getName());
             }
             concept.accept(new NamedConceptWithOriginVisitor() {
                 @Override

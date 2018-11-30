@@ -30,7 +30,8 @@ public enum VdvStyle {
     CAPTION("Caption"),
     DIENSTEZCHN("DiensteZchn"),
     LISTPARAGRAPH("ListParagraph"),
-    NORMAL("Normal");
+    NORMAL("Normal"),
+    BLOCK_TEXT("BlockText");
 
     @Getter final String styleId;
 

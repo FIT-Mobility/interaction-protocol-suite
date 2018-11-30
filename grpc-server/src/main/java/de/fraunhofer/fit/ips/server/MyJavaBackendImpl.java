@@ -26,6 +26,7 @@ import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.namespace.QName;
 import java.io.IOException;
@@ -33,6 +34,7 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -40,6 +42,7 @@ import java.util.function.Supplier;
 /**
  * @author Fabian Ohler <fabian.ohler1@rwth-aachen.de>
  */
+@Slf4j
 public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
     private byte[] template = Utils.readResourceIntoByteArray("/DocumentationTemplate.docx");
 
@@ -56,7 +59,8 @@ public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
             try {
                 return new PdfReporter().report(generateDocxReport());
             } catch (IOException e) {
-                return null;
+                log.error(Objects.toString(e.getMessage()), e);
+                return new byte[0];
             }
         }
     }

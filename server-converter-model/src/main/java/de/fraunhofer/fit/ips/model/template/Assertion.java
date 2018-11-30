@@ -1,5 +1,6 @@
 package de.fraunhofer.fit.ips.model.template;
 
+import de.fraunhofer.fit.ips.model.template.helper.InnerNode;
 import de.fraunhofer.fit.ips.model.template.helper.StructureBase;
 import de.fraunhofer.fit.ips.model.template.helper.StructureVisitor;
 import lombok.Builder;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Fabian Ohler <fabian.ohler1@rwth-aachen.de>
@@ -15,7 +18,7 @@ import javax.annotation.Nullable;
 @RequiredArgsConstructor
 @Getter
 @Builder
-public class Assertion implements StructureBase {
+public class Assertion implements InnerNode, StructureBase {
     @Nonnull final String test;
     @Nullable final String xpathDefaultNamespace;
     @Nonnull final MultilingualPlaintext headingTitle;
@@ -25,5 +28,10 @@ public class Assertion implements StructureBase {
     @Override
     public void accept(final StructureVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public List<StructureBase> getChildren() {
+        return Collections.emptyList();
     }
 }
