@@ -1,5 +1,6 @@
 package de.fraunhofer.fit.ips.server;
 
+import com.google.common.collect.Sets;
 import de.fraunhofer.fit.ips.proto.javabackend.CreateReportRequest;
 import de.fraunhofer.fit.ips.proto.javabackend.CreateReportResponse;
 import de.fraunhofer.fit.ips.proto.javabackend.JavaBackendGrpc;
@@ -15,11 +16,14 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
 import org.junit.Rule;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -51,7 +55,6 @@ public class SimpleTest {
                                                                   .addLanguages(PRIMARY_LANGUAGE)
                                                                   .addLanguages(ADDITIONAL_LANGUAGE)
                                                                   .build());
-        builder.addReportTypes(ReportType.REPORT_TYPE_DOCX);
         final String xsd = "<?xml version=\"1.0\"?>\n" +
                 "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\" targetNamespace=\"http://www.myshuttle.io\" xmlns:io=\"http://www.myshuttle.io\"></xs:schema>";
         final Project.Builder projectBuilder = Project.newBuilder();
@@ -109,15 +112,30 @@ public class SimpleTest {
                                                                       .setProject(project)
                                                                       .setSchema(Schema.newBuilder().setXsd(xsd).build())
                                                                       .build());
+        builder.addReportTypes(ReportType.REPORT_TYPE_DOCX);
+        builder.addReportTypes(ReportType.REPORT_TYPE_PDF);
         final CreateReportRequest request = builder.build();
         final CreateReportResponse response = blockingStub.createReport(request);
-        assertEquals(1, response.getReportsCount());
-        final CreateReportResponse.Report report = response.getReports(0);
-        try (final FileOutputStream out = new FileOutputStream("target/simple-test-result.docx")) {
-            out.write(report.getReport().toByteArray());
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
+        assertEquals(2, response.getReportsCount());
+        final Set<ReportType> resultReportTypes = response.getReportsList().stream().map(CreateReportResponse.Report::getReportType).collect(Collectors.toSet());
+        Assertions.assertEquals(Sets.newHashSet(ReportType.REPORT_TYPE_DOCX, ReportType.REPORT_TYPE_PDF), resultReportTypes);
+        for (final CreateReportResponse.Report report : response.getReportsList()) {
+            switch (report.getReportType()) {
+                case REPORT_TYPE_PDF:
+                    try (final FileOutputStream out = new FileOutputStream("target/simple-test-result.pdf")) {
+                        out.write(report.getReport().toByteArray());
+                    } catch (final IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                case REPORT_TYPE_DOCX:
+                    try (final FileOutputStream out = new FileOutputStream("target/simple-test-result.docx")) {
+                        out.write(report.getReport().toByteArray());
+                    } catch (final IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+            }
         }
-        assertEquals(ReportType.REPORT_TYPE_DOCX, report.getReportType());
     }
 }
