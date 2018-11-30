@@ -1,7 +1,14 @@
 package de.fraunhofer.fit.ips.server;
 
 import com.google.protobuf.ByteString;
+import de.fraunhofer.fit.ips.Utils;
 import de.fraunhofer.fit.ips.model.IllegalDocumentStructureException;
+import de.fraunhofer.fit.ips.model.converter.Converter;
+import de.fraunhofer.fit.ips.model.parser.XSDParser;
+import de.fraunhofer.fit.ips.model.template.Project;
+import de.fraunhofer.fit.ips.model.template.helper.StructureBase;
+import de.fraunhofer.fit.ips.model.xsd.Schema;
+import de.fraunhofer.fit.ips.particleassignment.ParticleScopeAnalyzer;
 import de.fraunhofer.fit.ips.proto.javabackend.AssignTypesRequest;
 import de.fraunhofer.fit.ips.proto.javabackend.AssignTypesResponse;
 import de.fraunhofer.fit.ips.proto.javabackend.CreateReportRequest;
@@ -10,57 +17,66 @@ import de.fraunhofer.fit.ips.proto.javabackend.JavaBackendGrpc;
 import de.fraunhofer.fit.ips.proto.javabackend.ReportType;
 import de.fraunhofer.fit.ips.proto.javabackend.ValidationRequest;
 import de.fraunhofer.fit.ips.proto.javabackend.ValidationResponse;
-import de.fraunhofer.fit.ips.reportgenerator.converter2.Converter;
-import de.fraunhofer.fit.ips.reportgenerator.model.template.Project;
-import de.fraunhofer.fit.ips.reportgenerator.model.template.helper.StructureBase;
-import de.fraunhofer.fit.ips.reportgenerator.model.xsd.Schema;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.parser.XSDParser;
-import de.fraunhofer.fit.ips.reportgenerator.reporter2.ReportConfiguration;
-import de.fraunhofer.fit.ips.reportgenerator.reporter2.ReportMetadata;
-import de.fraunhofer.fit.ips.reportgenerator.reporter2.Reporter;
-import de.fraunhofer.fit.ips.reportgenerator.typeassignment.TypeScopeAnalyzer;
+import de.fraunhofer.fit.ips.reportgenerator.reporter.PdfReporter;
+import de.fraunhofer.fit.ips.reportgenerator.reporter.ReportConfiguration;
+import de.fraunhofer.fit.ips.reportgenerator.reporter.ReportMetadata;
+import de.fraunhofer.fit.ips.reportgenerator.reporter.Reporter;
 import de.fraunhofer.fit.ips.xsd.Validator;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-import javax.annotation.Nonnull;
 import javax.xml.namespace.QName;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author Fabian Ohler <fabian.ohler1@rwth-aachen.de>
  */
 public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
-    private byte[] template = read("/DocumentationTemplate.docx");
+    private byte[] template = Utils.readResourceIntoByteArray("/DocumentationTemplate.docx");
 
     public MyJavaBackendImpl() throws IOException {
     }
 
-    private static byte[] read(@Nonnull final String resourceName) throws IOException {
-        try (final InputStream inputStream = Server.class.getResourceAsStream(resourceName);
-             final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = inputStream.read(buffer)) != -1) {
-                out.write(buffer, 0, length);
+    abstract class ResultsCache {
+        @Getter(lazy = true) private final byte[] docxReport = generateDocxReport();
+        @Getter(lazy = true) private final byte[] pdfReport = generatePdfReport();
+
+        abstract byte[] generateDocxReport();
+
+        byte[] generatePdfReport() {
+            try {
+                return new PdfReporter().report(generateDocxReport());
+            } catch (IOException e) {
+                return null;
             }
-            return out.toByteArray();
         }
     }
 
+    @RequiredArgsConstructor
+    class SimpleResultsCache extends ResultsCache {
+        final Supplier<byte[]> docxReportGenerator;
+
+        @Override
+        byte[] generateDocxReport() {
+            return docxReportGenerator.get();
+        }
+    }
 
     @Override
     public void createReport(final CreateReportRequest request,
                              final StreamObserver<CreateReportResponse> responseObserver) {
-        final Schema schema = XSDParser.createFromData(request.getSchemaAndProjectStructure().getSchema().getXsd()).process();
+        final ReportConfiguration reportConfiguration = getReportConfiguration(request);
+        final Schema schema = XSDParser.createFromData(request.getSchemaAndProjectStructure().getSchema().getXsd(), reportConfiguration.getXsdPrefix())
+                                       .process(reportConfiguration.getLocalPrefixIfMissing());
         final Project project;
         try {
             project = Converter.convert(schema, request.getSchemaAndProjectStructure().getProject());
@@ -68,15 +84,10 @@ public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
             responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(e.getMessage()).withCause(e).asException());
             return;
         }
-        final ReportConfiguration reportConfiguration = getReportConfiguration(request);
 
-        // TODO fill metadata with life
-        final ReportMetadata.ReportMetadataBuilder reportMetadataBuilder = ReportMetadata.builder();
-        final CreateReportRequest.Metadata metadata = request.getMetadata();
-        final ReportMetadata reportMetadata = reportMetadataBuilder.build();
+        final ReportMetadata reportMetadata = getReportMetadata(request);
 
-        final byte[] report = Reporter.createReport(schema, project, reportConfiguration, reportMetadata, template);
-        final byte[] pdfBytes = report; // FIXME convert to pdf
+        final ResultsCache results = new SimpleResultsCache(() -> Reporter.createReport(schema, project, reportConfiguration, reportMetadata, template));
 
         final CreateReportResponse.Builder responseBuilder = CreateReportResponse.newBuilder();
         final List<ReportType> reportTypesList = request.getReportTypesList();
@@ -87,7 +98,7 @@ public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
                             CreateReportResponse.Report
                                     .newBuilder()
                                     .setReportType(reportType)
-                                    .setReport(ByteString.copyFrom(pdfBytes))
+                                    .setReport(ByteString.copyFrom(results.getPdfReport()))
                                     .build()
                     );
                     break;
@@ -96,7 +107,7 @@ public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
                             CreateReportResponse.Report
                                     .newBuilder()
                                     .setReportType(reportType)
-                                    .setReport(ByteString.copyFrom(report))
+                                    .setReport(ByteString.copyFrom(results.getDocxReport()))
                                     .build()
                     );
                     break;
@@ -106,11 +117,19 @@ public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
         responseObserver.onCompleted();
     }
 
-    private ReportConfiguration getReportConfiguration(CreateReportRequest request) {
+    private ReportMetadata getReportMetadata(final CreateReportRequest request) {
+        final ReportMetadata.ReportMetadataBuilder reportMetadataBuilder = ReportMetadata.builder();
+        // TODO fill metadata with life
+        final CreateReportRequest.Metadata metadata = request.getMetadata();
+        return reportMetadataBuilder.build();
+    }
+
+    private ReportConfiguration getReportConfiguration(final CreateReportRequest request) {
         final ReportConfiguration.ReportConfigurationBuilder configurationBuilder = ReportConfiguration.builder();
         if (request.hasConfiguration()) {
             final CreateReportRequest.Configuration configuration = request.getConfiguration();
             checkAndSet(configuration.getLanguagesList(), List::isEmpty, configurationBuilder::languages);
+            checkAndSet(configuration.getXsdDocumentationLanguage(), String::isEmpty, configurationBuilder::xsdDocumentationLanguage);
             checkAndSet(configuration.getXsdPrefix(), String::isEmpty, configurationBuilder::xsdPrefix);
             checkAndSet(configuration.getLocalPrefixIfMissing(), String::isEmpty, configurationBuilder::localPrefixIfMissing);
             configurationBuilder.expandAttributeGroups(!configuration.getPreventExpandingAttributeGroups());
@@ -130,7 +149,9 @@ public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
     @Override
     public void assignTypes(final AssignTypesRequest request,
                             final StreamObserver<AssignTypesResponse> responseObserver) {
-        final Schema schema = XSDParser.createFromData(request.getSchemaAndProjectStructure().getSchema().getXsd()).process();
+        final ReportConfiguration defaultReportConfiguration = ReportConfiguration.builder().build();
+        final Schema schema = XSDParser.createFromData(request.getSchemaAndProjectStructure().getSchema().getXsd(), defaultReportConfiguration.getXsdPrefix())
+                                       .process(defaultReportConfiguration.getLocalPrefixIfMissing());
         final Project project;
         final Map<StructureBase, String> instanceToIdentifier = new IdentityHashMap<>();
         try {
@@ -145,7 +166,7 @@ public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
             responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(e.getMessage()).withCause(e).asException());
             return;
         }
-        final Map<StructureBase, List<QName>> categorizedDanglingTypes = TypeScopeAnalyzer.categorizeDanglingTypes(schema, project);
+        final Map<StructureBase, List<QName>> categorizedDanglingTypes = ParticleScopeAnalyzer.categorizeDanglingTypes(schema, project);
         final AssignTypesResponse.Builder responseBuilder = AssignTypesResponse.newBuilder();
         for (final Map.Entry<StructureBase, List<QName>> entry : categorizedDanglingTypes.entrySet()) {
             final AssignTypesResponse.TargetIdentifierAndTypes.Builder tiatBuilder

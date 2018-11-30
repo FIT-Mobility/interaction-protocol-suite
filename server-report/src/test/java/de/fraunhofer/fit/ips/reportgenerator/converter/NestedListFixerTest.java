@@ -1,11 +1,7 @@
 package de.fraunhofer.fit.ips.reportgenerator.converter;
 
-import de.fraunhofer.fit.ips.reportgenerator.converter2.NestedListFixer;
+import de.fraunhofer.fit.ips.model.converter.NestedListFixer;
 import org.junit.jupiter.api.Test;
-import org.xml.sax.SAXException;
-
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

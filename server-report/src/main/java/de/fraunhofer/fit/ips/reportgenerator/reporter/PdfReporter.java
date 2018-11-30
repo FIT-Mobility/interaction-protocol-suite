@@ -5,19 +5,11 @@ import com.google.common.cache.CacheBuilder;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.pdf.BaseFont;
-import de.fraunhofer.fit.ips.reportgenerator.converter.ModelConverter;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.temp.PdfConverter2;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.SchemaEmbedder;
-import de.fraunhofer.fit.ips.reportgenerator.ReportType;
 import de.fraunhofer.fit.ips.reportgenerator.Utils;
-import de.fraunhofer.fit.ips.reportgenerator.model.ReportContext;
-import de.fraunhofer.fit.ips.reportgenerator.model.ReportWrapper;
-import de.fraunhofer.fit.ips.reportgenerator.service.TemplateFinder;
+import de.fraunhofer.fit.ips.reportgenerator.reporter.temp.PdfConverter2;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
-import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.itext.extension.font.AbstractFontRegistry;
 import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
-import fr.opensagres.xdocreport.template.IContext;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.awt.Color;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,67 +32,25 @@ import java.util.concurrent.TimeUnit;
  * @since 10.11.2017
  */
 @Slf4j
-public class PdfReporter implements Reporter {
-
+public class PdfReporter {
     private final IFontProvider defaultFontProvider = CachingFontRegistry.INSTANCE;
-
-    private final ModelConverter modelConverter;
-    private final SchemaEmbedder schemaEmbedder;
-    private final TemplateFinder templateFinder;
 
     // if some wanted font (key) is not found, we replace it with a graceful fallback (value) that is bundled
     // with the application. use case: proprietary font used in template -> open-source free alternative
     private final Map<String, String> fontMapper = new HashMap<>();
+    private final FontErrorCollectingRegistry fontProvider = new FontErrorCollectingRegistry(defaultFontProvider, fontMapper);
 
-    public PdfReporter(ModelConverter modelConverter, SchemaEmbedder schemaEmbedder, TemplateFinder templateFinder) {
-        this.modelConverter = modelConverter;
-        this.schemaEmbedder = schemaEmbedder;
-        this.templateFinder = templateFinder;
-
+    public PdfReporter() {
         fontMapper.put("Arial", "Arimo");
         fontMapper.put("Calibri", "Carlito");
         fontMapper.put("Courier New", "Cousine");
         fontMapper.put("Times New Roman", "Tinos");
     }
 
-    @Override
-    public ReportType getType() {
-        return ReportType.PDF;
-    }
-
-    @Override
-    public ReportWrapper report(String templateId, String str) throws Exception {
-        IXDocReport template = templateFinder.getTemplate(templateId);
-        ReportContext context = modelConverter.getContext(template, str);
-        return handleByCollectingFontErrors(template, context);
-    }
-
-    private ReportWrapper handleByCollectingFontErrors(IXDocReport template, ReportContext context) throws Exception {
-        FontErrorCollectingRegistry fontProvider = new FontErrorCollectingRegistry(defaultFontProvider, fontMapper);
-
-        byte[] docx = getDocx(template, context);
-        byte[] pdf = getPdf(context, fontProvider, docx);
-
-        if (fontProvider.missingFonts.isEmpty()) {
-            return new ReportWrapper(getType(), pdf);
-        } else {
-            String msg = "The fonts " + fontProvider.missingFonts.toString() + " could not be found";
-            return new ReportWrapper(getType(), pdf, Collections.singletonList(msg));
-        }
-    }
-
-    private byte[] getPdf(ReportContext context, FontErrorCollectingRegistry fontProvider, byte[] docx)
-            throws IOException {
-        try (XWPFDocument docxWithSchema = schemaEmbedder.processAndReturnPOI(context.getSchema(), docx);
-             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+    public byte[] report(byte[] docx) throws IOException {
+        try (final XWPFDocument docxWithSchema = new XWPFDocument(new ByteArrayInputStream(docx));
+             final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             PdfConverter2.getInstance().convert(docxWithSchema, bos, PdfOptions.create().fontProvider(fontProvider));
-            return bos.toByteArray();
-        }
-    }
-
-    private byte[] getDocx(IXDocReport template, IContext context) throws Exception {
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            template.process(context, bos);
             return bos.toByteArray();
         }
     }

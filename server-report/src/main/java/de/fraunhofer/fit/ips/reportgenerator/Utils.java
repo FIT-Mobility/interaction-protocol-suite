@@ -5,14 +5,9 @@ import com.lowagie.text.FontFactoryImp;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SystemUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
@@ -31,28 +26,6 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public final class Utils {
-
-    public static String readToString(InputStream data) throws IOException {
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = data.read(buffer)) != -1) {
-                out.write(buffer, 0, length);
-            }
-            return out.toString(StandardCharsets.UTF_8.name());
-        }
-    }
-
-    private static void writeToFile(InputStream data, File target) throws IOException {
-        try (OutputStream out = new FileOutputStream(target)) {
-            byte[] buf = new byte[1024];
-            int length;
-            while ((length = data.read(buf)) > 0) {
-                out.write(buf, 0, length);
-            }
-        }
-    }
-
     public static String durationToHumanReadable(long millis) {
         if (millis < 0) {
             return "invalid";
@@ -94,10 +67,10 @@ public final class Utils {
      * Problem 1: FontFactory.registerDirectory(..) expects a path to a file system dir
      * Problem 2: A dir within the jar cannot be treated as a file system dir
      * Problem 3: It's not easy to traverse a dir within the jar
-     *
+     * <p>
      * Solution: Copy all fonts within the font dir from jar to a temp dir in file system, and register this
      * temp dir with FontFactory
-     *
+     * <p>
      * Help:
      * https://stackoverflow.com/questions/11012819/how-can-i-get-a-resource-folder-from-inside-my-jar-file
      * https://stackoverflow.com/questions/6247144/how-to-load-a-folder-from-a-jar
@@ -140,7 +113,7 @@ public final class Utils {
                     public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs)
                             throws IOException {
                         final File target = tempDirectory.resolve(cleanupInputString(file)).toFile();
-                        writeToFile(Utils.class.getResourceAsStream(file.toString()), target);
+                        de.fraunhofer.fit.ips.Utils.writeToFile(file.toString(), target);
                         return super.visitFile(file, attrs);
                     }
                 });
@@ -157,7 +130,7 @@ public final class Utils {
     /**
      * Paths not in {@link FontFactoryImp#registerDirectories()} or paths which are there but whose subdirectories
      * are not further explored.
-     *
+     * <p>
      * https://github.com/UnderwaterApps/overlap2d/blob/master/overlap2d/src/com/uwsoft/editor/proxy/FontManager.java
      */
     private static List<String> getOtherFontPaths() {

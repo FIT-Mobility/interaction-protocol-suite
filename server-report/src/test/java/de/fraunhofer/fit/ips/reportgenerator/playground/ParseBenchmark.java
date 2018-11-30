@@ -1,8 +1,5 @@
 package de.fraunhofer.fit.ips.reportgenerator.playground;
 
-import de.fraunhofer.fit.ips.reportgenerator.Application;
-import de.fraunhofer.fit.ips.reportgenerator.ApplicationConfig;
-import de.fraunhofer.fit.ips.reportgenerator.converter.JsonDataConverter3;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.document.SyntaxKind;
 import fr.opensagres.xdocreport.document.IXDocReport;
@@ -42,7 +39,6 @@ public class ParseBenchmark {
 
     private String json;
     private IXDocReport report;
-    private JsonDataConverter3 modelConverter3;
 
     /**
      * Main method to run benchmark
@@ -60,47 +56,47 @@ public class ParseBenchmark {
         new Runner(opt).run();
     }
 
-    @Setup
-    public final void prepare() {
-        try {
-            json = new String(
-                    Files.readAllBytes(
-                            Paths.get(ConversionFromFileToFile.class
-                                    .getClassLoader()
-                                    .getResource("jsonTestFiles/json_TEXT_100.json")
-                                    .toURI())
-                    ), StandardCharsets.UTF_8.name()
-            );
-        } catch (IOException | URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-
-        String template = ApplicationConfig.builder().build().getReportingDocxTemplate();
-
-        try (InputStream in = Application.class.getClassLoader()
-                                               .getResourceAsStream(template)) {
-
-            XDocReportRegistry registry = XDocReportRegistry.getRegistry();
-            report = registry.loadReport(in, TemplateEngineKind.Velocity);
-
-            FieldsMetadata metadata = new FieldsMetadata();
-            metadata.addFieldAsTextStyling("project.documentation", SyntaxKind.Html);
-            metadata.addFieldAsTextStyling("service.documentation", SyntaxKind.Html);
-            metadata.addFieldAsTextStyling("sequence.documentation", SyntaxKind.Html);
-            metadata.addFieldAsTextStyling("function.documentation", SyntaxKind.Html);
-            metadata.addFieldAsTextStyling("datatype.documentation", SyntaxKind.Html);
-
-            report.setFieldsMetadata(metadata);
-            modelConverter3 = new JsonDataConverter3();
-
-        } catch (IOException | XDocReportException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Benchmark
-    public void toContext3Bench(Blackhole bh) throws Exception {
-        IContext ctx = modelConverter3.getContext(report, json);
-        bh.consume(ctx);
-    }
+//    @Setup
+//    public final void prepare() {
+//        try {
+//            json = new String(
+//                    Files.readAllBytes(
+//                            Paths.get(ConversionFromFileToFile.class
+//                                    .getClassLoader()
+//                                    .getResource("jsonTestFiles/json_TEXT_100.json")
+//                                    .toURI())
+//                    ), StandardCharsets.UTF_8.name()
+//            );
+//        } catch (IOException | URISyntaxException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        String template = ApplicationConfig.builder().build().getReportingDocxTemplate();
+//
+//        try (InputStream in = Application.class.getClassLoader()
+//                                               .getResourceAsStream(template)) {
+//
+//            XDocReportRegistry registry = XDocReportRegistry.getRegistry();
+//            report = registry.loadReport(in, TemplateEngineKind.Velocity);
+//
+//            FieldsMetadata metadata = new FieldsMetadata();
+//            metadata.addFieldAsTextStyling("project.documentation", SyntaxKind.Html);
+//            metadata.addFieldAsTextStyling("service.documentation", SyntaxKind.Html);
+//            metadata.addFieldAsTextStyling("sequence.documentation", SyntaxKind.Html);
+//            metadata.addFieldAsTextStyling("function.documentation", SyntaxKind.Html);
+//            metadata.addFieldAsTextStyling("datatype.documentation", SyntaxKind.Html);
+//
+//            report.setFieldsMetadata(metadata);
+//            modelConverter3 = new JsonDataConverter3();
+//
+//        } catch (IOException | XDocReportException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//
+//    @Benchmark
+//    public void toContext3Bench(Blackhole bh) throws Exception {
+//        IContext ctx = modelConverter3.getContext(report, json);
+//        bh.consume(ctx);
+//    }
 }

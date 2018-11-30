@@ -1,43 +1,13 @@
 package de.fraunhofer.fit.ips.reportgenerator.playground;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import de.fraunhofer.fit.ips.reportgenerator.model.template.Function;
-import de.fraunhofer.fit.ips.reportgenerator.model.xsd.Documentations;
-import de.fraunhofer.fit.ips.reportgenerator.model.xsd.Element;
-import de.fraunhofer.fit.ips.reportgenerator.model.xsd.Origin;
-import de.fraunhofer.fit.ips.reportgenerator.model.xsd.Schema;
-import de.fraunhofer.fit.ips.reportgenerator.model.xsd.Type;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.parser.XSDParser;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.poi.BookmarkHelper;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.poi.BookmarkRegistry;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.poi.CaptionHelper;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.poi.Context;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.poi.CursorHelper;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.poi.OperationsTableHelper;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.poi.ParagraphHelper;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.poi.PrefixHelper;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.poi.VdvStyle;
-import de.fraunhofer.fit.ips.reportgenerator.reporter.xsd.poi.VdvTables;
+import de.fraunhofer.fit.ips.model.template.Function;
+import de.fraunhofer.fit.ips.model.xsd.Documentations;
+import de.fraunhofer.fit.ips.model.xsd.Element;
+import de.fraunhofer.fit.ips.model.xsd.Origin;
+import de.fraunhofer.fit.ips.model.xsd.Schema;
+import de.fraunhofer.fit.ips.model.xsd.Type;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.xwpf.usermodel.PositionInParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-
-import javax.xml.namespace.QName;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * @author Fabian Ohler <fabian.ohler1@rwth-aachen.de>

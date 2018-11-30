@@ -30,87 +30,87 @@
 
             <!-- http://www.mojohaus.org/xml-maven-plugin/ -->
             <!--<plugin>-->
-                <!--<groupId>org.codehaus.mojo</groupId>-->
-                <!--<artifactId>xml-maven-plugin</artifactId>-->
-                <!--<version>1.0</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>transform</goal>-->
-                        <!--</goals>-->
-                        <!--<phase>generate-resources</phase>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<configuration>-->
-                    <!--<transformationSets>-->
-                        <!--<transformationSet>-->
-                            <!--<dir>${project.build.testSourceDirectory}/../resources/schematron-test/</dir>-->
-                            <!--<includes>-->
-                                <!--<include>example.xsd</include>-->
-                            <!--</includes>-->
-                            <!--<stylesheet>${project.build.testSourceDirectory}/../resources/schematron/ExtractSchFromXSD-2.xsl</stylesheet>-->
-                            <!--<outputDir>${project.build.directory}/generated-resources/schematron-test</outputDir>-->
-                            <!--<fileMappers>-->
-                                <!--<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.MergeFileMapper">-->
-                                    <!--<targetName>extracted.sch</targetName>-->
-                                <!--</fileMapper>-->
-                            <!--</fileMappers>-->
-                        <!--</transformationSet>-->
-                        <!--<transformationSet>-->
-                            <!--<dir>${project.build.directory}/generated-resources/schematron-test/</dir>-->
-                            <!--<includes>-->
-                                <!--<include>extracted.sch</include>-->
-                            <!--</includes>-->
-                            <!--<stylesheet>${project.build.testSourceDirectory}/../resources/schematron/iso_svrl_for_xslt2.xsl</stylesheet>-->
-                            <!--<outputDir>${project.build.directory}/generated-resources/schematron-test</outputDir>-->
-                            <!--<fileMappers>-->
-                                <!--<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.MergeFileMapper">-->
-                                    <!--<targetName>validator.xsl</targetName>-->
-                                <!--</fileMapper>-->
-                            <!--</fileMappers>-->
-                        <!--</transformationSet>-->
-                        <!--<transformationSet>-->
-                            <!--<dir>${project.build.testSourceDirectory}/../resources/xsd11-test/</dir>-->
-                            <!--<includes>-->
-                                <!--<include>example-instance?.xml</include>-->
-                            <!--</includes>-->
-                            <!--<stylesheet>${project.build.directory}/generated-resources/schematron-test/validator.xsl</stylesheet>-->
-                            <!--<outputDir>${project.build.directory}/generated-resources/schematron-test</outputDir>-->
-                            <!--<fileMappers>-->
-                                <!--<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.MergeFileMapper">-->
-                                    <!--<targetName>result.svrl</targetName>-->
-                                <!--</fileMapper>-->
-                            <!--</fileMappers>-->
-                        <!--</transformationSet>-->
-                    <!--</transformationSets>-->
-                <!--</configuration>-->
-                <!--<dependencies>-->
-                    <!--<dependency>-->
-                        <!--<groupId>net.sf.saxon</groupId>-->
-                        <!--<artifactId>Saxon-HE</artifactId>-->
-                        <!--<version>9.6.0-4</version>-->
-                    <!--</dependency>-->
-                <!--</dependencies>-->
+            <!--<groupId>org.codehaus.mojo</groupId>-->
+            <!--<artifactId>xml-maven-plugin</artifactId>-->
+            <!--<version>1.0</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<goals>-->
+            <!--<goal>transform</goal>-->
+            <!--</goals>-->
+            <!--<phase>generate-resources</phase>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--<configuration>-->
+            <!--<transformationSets>-->
+            <!--<transformationSet>-->
+            <!--<dir>${project.build.testSourceDirectory}/../resources/schematron-test/</dir>-->
+            <!--<includes>-->
+            <!--<include>example.xsd</include>-->
+            <!--</includes>-->
+            <!--<stylesheet>${project.build.testSourceDirectory}/../resources/schematron/ExtractSchFromXSD-2.xsl</stylesheet>-->
+            <!--<outputDir>${project.build.directory}/generated-resources/schematron-test</outputDir>-->
+            <!--<fileMappers>-->
+            <!--<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.MergeFileMapper">-->
+            <!--<targetName>extracted.sch</targetName>-->
+            <!--</fileMapper>-->
+            <!--</fileMappers>-->
+            <!--</transformationSet>-->
+            <!--<transformationSet>-->
+            <!--<dir>${project.build.directory}/generated-resources/schematron-test/</dir>-->
+            <!--<includes>-->
+            <!--<include>extracted.sch</include>-->
+            <!--</includes>-->
+            <!--<stylesheet>${project.build.testSourceDirectory}/../resources/schematron/iso_svrl_for_xslt2.xsl</stylesheet>-->
+            <!--<outputDir>${project.build.directory}/generated-resources/schematron-test</outputDir>-->
+            <!--<fileMappers>-->
+            <!--<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.MergeFileMapper">-->
+            <!--<targetName>validator.xsl</targetName>-->
+            <!--</fileMapper>-->
+            <!--</fileMappers>-->
+            <!--</transformationSet>-->
+            <!--<transformationSet>-->
+            <!--<dir>${project.build.testSourceDirectory}/../resources/xsd11-test/</dir>-->
+            <!--<includes>-->
+            <!--<include>example-instance?.xml</include>-->
+            <!--</includes>-->
+            <!--<stylesheet>${project.build.directory}/generated-resources/schematron-test/validator.xsl</stylesheet>-->
+            <!--<outputDir>${project.build.directory}/generated-resources/schematron-test</outputDir>-->
+            <!--<fileMappers>-->
+            <!--<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.MergeFileMapper">-->
+            <!--<targetName>result.svrl</targetName>-->
+            <!--</fileMapper>-->
+            <!--</fileMappers>-->
+            <!--</transformationSet>-->
+            <!--</transformationSets>-->
+            <!--</configuration>-->
+            <!--<dependencies>-->
+            <!--<dependency>-->
+            <!--<groupId>net.sf.saxon</groupId>-->
+            <!--<artifactId>Saxon-HE</artifactId>-->
+            <!--<version>9.6.0-4</version>-->
+            <!--</dependency>-->
+            <!--</dependencies>-->
             <!--</plugin>-->
 
             <!--<plugin>-->
-                <!--<groupId>com.helger.maven</groupId>-->
-                <!--<artifactId>ph-schematron-maven-plugin</artifactId>-->
-                <!--<version>5.0.1</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>process-resources</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>validate</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<configuration>-->
-                    <!--<schematronFile>${project.build.directory}/generated-resources/schematron-test/extracted.sch</schematronFile>-->
-                    <!--<xmlDirectory>${project.build.testSourceDirectory}/../resources/schematron-test/</xmlDirectory>-->
-                    <!--&lt;!&ndash;<svrlDirectory>${project.build.directory}/testing/svrl</svrlDirectory>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<svrlErrorDirectory>${project.build.directory}/testing/svrl-error</svrlErrorDirectory>&ndash;&gt;-->
-                <!--</configuration>-->
+            <!--<groupId>com.helger.maven</groupId>-->
+            <!--<artifactId>ph-schematron-maven-plugin</artifactId>-->
+            <!--<version>5.0.1</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<phase>process-resources</phase>-->
+            <!--<goals>-->
+            <!--<goal>validate</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--<configuration>-->
+            <!--<schematronFile>${project.build.directory}/generated-resources/schematron-test/extracted.sch</schematronFile>-->
+            <!--<xmlDirectory>${project.build.testSourceDirectory}/../resources/schematron-test/</xmlDirectory>-->
+            <!--&lt;!&ndash;<svrlDirectory>${project.build.directory}/testing/svrl</svrlDirectory>&ndash;&gt;-->
+            <!--&lt;!&ndash;<svrlErrorDirectory>${project.build.directory}/testing/svrl-error</svrlErrorDirectory>&ndash;&gt;-->
+            <!--</configuration>-->
             <!--</plugin>-->
 
             <plugin>
@@ -155,23 +155,23 @@
 
 
             <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-shade-plugin</artifactId>-->
-                <!--<version>3.1.0</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>shade</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<minimizeJar>false</minimizeJar>-->
-                            <!--<createDependencyReducedPom>false</createDependencyReducedPom>-->
-                            <!--<transformers>-->
-                                <!--<transformer-->
-                                        <!--implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
-                                    <!--<mainClass>${mainClass}</mainClass>-->
-                                <!--</transformer>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-shade-plugin</artifactId>-->
+            <!--<version>3.1.0</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<phase>package</phase>-->
+            <!--<goals>-->
+            <!--<goal>shade</goal>-->
+            <!--</goals>-->
+            <!--<configuration>-->
+            <!--<minimizeJar>false</minimizeJar>-->
+            <!--<createDependencyReducedPom>false</createDependencyReducedPom>-->
+            <!--<transformers>-->
+            <!--<transformer-->
+            <!--implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
+            <!--<mainClass>${mainClass}</mainClass>-->
+            <!--</transformer>-->
 
             <!--&lt;!&ndash; https://issues.apache.org/jira/browse/LOG4J2-673 &ndash;&gt;-->
             <!--&lt;!&ndash; https://issues.apache.org/jira/browse/LOG4J2-1659 &ndash;&gt;-->
@@ -221,6 +221,21 @@
         <dependency>
             <groupId>de.fraunhofer.fit</groupId>
             <artifactId>proto-beans</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.fraunhofer.fit</groupId>
+            <artifactId>server-base</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.fraunhofer.fit</groupId>
+            <artifactId>server-converter-xsd</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.fraunhofer.fit</groupId>
+            <artifactId>server-converter-model</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

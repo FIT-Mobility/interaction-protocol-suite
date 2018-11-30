@@ -47,6 +47,10 @@
         <module>proto-beans</module>
         <module>xsd-validator</module>
         <module>grpc-server</module>
+        <module>server-particle-assigner</module>
+        <module>server-converter-model</module>
+        <module>server-converter-xsd</module>
+        <module>server-base</module>
     </modules>
 
     <repositories>
