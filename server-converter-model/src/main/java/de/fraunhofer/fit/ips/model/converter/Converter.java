@@ -126,12 +126,15 @@ public class Converter {
     }
 
     private Assertion convert(final de.fraunhofer.fit.ips.proto.structure.Function.Assertion assertion) {
-        return Assertion.builder()
-                        .test(assertion.getTest())
-                        .xpathDefaultNamespace(assertion.getXpathDefaultNamespace())
-                        .headingTitle(convert(assertion.getHeadingTitle()))
-                        .description(convert(assertion.getDescription()))
-                        .build();
+        final Assertion.AssertionBuilder assertionBuilder = Assertion.builder();
+        if (!assertion.getXpathDefaultNamespace().isEmpty()) {
+            assertionBuilder.xpathDefaultNamespace(assertion.getXpathDefaultNamespace());
+        }
+        return assertionBuilder
+                .test(assertion.getTest())
+                .headingTitle(convert(assertion.getHeadingTitle()))
+                .description(convert(assertion.getDescription()))
+                .build();
     }
 
     @Data
