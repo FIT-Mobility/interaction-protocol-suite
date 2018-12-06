@@ -303,7 +303,7 @@
         </dependency>
         <dependency>
             <groupId>${xdocreport.groupId}</groupId>
-            <artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
+            <artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
             <version>${xdocreport.version}</version>
         </dependency>
         <dependency>

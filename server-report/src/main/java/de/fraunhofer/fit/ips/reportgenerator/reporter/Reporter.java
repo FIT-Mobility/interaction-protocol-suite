@@ -26,7 +26,6 @@ import java.util.function.Function;
  * @author Fabian Ohler <fabian.ohler1@rwth-aachen.de>
  */
 public class Reporter {
-
     private static final String QUILL_SYNTAX_KIND = "quill";
 
     static {
@@ -60,7 +59,7 @@ public class Reporter {
     private static byte[] runXDocReporter(final PreparationResult result,
                                           final Consumer<Map<String, Object>> metadataInjector) {
         try {
-            final IXDocReport report = XDocReportRegistry.getRegistry().loadReport(new ByteArrayInputStream(result.docx), TemplateEngineKind.Velocity);
+            final IXDocReport report = XDocReportRegistry.getRegistry().loadReport(new ByteArrayInputStream(result.docx), TemplateEngineKind.Freemarker);
             setFieldsMetadata(report, result.richtextMarkerManager);
             final Map<String, Object> contextMap = result.richtextMarkerManager.contextMap;
             metadataInjector.accept(contextMap);
@@ -91,7 +90,7 @@ public class Reporter {
         final Map<String, Object> contextMap = new HashMap<>();
 
         public String newMarkerForRichtext(final String richtext) {
-            final String marker = "marker-" + UUID.randomUUID().toString();
+            final String marker = "marker_" + UUID.randomUUID().toString().replace("-", "_");
             contextMap.put(marker, richtext);
             return marker;
         }
