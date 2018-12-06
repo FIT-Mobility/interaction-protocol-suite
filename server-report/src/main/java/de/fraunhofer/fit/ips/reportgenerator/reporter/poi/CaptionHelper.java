@@ -70,24 +70,23 @@ public class CaptionHelper {
                                           final String floatTypeNameWithTrailingSpace,
                                           final String sequenceName,
                                           final VdvStyle style) {
-        final XWPFParagraph paragraph = cursorHelper.createParagraph();
-        style.applyTo(paragraph);
-        try (final BookmarkRegistry.Helper ignored = bookmarkRegistry.createBookmark(paragraph, bookmarkHelper.toFloatLabel())) {
-            paragraph.createRun().setText(floatTypeNameWithTrailingSpace);
-            paragraph.createRun().getCTR().addNewFldChar().setFldCharType(STFldCharTypeImpl.BEGIN);
+        final ParagraphHelper.RunHelper runHelper = new ParagraphHelper(cursorHelper).createRunHelper(style);
+        try (final BookmarkRegistry.Helper ignored = bookmarkRegistry.createBookmark(runHelper.paragraph, bookmarkHelper.toFloatLabel())) {
+            runHelper.text(floatTypeNameWithTrailingSpace);
+            runHelper.paragraph.createRun().getCTR().addNewFldChar().setFldCharType(STFldCharTypeImpl.BEGIN);
             {
-                final CTText instrText = paragraph.createRun().getCTR().addNewInstrText();
+                final CTText instrText = runHelper.paragraph.createRun().getCTR().addNewInstrText();
                 instrText.setSpace(SpaceAttribute.Space.PRESERVE);
                 instrText.setStringValue("SEQ " + sequenceName + " \\* ARABIC ");
             }
-            paragraph.createRun().getCTR().addNewFldChar().setFldCharType(STFldCharTypeImpl.SEPARATE);
-            paragraph.createRun().setText("refresh-me");
-            paragraph.createRun().getCTR().addNewFldChar().setFldCharType(STFldCharTypeImpl.END);
+            runHelper.paragraph.createRun().getCTR().addNewFldChar().setFldCharType(STFldCharTypeImpl.SEPARATE);
+            runHelper.text("refresh-me");
+            runHelper.paragraph.createRun().getCTR().addNewFldChar().setFldCharType(STFldCharTypeImpl.END);
         }
-        paragraph.createRun().setText(": " + stringBeforeConceptWithTrailingSpace);
-        try (final BookmarkRegistry.Helper ignored = bookmarkRegistry.createBookmark(paragraph, bookmarkHelper.toConceptLabel())) {
-            paragraph.createRun().setText(bookmarkHelper.getOriginalName());
+        runHelper.text(": " + stringBeforeConceptWithTrailingSpace);
+        try (final BookmarkRegistry.Helper ignored = bookmarkRegistry.createBookmark(runHelper.paragraph, bookmarkHelper.toConceptLabel())) {
+            runHelper.text(bookmarkHelper.getOriginalName());
         }
-        paragraph.createRun().setText(stringAfterConceptWithLeadingSpace);
+        runHelper.text(stringAfterConceptWithLeadingSpace);
     }
 }

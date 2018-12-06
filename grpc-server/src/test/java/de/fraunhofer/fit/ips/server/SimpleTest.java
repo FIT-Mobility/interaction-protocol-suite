@@ -71,7 +71,7 @@ public class SimpleTest {
                             .setSuppressNumbering(true)
                             .setHeadingTitle(MultilingualPlaintext.newBuilder()
                                                                   .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Test-Level")
-                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "test level")
+                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "test level with malicious comment-start-tag [#--")
                                                                   .build())
                             .addChildren(Level.LevelChild
                                     .newBuilder()
@@ -137,7 +137,7 @@ public class SimpleTest {
                                                                                                   .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "example assertion")
                                                                                                   .build())
                                                             .setTest("every $offer in GetOffersResponse/offer satisfies $offer/ArrivalTime/Deviation le GetOffersRequest/TimeFlexibility")
-//                                                            .setXpathDefaultNamespace("##targetNamespace")
+                                                            .setXpathDefaultNamespace("##targetNamespace")
                                                             .setDescription(MultilingualRichtext
                                                                     .newBuilder()
                                                                     .putLanguageToRichtext(PRIMARY_LANGUAGE, "Erklärung zur Zusicherung")

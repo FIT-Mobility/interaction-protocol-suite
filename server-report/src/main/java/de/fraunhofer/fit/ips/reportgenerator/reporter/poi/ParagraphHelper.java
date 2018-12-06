@@ -34,11 +34,10 @@ public class ParagraphHelper {
     }
 
     public void createHeading(final VdvStyle headingStyle, final String headingText, final boolean suppressNumbering) {
-        final XWPFParagraph xwpfParagraph = headingStyle.applyTo(cursorHelper.createParagraph());
-        final XWPFRun run = xwpfParagraph.createRun();
+        final RunHelper runHelper = createRunHelper(headingStyle);
         if (suppressNumbering) {
             // add a numPr
-            final CTP p = xwpfParagraph.getCTP();
+            final CTP p = runHelper.paragraph.getCTP();
             final CTPPr ppr = Optional.ofNullable(p.getPPr())
                                       .orElseGet(p::addNewPPr);
             final CTNumPr numPr = Optional.ofNullable(ppr.getNumPr())
@@ -52,7 +51,7 @@ public class ParagraphHelper {
 //            run.setText(String.valueOf(Constants.ZERO_WIDTH_SPACE));
 //            run.addTab();
         }
-        run.setText(headingText);
+        runHelper.text(headingText);
     }
 
     public void createEnHeading(final VdvStyle headingStyle, final String headingText) {
@@ -70,17 +69,22 @@ public class ParagraphHelper {
 //        final CTPPr ppr = Optional.ofNullable(p.getPPr())
 //                                  .orElseGet(p::addNewPPr);
 //        final CTTabs tabs = Optional.ofNullable(ppr.getTabs())
-//                                      .orElseGet(ppr::addNewTabs);
+//                                    .orElseGet(ppr::addNewTabs);
 //        final CTTabStop tab = tabs.addNewTab();
 //        tab.setVal(STTabJc.LEFT);
 //        tab.setPos(left);
 
         final XWPFRun run = headingStyle.applyTo(paragraph).createRun();
         if (!suppressNumbering) {
-            run.setText(String.valueOf(Constants.ZERO_WIDTH_SPACE));
+            internalSetText(run, String.valueOf(Constants.ZERO_WIDTH_SPACE));
             run.addTab();
         }
-        run.setText(headingText);
+        internalSetText(run, headingText);
+    }
+
+    private static XWPFRun internalSetText(final XWPFRun run, final String text) {
+        run.setText("${r\"" + text + "\"}");
+        return run;
     }
 
     @RequiredArgsConstructor
@@ -98,7 +102,7 @@ public class ParagraphHelper {
 
         public RunHelper text(final String text) {
             final XWPFRun run = paragraph.createRun();
-            run.setText(text);
+            internalSetText(run, text);
             runStyler.apply(run);
             return this;
         }
@@ -109,7 +113,7 @@ public class ParagraphHelper {
 
         public RunHelper code(final String text, final VdvStyle style) {
             final XWPFRun run = paragraph.createRun();
-            run.setText(text);
+            internalSetText(run, text);
             style.applyTo(runStyler.apply(run));
             return this;
         }
@@ -137,11 +141,7 @@ public class ParagraphHelper {
                 instrText.setStringValue("REF " + target.apply(bookmarkHelper) + " \\h \\* MERGEFORMAT ");
             }
             runStyler.apply(paragraph.createRun()).getCTR().addNewFldChar().setFldCharType(STFldCharTypeImpl.SEPARATE);
-            {
-                final XWPFRun run = paragraph.createRun();
-                run.setText(bookmarkHelper.getOriginalName());
-                runStyler.apply(run);
-            }
+            text(bookmarkHelper.getOriginalName());
             runStyler.apply(paragraph.createRun()).getCTR().addNewFldChar().setFldCharType(STFldCharTypeImpl.END);
             // add empty run to prevent the text style from becoming overridden when refreshing the hyperlink
             runStyler.apply(paragraph.createRun());
@@ -153,14 +153,10 @@ public class ParagraphHelper {
             {
                 final CTText instrText = runStyler.apply(paragraph.createRun()).getCTR().addNewInstrText();
                 instrText.setSpace(SpaceAttribute.Space.PRESERVE);
-                instrText.setStringValue("MERGEFIELD $" + marker + " \\* MERGEFORMAT ");
+                instrText.setStringValue("MERGEFIELD ${" + marker + "} \\* MERGEFORMAT ");
             }
             runStyler.apply(paragraph.createRun()).getCTR().addNewFldChar().setFldCharType(STFldCharTypeImpl.SEPARATE);
-            {
-                final XWPFRun run = paragraph.createRun();
-                run.setText("«$" + marker + "»");
-                runStyler.apply(run);
-            }
+            text("«" + marker + "»");
             runStyler.apply(paragraph.createRun()).getCTR().addNewFldChar().setFldCharType(STFldCharTypeImpl.END);
             return this;
         }
