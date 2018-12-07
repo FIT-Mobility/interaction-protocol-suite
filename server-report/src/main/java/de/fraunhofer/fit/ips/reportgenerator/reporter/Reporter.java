@@ -16,6 +16,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -54,6 +55,7 @@ public class Reporter {
         // FIXME insert metadata information into context map, e.g. project title, authors, ...
         // has to be in sync with documentation template
         contextMap.put("project_title", project.getTitle());
+        contextMap.put("authors", Collections.emptyList());
     }
 
     private static byte[] runXDocReporter(final PreparationResult result,
