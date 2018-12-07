@@ -79,7 +79,7 @@ public class SimpleTest {
                                             .newBuilder()
                                             .setRtContent(MultilingualRichtext
                                                     .newBuilder()
-                                                    .putLanguageToRichtext(PRIMARY_LANGUAGE, "<p xmlns=\"http://www.w3.org/1999/xhtml\">Der Buchungsdienst bietet zwei Funktionen:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Buchung</li><li>Stornierung</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>")
+                                                    .putLanguageToRichtext(PRIMARY_LANGUAGE, "<p xmlns=\"http://www.w3.org/1999/xhtml\">Der Buchungsdienst ${octopod} bietet zwei Funktionen:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Buchung</li><li>Stornierung</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>")
                                                     .putLanguageToRichtext(ADDITIONAL_LANGUAGE, "<p xmlns=\"http://www.w3.org/1999/xhtml\">The Booking service offers two functions:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Booking</li><li>Cancellation</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>")
                                                     .build())
                                             .build())
