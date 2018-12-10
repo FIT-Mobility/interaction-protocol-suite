@@ -50,16 +50,16 @@ message CreateReportResponse {
     repeated Report reports = 1;
 }
 
-message AssignTypesRequest {
+message AssignParticlesRequest {
     SchemaAndProjectStructure schema_and_project_structure = 1;
 }
 
-message AssignTypesResponse {
-    message TargetIdentifierAndTypes {
+message AssignParticlesResponse {
+    message TargetIdentifierAndParticles {
         string identifier = 1;
         repeated structure.QName q_name = 2;
     }
-    repeated TargetIdentifierAndTypes target_identifier_and_types = 1;
+    repeated TargetIdentifierAndParticles target_identifier_and_particles = 1;
 }
 
 message ValidationRequest {
@@ -77,6 +77,6 @@ message ValidationResponse {
 
 service JavaBackend {
     rpc CreateReport (CreateReportRequest) returns (CreateReportResponse);
-    rpc AssignTypes (AssignTypesRequest) returns (AssignTypesResponse);
+    rpc AssignParticles (AssignParticlesRequest) returns (AssignParticlesResponse);
     rpc Validate (ValidationRequest) returns (ValidationResponse);
 }

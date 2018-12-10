@@ -336,7 +336,7 @@ public class Converter {
             builder.headingTitle(convert(request.getHeadingTitle()));
         }
         if (request.hasQName()) {
-            builder.datatype(determineDataTypeName(convert(request.getQName())));
+            builder.particle(determineDataTypeName(convert(request.getQName())));
         }
         builder.children(convertRequestResponseChildren(request.getChildrenList()));
         return cache.cacheAndReturn(request.getIdentifier(), builder.build());
@@ -379,7 +379,7 @@ public class Converter {
             builder.headingTitle(convert(response.getHeadingTitle()));
         }
         if (response.hasQName()) {
-            builder.datatype(determineDataTypeName(convert(response.getQName())));
+            builder.particle(determineDataTypeName(convert(response.getQName())));
         }
         builder.children(convertRequestResponseChildren(response.getChildrenList()));
         return cache.cacheAndReturn(response.getIdentifier(), builder.build());

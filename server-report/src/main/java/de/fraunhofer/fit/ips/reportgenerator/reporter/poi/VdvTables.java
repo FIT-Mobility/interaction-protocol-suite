@@ -48,8 +48,8 @@ public class VdvTables {
         final ParagraphHelper paragraphHelper = new ParagraphHelper(cursorHelper);
         final CaptionHelper captionHelper = new CaptionHelper(cursorHelper, context.bookmarkRegistry);
 
-        final Type.Complex inputDataType = (Type.Complex) Optional.ofNullable(operation.getRequest()).map(Request::getDatatype).map(context::getConcept).orElse(null);
-        final Type.Complex outputDataType = (Type.Complex) Optional.ofNullable(operation.getResponse()).map(Response::getDatatype).map(context::getConcept).orElse(null);
+        final Type.Complex inputDataType = (Type.Complex) Optional.ofNullable(operation.getRequest()).map(Request::getParticle).map(context::getConcept).orElse(null);
+        final Type.Complex outputDataType = (Type.Complex) Optional.ofNullable(operation.getResponse()).map(Response::getParticle).map(context::getConcept).orElse(null);
 
         final boolean noOutput = null == outputDataType;
         final boolean noInput = null == inputDataType;

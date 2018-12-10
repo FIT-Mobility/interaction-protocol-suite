@@ -10,6 +10,7 @@ import de.fraunhofer.fit.ips.model.template.Request;
 import de.fraunhofer.fit.ips.model.template.Response;
 import de.fraunhofer.fit.ips.model.template.Service;
 import de.fraunhofer.fit.ips.model.template.Text;
+import de.fraunhofer.fit.ips.model.template.helper.InnerNode;
 import de.fraunhofer.fit.ips.model.template.helper.RequestOrResponse;
 import de.fraunhofer.fit.ips.model.template.helper.StructureBase;
 import de.fraunhofer.fit.ips.model.template.helper.StructureVisitor;
@@ -29,24 +30,25 @@ import de.fraunhofer.fit.ips.model.xsd.Type;
 import de.fraunhofer.fit.ips.particleassignment.ParticleScopeAnalyzer.ProjectScope.ServiceScope;
 import de.fraunhofer.fit.ips.particleassignment.ParticleScopeAnalyzer.ProjectScope.ServiceScope.FunctionScope;
 import de.fraunhofer.fit.ips.particleassignment.ParticleScopeAnalyzer.ProjectScope.ServiceScope.FunctionScope.RequestOrResponseScope;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.namespace.QName;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
  * @author Fabian Ohler <fabian.ohler1@rwth-aachen.de>
  */
+@Slf4j
 public class ParticleScopeAnalyzer {
-
     enum Scope {
-        REQUEST_OR_RESPONSE, SERVICE, FUNCTION, PROJECT
+        REQUEST_OR_RESPONSE, FUNCTION, SERVICE, PROJECT
     }
 
     interface Scoped {
@@ -73,7 +75,7 @@ public class ParticleScopeAnalyzer {
         }
 
         @Override
-        public Scoped merge(Scoped other) {
+        public Scoped merge(final Scoped other) {
             return this;
         }
 
@@ -93,14 +95,16 @@ public class ParticleScopeAnalyzer {
             }
 
             @Override
-            public Scoped merge(Scoped other) {
+            public Scoped merge(final Scoped other) {
                 switch (other.getScope()) {
                     case PROJECT:
                         return other;
                     case SERVICE:
-                    case FUNCTION:
-                    case REQUEST_OR_RESPONSE:
                         return ((ServiceScope) other).service == service ? this : new ProjectScope(project);
+                    case FUNCTION:
+                        return ((FunctionScope) other).getService() == service ? this : new ProjectScope(project);
+                    case REQUEST_OR_RESPONSE:
+                        return ((RequestOrResponseScope) other).getService() == service ? this : new ProjectScope(project);
                 }
                 throw new IllegalStateException("unknown scope enum value");
             }
@@ -120,12 +124,17 @@ public class ParticleScopeAnalyzer {
                     return Scope.FUNCTION;
                 }
 
+                Service getService() {
+                    return service;
+                }
+
                 @Override
-                public Scoped merge(Scoped other) {
+                public Scoped merge(final Scoped other) {
                     switch (other.getScope()) {
                         case FUNCTION:
-                        case REQUEST_OR_RESPONSE:
                             return ((FunctionScope) other).function == function ? this : new ServiceScope(service).merge(other);
+                        case REQUEST_OR_RESPONSE:
+                            return ((RequestOrResponseScope) other).getFunction() == function ? this : new ServiceScope(service).merge(other);
                     }
                     return other.merge(this);
                 }
@@ -145,11 +154,18 @@ public class ParticleScopeAnalyzer {
                         return Scope.REQUEST_OR_RESPONSE;
                     }
 
+                    Service getService() {
+                        return service;
+                    }
+
+                    Function getFunction() {
+                        return function;
+                    }
+
                     @Override
-                    public Scoped merge(Scoped other) {
-                        switch (other.getScope()) {
-                            case REQUEST_OR_RESPONSE:
-                                return ((RequestOrResponseScope) other).requestOrResponse == requestOrResponse ? this : new FunctionScope(function).merge(other);
+                    public Scoped merge(final Scoped other) {
+                        if (Scope.REQUEST_OR_RESPONSE == other.getScope()) {
+                            return ((RequestOrResponseScope) other).requestOrResponse == requestOrResponse ? this : new FunctionScope(function).merge(other);
                         }
                         return other.merge(this);
                     }
@@ -158,38 +174,38 @@ public class ParticleScopeAnalyzer {
         }
     }
 
-    public static Map<StructureBase, List<QName>> categorizeDanglingTypes(final Schema schema, final Project project) {
+    public static Map<StructureBase, List<QName>> categorizeDanglingParticles(final Schema schema,
+                                                                              final Project project) {
         final ProjectScope projectScope = new ProjectScope(project);
 
-        // create a map from all data types within the document structure to their scope
+        // create a map from all particles within the document structure to their scope
         // since data types are only put to a single location within the document structure, the scope is unique
-        final Map<QName, Scoped> assignedTypeToScope = new HashMap<>();
+        final Map<QName, WrappedScope<? extends Scoped>> assignedParticleToScope = new HashMap<>();
         for (final StructureBase child : project.getChildren()) {
-            child.accept(new ProjectScopeVisitor(assignedTypeToScope, projectScope));
+            child.accept(new ProjectScopeVisitor(assignedParticleToScope, new WrappedScope<>(projectScope, true)));
         }
 
-        final Sets.SetView<QName> danglingTypes = Sets.difference(schema.getInternalConceptNames(), assignedTypeToScope.keySet());
-        final Set<QName> assignedTypes = assignedTypeToScope.keySet();
-
-        // analyze dependencies of assignedTypes searching for danglingTypes
-        final Map<QName, Scoped> danglingTypeToScope = new HashMap<>();
-        for (final Map.Entry<QName, Scoped> entry : assignedTypeToScope.entrySet()) {
-            final QName assignedTypeName = entry.getKey();
-            final Scoped scope = entry.getValue();
-            final NamedConceptWithOrigin namedConceptWithOrigin = schema.getConcept(assignedTypeName);
+        // analyze dependencies of assignedParticles searching for danglingParticles
+        final Map<QName, Scoped> danglingParticleToScope = new HashMap<>();
+        for (final Map.Entry<QName, WrappedScope<? extends Scoped>> entry : assignedParticleToScope.entrySet()) {
+            final QName assignedParticleName = entry.getKey();
+            // at this point, it is irrelevant whether the scope was explicit or implicit
+            final Scoped scope = entry.getValue().getScope();
+            final NamedConceptWithOrigin namedConceptWithOrigin = schema.getConcept(assignedParticleName);
             if (null == namedConceptWithOrigin) {
                 // OUCH
+                log.error("No concept found for referenced particle {}", assignedParticleName);
                 continue;
             }
-            namedConceptWithOrigin.accept(new DependenciesVisitor(schema, assignedTypes, danglingType -> danglingTypeToScope.merge(danglingType, scope, Scoped::merge)));
+            namedConceptWithOrigin.accept(new DependenciesVisitor(schema, danglingParticle -> danglingParticleToScope.merge(danglingParticle, scope, Scoped::merge)));
         }
 
-        // all unassigned types not referenced within assigned types belong to the project scope
-        for (final QName danglingType : danglingTypes) {
-            danglingTypeToScope.putIfAbsent(danglingType, projectScope);
+        // all unassigned particles not referenced within assigned particles belong to the project scope
+        for (final QName danglingParticle : Sets.difference(schema.getInternalConceptNames(), assignedParticleToScope.keySet())) {
+            danglingParticleToScope.putIfAbsent(danglingParticle, projectScope);
         }
 
-        return danglingTypeToScope.entrySet().stream().collect(
+        return danglingParticleToScope.entrySet().stream().collect(
                 Collectors.groupingBy(entry -> entry.getValue().getStructuralElement(),
                         Collectors.mapping(Map.Entry::getKey, Collectors.toList())));
     }
@@ -197,28 +213,22 @@ public class ParticleScopeAnalyzer {
     @RequiredArgsConstructor
     private static class DependenciesVisitor implements SequenceOrChoiceOrGroupRefOrElementListVisitor, NamedConceptWithOriginVisitor, AttributeVisitor {
         private final Schema schema;
-        final Set<QName> assignedTypes;
-        final Consumer<QName> danglingTypeConsumer;
+        final Consumer<QName> danglingParticlesConsumer;
 
         private void consume(final QName name) {
-            if (assignedTypes.contains(name)) {
-                return;
-            }
-            danglingTypeConsumer.accept(name);
+            danglingParticlesConsumer.accept(name);
         }
 
         @Override
         public void visit(final Sequence sequence) {
-            final List<SequenceOrChoiceOrGroupRefOrElementList> children = sequence.getParticleList();
-            for (final SequenceOrChoiceOrGroupRefOrElementList child : children) {
+            for (final SequenceOrChoiceOrGroupRefOrElementList child : sequence.getParticleList()) {
                 child.accept(this);
             }
         }
 
         @Override
         public void visit(final Choice choice) {
-            final List<SequenceOrChoiceOrGroupRefOrElementList> children = choice.getParticleList();
-            for (final SequenceOrChoiceOrGroupRefOrElementList child : children) {
+            for (final SequenceOrChoiceOrGroupRefOrElementList child : choice.getParticleList()) {
                 child.accept(this);
             }
         }
@@ -230,14 +240,12 @@ public class ParticleScopeAnalyzer {
             if (null == group || !group.getOrigin().isInternal()) {
                 return;
             }
-            consume(refName);
             group.accept(this);
         }
 
         @Override
         public void visit(final ElementList elementList) {
-            final List<Element> elements = elementList.getElements();
-            for (final Element element : elements) {
+            for (final Element element : elementList.getElements()) {
                 final QName childName = element.getDataType();
                 final NamedConceptWithOrigin concept = schema.getConcept(childName);
                 if (null != concept && concept.getOrigin().isInternal()) {
@@ -291,6 +299,7 @@ public class ParticleScopeAnalyzer {
 
         @Override
         public void visit(final Attributes.GlobalAttributeGroupDeclaration globalAttributeGroupDeclaration) {
+            consume(globalAttributeGroupDeclaration.getName());
             for (final Attributes.AttributeOrAttributeGroup attributeOrAttributeGroup : globalAttributeGroupDeclaration.getAttributes().values()) {
                 attributeOrAttributeGroup.accept(this);
             }
@@ -298,12 +307,12 @@ public class ParticleScopeAnalyzer {
 
         @Override
         public void visit(final Attributes.GlobalAttributeDeclaration globalAttributeDeclaration) {
+            consume(globalAttributeDeclaration.getName());
             final QName typeName = globalAttributeDeclaration.getType();
             final NamedConceptWithOrigin type = schema.getConcept(typeName);
             if (null == type || !type.getOrigin().isInternal()) {
                 return;
             }
-            consume(typeName);
             type.accept(this);
         }
 
@@ -314,7 +323,6 @@ public class ParticleScopeAnalyzer {
             if (null == type || !type.getOrigin().isInternal()) {
                 return;
             }
-            consume(typeName);
             type.accept(this);
         }
 
@@ -343,13 +351,14 @@ public class ParticleScopeAnalyzer {
 
 
     private static class ProjectScopeVisitor extends ScopedStructureVisitor<ProjectScope> {
-        ProjectScopeVisitor(final Map<QName, Scoped> typeToScope, final ProjectScope projectScope) {
-            super(typeToScope, projectScope);
+        ProjectScopeVisitor(final Map<QName, WrappedScope<? extends Scoped>> particleToScope,
+                            final WrappedScope<ProjectScope> projectScope) {
+            super(particleToScope, projectScope);
         }
 
         @Override
         public void visit(final Service service) {
-            final ServiceScopeVisitor serviceScopeVisitor = new ServiceScopeVisitor(typeToScope, scope.new ServiceScope(service));
+            final ServiceScopeVisitor serviceScopeVisitor = new ServiceScopeVisitor(particleToScope, new WrappedScope<>(wrappedScope.scope.new ServiceScope(service), true));
             for (final StructureBase child : service.getChildren()) {
                 child.accept(serviceScopeVisitor);
             }
@@ -357,13 +366,14 @@ public class ParticleScopeAnalyzer {
     }
 
     private static class ServiceScopeVisitor extends ScopedStructureVisitor<ServiceScope> {
-        ServiceScopeVisitor(final Map<QName, Scoped> typeToScope, final ServiceScope scope) {
-            super(typeToScope, scope);
+        ServiceScopeVisitor(final Map<QName, WrappedScope<? extends Scoped>> particleToScope,
+                            final WrappedScope<ServiceScope> wrappedScope) {
+            super(particleToScope, wrappedScope);
         }
 
         @Override
         public void visit(final Function function) {
-            final FunctionScopeVisitor functionScopeVisitor = new FunctionScopeVisitor(typeToScope, scope.new FunctionScope(function));
+            final FunctionScopeVisitor functionScopeVisitor = new FunctionScopeVisitor(particleToScope, new WrappedScope<>(wrappedScope.scope.new FunctionScope(function), true));
             for (final StructureBase child : function.getChildren()) {
                 child.accept(functionScopeVisitor);
             }
@@ -371,43 +381,63 @@ public class ParticleScopeAnalyzer {
     }
 
     private static class FunctionScopeVisitor extends ScopedStructureVisitor<FunctionScope> {
-        FunctionScopeVisitor(final Map<QName, Scoped> typeToScope,
-                             final FunctionScope scope) {
-            super(typeToScope, scope);
+        FunctionScopeVisitor(final Map<QName, WrappedScope<? extends Scoped>> particleToScope,
+                             final WrappedScope<FunctionScope> wrappedScope) {
+            super(particleToScope, wrappedScope);
+        }
+
+        private <RR extends RequestOrResponse & InnerNode> void handle(final RR requestOrResponse) {
+            final RequestOrResponseScopeVisitor requestOrResponseScopeVisitor = new RequestOrResponseScopeVisitor(particleToScope, new WrappedScope<>(wrappedScope.scope.new RequestOrResponseScope(requestOrResponse), true));
+            for (final StructureBase child : requestOrResponse.getChildren()) {
+                child.accept(requestOrResponseScopeVisitor);
+            }
         }
 
         @Override
         public void visit(final Request request) {
-            final RequestOrResponseScopeVisitor requestOrResponseScopeVisitor = new RequestOrResponseScopeVisitor(typeToScope, scope.new RequestOrResponseScope(request));
-            for (final StructureBase child : request.getChildren()) {
-                child.accept(requestOrResponseScopeVisitor);
-            }
+            handle(request);
         }
 
         @Override
         public void visit(final Response response) {
-            final RequestOrResponseScopeVisitor requestOrResponseScopeVisitor = new RequestOrResponseScopeVisitor(typeToScope, scope.new RequestOrResponseScope(response));
-            for (final StructureBase child : response.getChildren()) {
-                child.accept(requestOrResponseScopeVisitor);
-            }
+            handle(response);
         }
     }
 
     private static class RequestOrResponseScopeVisitor extends ScopedStructureVisitor<RequestOrResponseScope> {
-        RequestOrResponseScopeVisitor(final Map<QName, Scoped> typeToScope,
-                                      final RequestOrResponseScope scope) {
-            super(typeToScope, scope);
-            register(scope.getStructuralElement().getDatatype());
+        RequestOrResponseScopeVisitor(final Map<QName, WrappedScope<? extends Scoped>> particleToScope,
+                                      final WrappedScope<RequestOrResponseScope> wrappedScope) {
+            super(particleToScope, wrappedScope);
+            registerImplicit(wrappedScope.getScope().getStructuralElement().getParticle());
+        }
+    }
+
+    @Data
+    static class WrappedScope<S extends Scoped> {
+        final S scope;
+        final boolean explicit;
+
+        static WrappedScope<? extends Scoped> merge(final WrappedScope<? extends Scoped> oldValue,
+                                                    final WrappedScope<? extends Scoped> newValue) {
+            if (oldValue.explicit) {
+                return oldValue;
+            }
+            assert !newValue.isExplicit();
+            return new WrappedScope<>(oldValue.scope.merge(newValue.scope), false);
         }
     }
 
     @RequiredArgsConstructor
     private static abstract class ScopedStructureVisitor<S extends Scoped> implements StructureVisitor {
-        final Map<QName, Scoped> typeToScope;
-        final S scope;
+        final Map<QName, WrappedScope<? extends Scoped>> particleToScope;
+        final WrappedScope<S> wrappedScope;
 
-        protected void register(final QName dataTypeName) {
-            typeToScope.put(dataTypeName, scope);
+        protected void registerExplicit(final QName particleName) {
+            particleToScope.put(particleName, wrappedScope);
+        }
+
+        protected void registerImplicit(final QName particleName) {
+            particleToScope.merge(particleName, new WrappedScope<>(wrappedScope.scope, false), WrappedScope::merge);
         }
 
         @Override
@@ -418,8 +448,8 @@ public class ParticleScopeAnalyzer {
         }
 
         @Override
-        public void visit(final Particle datatype) {
-            register(datatype.getName());
+        public void visit(final Particle particle) {
+            registerExplicit(particle.getName());
         }
 
         @Override

@@ -21,7 +21,7 @@ import java.util.List;
 @Builder
 public class Response implements InnerNode, RequestOrResponse {
     @Nullable final MultilingualPlaintext headingTitle;
-    @Nullable final QName datatype;
+    @Nullable final QName particle;
     @Nonnull final List<StructureBase> children;
 
     @Override

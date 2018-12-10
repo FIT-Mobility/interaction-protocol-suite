@@ -9,8 +9,8 @@ import de.fraunhofer.fit.ips.model.template.Project;
 import de.fraunhofer.fit.ips.model.template.helper.StructureBase;
 import de.fraunhofer.fit.ips.model.xsd.Schema;
 import de.fraunhofer.fit.ips.particleassignment.ParticleScopeAnalyzer;
-import de.fraunhofer.fit.ips.proto.javabackend.AssignTypesRequest;
-import de.fraunhofer.fit.ips.proto.javabackend.AssignTypesResponse;
+import de.fraunhofer.fit.ips.proto.javabackend.AssignParticlesRequest;
+import de.fraunhofer.fit.ips.proto.javabackend.AssignParticlesResponse;
 import de.fraunhofer.fit.ips.proto.javabackend.CreateReportRequest;
 import de.fraunhofer.fit.ips.proto.javabackend.CreateReportResponse;
 import de.fraunhofer.fit.ips.proto.javabackend.JavaBackendGrpc;
@@ -151,8 +151,8 @@ public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
     }
 
     @Override
-    public void assignTypes(final AssignTypesRequest request,
-                            final StreamObserver<AssignTypesResponse> responseObserver) {
+    public void assignParticles(final AssignParticlesRequest request,
+                                final StreamObserver<AssignParticlesResponse> responseObserver) {
         final ReportConfiguration defaultReportConfiguration = ReportConfiguration.builder().build();
         final Schema schema = XSDParser.createFromData(request.getSchemaAndProjectStructure().getSchema().getXsd(), defaultReportConfiguration.getXsdPrefix())
                                        .process(defaultReportConfiguration.getLocalPrefixIfMissing());
@@ -170,19 +170,19 @@ public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
             responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(e.getMessage()).withCause(e).asException());
             return;
         }
-        final Map<StructureBase, List<QName>> categorizedDanglingTypes = ParticleScopeAnalyzer.categorizeDanglingTypes(schema, project);
-        final AssignTypesResponse.Builder responseBuilder = AssignTypesResponse.newBuilder();
-        for (final Map.Entry<StructureBase, List<QName>> entry : categorizedDanglingTypes.entrySet()) {
-            final AssignTypesResponse.TargetIdentifierAndTypes.Builder tiatBuilder
-                    = AssignTypesResponse.TargetIdentifierAndTypes.newBuilder().setIdentifier(instanceToIdentifier.get(entry.getKey()));
+        final Map<StructureBase, List<QName>> categorizedDanglingParticles = ParticleScopeAnalyzer.categorizeDanglingParticles(schema, project);
+        final AssignParticlesResponse.Builder responseBuilder = AssignParticlesResponse.newBuilder();
+        for (final Map.Entry<StructureBase, List<QName>> entry : categorizedDanglingParticles.entrySet()) {
+            final AssignParticlesResponse.TargetIdentifierAndParticles.Builder tiapBuilder
+                    = AssignParticlesResponse.TargetIdentifierAndParticles.newBuilder().setIdentifier(instanceToIdentifier.get(entry.getKey()));
             for (final QName qName : entry.getValue()) {
-                tiatBuilder.addQName(de.fraunhofer.fit.ips.proto.structure.QName
+                tiapBuilder.addQName(de.fraunhofer.fit.ips.proto.structure.QName
                         .newBuilder()
                         .setNamespaceUri(qName.getNamespaceURI())
                         .setNcName(qName.getLocalPart())
                         .build());
             }
-            responseBuilder.addTargetIdentifierAndTypes(tiatBuilder.build());
+            responseBuilder.addTargetIdentifierAndParticles(tiapBuilder.build());
         }
         responseObserver.onNext(responseBuilder.build());
         responseObserver.onCompleted();
