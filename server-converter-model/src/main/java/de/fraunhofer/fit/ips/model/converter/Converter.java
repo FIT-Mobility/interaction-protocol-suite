@@ -148,14 +148,14 @@ public class Converter {
 
         void setRequest(final Request request) {
             if (this.request != null) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("duplicate request child! request was already set to " + this.request + ", tried to set it to " + request);
             }
             this.request = request;
         }
 
         void setResponse(final Response response) {
             if (this.response != null) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("duplicate response child! response was already set to " + this.response + ", tried to set it to " + response);
             }
             this.response = response;
         }
