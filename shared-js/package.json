@@ -13,7 +13,7 @@
     "access": "public"
   },
   "scripts": {
-    "postinstall": "npm run clean && npm run build:schema && npm run build:ts",
+    "build": "npm run clean && npm run build:schema && npm run build:ts",
     "build:schema": "npx --package json-schema-to-typescript json2ts ./omp-tool-project-schema.json backend.ts && mkdir commonjs && cp backend.* commonjs",
     "build:ts": "npm run build:ts:es && npm run build:ts:cjs",
     "build:ts:es": "npx --package typescript tsc",
