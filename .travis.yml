@@ -32,3 +32,5 @@ matrix:
       language: java
       script:
         - mvn clean package -pl grpc-server -am -Djdk.tls.client.protocols="TLSv1,TLSv1.1,TLSv1.2"
+      jdk:
+        - openjdk11
