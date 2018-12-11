@@ -1,4 +1,4 @@
-package de.fraunhofer.fit;
+package de.fraunhofer.fit.ips.project2wsdl;
 
 
 import javax.xml.namespace.QName;

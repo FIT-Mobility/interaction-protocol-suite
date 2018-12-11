@@ -1,4 +1,4 @@
-package de.fraunhofer.fit;
+package de.fraunhofer.fit.ips.project2wsdl;
 
 import com.google.common.base.Charsets;
 import de.fraunhofer.fit.ips.model.Converter;
@@ -50,19 +50,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author Fabian Ohler <fabian.ohler1@rwth-aachen.de>
  */
-public class Impl {
+public class ProjectToWsdlConverter {
 
     private static final QName QNAME_TARGET_NAMESPACE = new QName("targetNamespace");
     private static final String TNS = "tns";
     private static final String PORT_PREFIX = "port_";
     private static final String SOAP_PREFIX = "soap_";
 
-    public static void createWSDL(final URL protoFilePath, final String hostname, final File outputDirectory)
+    public static void createWSDL(final URL protoSchemaAndProjectStructureURL, final String hostname,
+                                  final File outputDirectory)
             throws IOException, TransformerException, ParserConfigurationException, IllegalDocumentStructureException {
         final Project project;
         final Schema schema;
-        try (final InputStream inputStream = protoFilePath.openStream()) {
-            final SchemaAndProjectStructure createReportRequest = SchemaAndProjectStructure.parseFrom(inputStream);
+        try (final InputStream inputStream = protoSchemaAndProjectStructureURL.openStream()) {
+            final SchemaAndProjectStructure createReportRequest = SchemaAndProjectStructure.parseDelimitedFrom(inputStream);
             project = Converter.convert(createReportRequest.getProject());
             schema = createReportRequest.getSchema();
         }
@@ -142,14 +143,13 @@ public class Impl {
 
             for (final Function protoFunction : protoService.getFunctions()) {
                 final String protoFunctionName = protoFunction.getName();
-                // FIXME !!! TYPE != ELEMENT
                 final QName jsonFunctionInputElementName = protoFunction.getRequestParticle();
                 final QName jsonFunctionOutputElementName = protoFunction.getResponseParticle();
 
                 final DocumentWrapper.ElementWrapper wsdlBindingOperation = wsdlBinding.addChild(WSDL11Constants.EL_OPERATION)
                                                                                        .addPlainAttribute(WSDL11Constants.ATT_NAME, protoFunctionName);
                 wsdlBindingOperation.addChild(SOAP12BindingConstants.EL_OPERATION)
-                                    .addPlainAttribute(SOAP12BindingConstants.ATT_SOAP_ACTION, "/" + protoFunction)
+                                    .addPlainAttribute(SOAP12BindingConstants.ATT_SOAP_ACTION, "/" + protoFunctionName)
                                     .addPlainAttribute(SOAP12BindingConstants.ATT_STYLE, SOAP12BindingConstants.STYLE_DOCUMENT);
                 wsdlBindingOperation.addChild(WSDL11Constants.EL_INPUT)
                                     .addChild(SOAP12BindingConstants.EL_BODY)
@@ -236,7 +236,7 @@ public class Impl {
     }
 
     private static String downgradeXSD(final String xsd11) throws TransformerException {
-        final StreamSource xslSource = new StreamSource(Impl.class.getResource("/xsd11-assertion-remover.xsl").toExternalForm());
+        final StreamSource xslSource = new StreamSource(ProjectToWsdlConverter.class.getResource("/xsd11-assertion-remover.xsl").toExternalForm());
         final Templates templates = TransformerFactory.newInstance().newTemplates(xslSource);
         final StringWriter writer = new StringWriter();
         final StreamSource sourceSchema = new StreamSource(new ByteArrayInputStream(xsd11.getBytes(Charsets.UTF_8)), "schema.xsd");
@@ -246,7 +246,7 @@ public class Impl {
 
     private static void embedXSD(final Source withoutTypes, final String xsd, final StreamResult result)
             throws TransformerException {
-        final Templates template = TransformerFactory.newInstance().newTemplates(new StreamSource(Impl.class.getResource("/transform.xsl").toExternalForm()));
+        final Templates template = TransformerFactory.newInstance().newTemplates(new StreamSource(ProjectToWsdlConverter.class.getResource("/transform.xsl").toExternalForm()));
         final Transformer transformer = template.newTransformer();
         {
             transformer.setURIResolver((href, base) -> {

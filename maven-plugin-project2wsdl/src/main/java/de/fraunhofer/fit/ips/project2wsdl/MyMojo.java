@@ -1,4 +1,4 @@
-package de.fraunhofer.fit;
+package de.fraunhofer.fit.ips.project2wsdl;
 
 
 import de.fraunhofer.fit.ips.model.IllegalDocumentStructureException;
@@ -15,9 +15,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Goal which touches a timestamp file.
- */
 @Mojo(name = "project2wsdl", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class MyMojo extends AbstractMojo {
     /**
@@ -26,10 +23,10 @@ public class MyMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project.build.directory}", property = "outputDir", required = true)
     private File outputDirectory;
     /**
-     * Location of the json project file.
+     * Location of the proto file containing a delimited SchemaAndProjectStructure instance.
      */
     @Parameter(property = "jsonProject", required = true)
-    private String jsonProject;
+    private String protoSchemaAndProjectStructurePath;
     /**
      * Hostname prefix, e.g. http://localhost:8080/ws
      */
@@ -40,7 +37,7 @@ public class MyMojo extends AbstractMojo {
             throws MojoExecutionException {
         outputDirectory.mkdirs();
         try {
-            Impl.createWSDL(getUrl(), hostname, outputDirectory);
+            ProjectToWsdlConverter.createWSDL(getUrl(), hostname, outputDirectory);
         } catch (final IOException | TransformerException | ParserConfigurationException | IllegalDocumentStructureException e) {
             throw new MojoExecutionException("error", e);
         }
@@ -48,10 +45,10 @@ public class MyMojo extends AbstractMojo {
 
     private URL getUrl() throws MojoExecutionException {
         try {
-            return new URL(new URL(jsonProject).toExternalForm());
+            return new URL(new URL(protoSchemaAndProjectStructurePath).toExternalForm());
         } catch (MalformedURLException e) {
             try {
-                return new File(jsonProject).toURI().toURL();
+                return new File(protoSchemaAndProjectStructurePath).toURI().toURL();
             } catch (MalformedURLException e2) {
                 throw new MojoExecutionException("invalid url", e);
             }
