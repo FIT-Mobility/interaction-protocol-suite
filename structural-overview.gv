@@ -1,0 +1,67 @@
+digraph G {
+    frontend [label="frontend"];
+    js_backend [label="server-js"];
+    shared_js [label="shared-js"];
+    grpc_server [label="server-grpc"];
+    xsd_validator [label="xsd-validator"];
+    report_generator [label="server-report"];
+    server_particle_assigner [label="server-\nparticle-\nassigner"];
+    proto_beans [label="proto-beans"];
+    proto [label="proto"];
+    proto_node [label="proto-node"];
+    mongo_db [label="mongo-db"];
+    maven_plugin [label="maven-\nplugin-\nproject2wsdl"];
+    monitor_test [label="monitor-test"];
+    server_base [label="server-base"];
+    server_converter_model [label="server-\nconverter-\nmodel"];
+    server_converter_xsd [label="server-\nconverter-\nxsd"];
+    server_demo [label="server-demo"];
+    vaas_info [label="vaas-info"];
+
+    subgraph { rank=same; report_generator; xsd_validator; server_particle_assigner; }
+    subgraph { rank=same; proto_beans; proto_node; }
+    subgraph { rank=same; monitor_test; server_demo; }
+
+    // build dependencies
+    frontend -> shared_js;
+    js_backend -> shared_js;
+
+    grpc_server -> xsd_validator;
+    grpc_server -> server_particle_assigner;
+    grpc_server -> report_generator;
+    // grpc_server -> proto_beans;
+    // grpc_server -> server_base;
+
+    proto_beans -> proto;
+    proto_node -> proto;
+    js_backend -> proto_node;
+
+    server_demo -> maven_plugin;
+    server_demo -> vaas_info;
+
+    monitor_test -> proto_beans;
+    monitor_test -> vaas_info;
+
+    maven_plugin -> proto_beans;
+
+    report_generator -> server_base;
+    report_generator -> server_converter_model;
+
+    server_converter_model -> server_converter_xsd;
+    // server_converter_model -> server_base;
+    server_converter_model -> proto_beans;
+
+    server_converter_xsd -> server_base;
+
+    server_particle_assigner -> server_converter_model;
+
+    // functional dependencies
+    edge [style="dotted", dir="none"]
+    frontend -> js_backend;
+    js_backend -> grpc_server;
+    js_backend -> mongo_db;
+    monitor_test -> js_backend;
+    server_demo -> js_backend;
+    server_demo -> monitor_test;
+
+}
