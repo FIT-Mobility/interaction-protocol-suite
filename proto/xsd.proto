@@ -1,7 +1,8 @@
 syntax = "proto3";
 
-package de.fraunhofer.fit.ips.proto.xsd;
+package ips.xsd;
 
+option java_package = "de.fraunhofer.fit.ips.proto.xsd";
 option java_outer_classname = "Protobuf";
 option java_multiple_files = true;
 

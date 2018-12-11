@@ -1,7 +1,8 @@
 syntax = "proto3";
 
-package de.fraunhofer.fit.ips.proto.structure;
+package ips.structure;
 
+option java_package = "de.fraunhofer.fit.ips.proto.structure";
 option java_outer_classname = "Protobuf";
 option java_multiple_files = true;
 
