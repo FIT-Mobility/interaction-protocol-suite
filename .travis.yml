@@ -31,6 +31,5 @@ matrix:
     - name: "grpc server"
       language: java
       jdk: openjdk11
-      install:
-      script:
-        - mvn clean package -pl grpc-server -am -Djdk.tls.client.protocols="TLSv1,TLSv1.1,TLSv1.2"
+      install: mvn clean install -DskipTests -pl grpc-server -am -Djdk.tls.client.protocols="TLSv1,TLSv1.1,TLSv1.2"
+      script: mvn test -pl grpc-server -am -Djdk.tls.client.protocols="TLSv1,TLSv1.1,TLSv1.2"
