@@ -1,7 +1,7 @@
 matrix:
   include:
-    # nodejs proto files
-    - language: node_js
+    - name: "nodejs proto files"
+      language: node_js
       node_js: "node"
       before_script:
         - cd proto-node
@@ -14,8 +14,8 @@ matrix:
       #  email: $NPM_DPL_EMAIL
       #  api_key: $NPM_DPL_TOKEN
 
-    # shared JS
-    - language: node_js
+    - name: "shared JS"
+      language: node_js
       node_js: "node"
       before_script:
         - cd shared-js
