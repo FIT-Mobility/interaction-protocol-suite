@@ -20,3 +20,6 @@ Since our template makes use of proprietary fonts that we can't bundle with our 
 - system dependent mechanisms: the most common directories fonts are installed to are scanned for fonts
 - the server/data/fonts directory is mounted to /root/.fonts for docker-setups. You may place fonts into this directory to have them detected. You should, however, check that no legal issues prohibit you to do so.
 - fonts with more permissive licenses were added as fallbacks for common proprietary fonts, such as Calibri
+
+## structural overview
+![structural overview graphics](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2FFIT-Mobility%2Finteraction-protocol-suite%2Fmaster%2Fstructural-overview.gv)
