@@ -27,3 +27,8 @@ matrix:
       #  provider: npm
       #  email: $NPM_DPL_EMAIL
       #  api_key: $NPM_DPL_TOKEN
+
+    - name: "grpc server"
+      language: java
+      script:
+        - mvn clean package -pl grpc-server -am -Djdk.tls.client.protocols="TLSv1,TLSv1.1,TLSv1.2"
