@@ -21,6 +21,7 @@ import de.fraunhofer.fit.ips.model.xsd.Type;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,6 +32,7 @@ import java.util.List;
 /**
  * @author Fabian Ohler <fabian.ohler1@rwth-aachen.de>
  */
+@Slf4j
 @RequiredArgsConstructor
 public class Converter {
     final Schema schema;
@@ -388,12 +390,9 @@ public class Converter {
     private QName determineDataTypeName(final QName rrQname) throws IllegalDocumentStructureException {
         @Nullable final NamedConceptWithOrigin namedConceptWithOrigin = schema.getConcepts().get(rrQname);
         if (namedConceptWithOrigin instanceof Element) {
-            final QName dataTypeName = ((Element) namedConceptWithOrigin).getDataType();
-            final NamedConceptWithOrigin dataType = schema.getConcepts().get(dataTypeName);
-            if (dataType instanceof Type) {
-                return dataTypeName;
-            }
+            return rrQname;
         } else if (namedConceptWithOrigin instanceof Type) {
+            log.error("request / response particle identified by type instead of element");
             return rrQname;
         }
         throw new IllegalDocumentStructureException("qname could not be used to identify type of concept: " + rrQname.toString());
