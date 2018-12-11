@@ -222,7 +222,7 @@ public class Converter {
                 throw new IllegalDocumentStructureException("found two request children in function " + function.getName());
             }
             if (!request.hasQName()) {
-                throw new IllegalDocumentStructureException("found request without data type qname in function " + function.getName());
+                throw new IllegalDocumentStructureException("found request without particle qname in function " + function.getName());
             }
             this.request = convert(request.getQName());
         }
@@ -233,7 +233,7 @@ public class Converter {
                 throw new IllegalDocumentStructureException("found two request children in function " + function.getName());
             }
             if (!response.hasQName()) {
-                throw new IllegalDocumentStructureException("found response without data type qname in function " + function.getName());
+                throw new IllegalDocumentStructureException("found response without particle qname in function " + function.getName());
             }
             this.response = convert(response.getQName());
         }

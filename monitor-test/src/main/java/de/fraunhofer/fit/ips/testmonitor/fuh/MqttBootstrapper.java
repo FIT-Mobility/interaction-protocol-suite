@@ -125,7 +125,7 @@ public class MqttBootstrapper {
             final String functionSchema = DataExtractor.generateFunctionSchema(new StreamSource(dataTypeSchemaFile.toString()), new Project("FuH", Collections.singletonList(dummyService)), null);
             final FunctionValidator functionValidator = new FunctionValidator(reporter, null, Paths.get(config.getXsdDirectory(), "function-schema.xsd").toUri().toString(), functionSchema);
             for (final Function function : dummyService.getFunctions()) {
-                final QName inputElementName = function.getRequestType();
+                final QName inputElementName = function.getRequestParticle();
                 lookup.put(
                         inputElementName,
                         MqttRequestReplyFunctionInfo.builder()
@@ -134,7 +134,7 @@ public class MqttBootstrapper {
                                                     .serviceName("common")
                                                     .functionValidator(functionValidator)
                                                     .requestTopicValidator(createTopicMatcher(elementAndTopicsMap, inputElementName))
-                                                    .replyTopicValidator(createTopicMatcher(elementAndTopicsMap, function.getResponseType()))
+                                                    .replyTopicValidator(createTopicMatcher(elementAndTopicsMap, function.getResponseParticle()))
                                                     .build()
                 );
             }

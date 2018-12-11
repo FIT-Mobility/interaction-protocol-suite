@@ -13,7 +13,7 @@ import java.util.List;
 @Value
 public class Function {
     @Nonnull final String name;
-    @Nullable final QName requestType;
-    @Nullable final QName responseType;
+    @Nullable final QName requestParticle;
+    @Nullable final QName responseParticle;
     @Nonnull final List<Assertion> assertions;
 }

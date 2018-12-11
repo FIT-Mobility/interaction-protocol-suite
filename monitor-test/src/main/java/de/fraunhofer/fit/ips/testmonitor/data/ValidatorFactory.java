@@ -3,12 +3,11 @@ package de.fraunhofer.fit.ips.testmonitor.data;
 import de.fraunhofer.fit.ips.model.Converter;
 import de.fraunhofer.fit.ips.model.IllegalDocumentStructureException;
 import de.fraunhofer.fit.ips.model.simple.Project;
+import de.fraunhofer.fit.ips.proto.javabackend.SchemaAndProjectStructure;
 import de.fraunhofer.fit.ips.testmonitor.reporting.Reporter;
 import de.fraunhofer.fit.ips.testmonitor.routing.messagebased.MessageBasedFunctionInfo;
 import de.fraunhofer.fit.ips.testmonitor.validation.FunctionValidator;
 import de.fraunhofer.fit.ips.testmonitor.validation.InstanceValidator;
-import de.fraunhofer.fit.ips.proto.javabackend.CreateReportRequest;
-import de.fraunhofer.fit.ips.proto.javabackend.SchemaAndProjectStructure;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,18 +52,18 @@ public class ValidatorFactory {
     }
 
     public static RegularOperations newRegularOperations(final Reporter reporter,
-                                                         final URI jsonURI)
+                                                         final URI protoSchemaAndProjectStructureURI)
             throws IOException, TransformerException, ParserConfigurationException, SAXException, IllegalDocumentStructureException {
-        final CommonFields commonFields = CommonFields.create(jsonURI);
+        final CommonFields commonFields = CommonFields.create(protoSchemaAndProjectStructureURI);
         final InstanceValidator instanceValidator = new InstanceValidator(reporter, DATATYPE_SCHEMA_SYSTEM_ID, commonFields.dataTypeSchema);
         final FunctionValidator functionValidator = new FunctionValidator(reporter, commonFields.resourceResolver, FUNCTION_SCHEMA_SYSTEM_ID, commonFields.functionSchema);
         return new RegularOperations(instanceValidator, functionValidator, commonFields.lookup);
     }
 
     public static VaasOperations newVaasOperations(final Reporter reporter,
-                                                   final URI jsonURI)
+                                                   final URI protoSchemaAndProjectStructureURI)
             throws IOException, TransformerException, ParserConfigurationException, SAXException, IllegalDocumentStructureException {
-        final CommonFields commonFields = CommonFields.create(jsonURI);
+        final CommonFields commonFields = CommonFields.create(protoSchemaAndProjectStructureURI);
         final InstanceValidator functionValidator = new InstanceValidator(reporter, commonFields.resourceResolver, FUNCTION_SCHEMA_SYSTEM_ID, commonFields.functionSchema);
         return new VaasOperations(functionValidator, commonFields.lookup);
     }
@@ -76,15 +75,15 @@ public class ValidatorFactory {
         final HashMap<QName, MessageBasedFunctionInfo> lookup;
         final LSResourceResolver resourceResolver;
 
-        protected static CommonFields create(final URI jsonURI)
+        protected static CommonFields create(final URI protoSchemaAndProjectStructureURI)
                 throws IOException, ParserConfigurationException, TransformerException, IllegalDocumentStructureException {
             final String dataTypeSchema;
             final String functionSchema;
             final HashMap<QName, MessageBasedFunctionInfo> lookup = new HashMap<>();
             {
                 final Project project;
-                try (final InputStream inputStream = jsonURI.toURL().openStream()) {
-                    final SchemaAndProjectStructure schemaAndProjectStructure = CreateReportRequest.parseFrom(inputStream).getSchemaAndProjectStructure();
+                try (final InputStream inputStream = protoSchemaAndProjectStructureURI.toURL().openStream()) {
+                    final SchemaAndProjectStructure schemaAndProjectStructure = SchemaAndProjectStructure.parseDelimitedFrom(inputStream);
                     dataTypeSchema = schemaAndProjectStructure.getSchema().getXsd();
                     project = Converter.convert(schemaAndProjectStructure.getProject());
                 }

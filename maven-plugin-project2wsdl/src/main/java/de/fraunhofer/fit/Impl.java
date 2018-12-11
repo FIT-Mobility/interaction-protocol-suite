@@ -143,8 +143,8 @@ public class Impl {
             for (final Function protoFunction : protoService.getFunctions()) {
                 final String protoFunctionName = protoFunction.getName();
                 // FIXME !!! TYPE != ELEMENT
-                final QName jsonFunctionInputElementName = protoFunction.getRequestType();
-                final QName jsonFunctionOutputElementName = protoFunction.getResponseType();
+                final QName jsonFunctionInputElementName = protoFunction.getRequestParticle();
+                final QName jsonFunctionOutputElementName = protoFunction.getResponseParticle();
 
                 final DocumentWrapper.ElementWrapper wsdlBindingOperation = wsdlBinding.addChild(WSDL11Constants.EL_OPERATION)
                                                                                        .addPlainAttribute(WSDL11Constants.ATT_NAME, protoFunctionName);

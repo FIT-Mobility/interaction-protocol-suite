@@ -95,7 +95,7 @@ public class Application {
         public Object visit(final HttpConfiguration httpConfiguration)
                 throws TransformerException, ParserConfigurationException, IOException, SAXException, IllegalDocumentStructureException {
             final ReporterBase reporter = new ReporterBase(httpConfiguration);
-            final ValidatorFactory.RegularOperations operations = ValidatorFactory.newRegularOperations(reporter, URI.create(httpConfiguration.getJsonURI()));
+            final ValidatorFactory.RegularOperations operations = ValidatorFactory.newRegularOperations(reporter, URI.create(httpConfiguration.getProtoSchemaAndProjectStructureURI()));
             new HttpCamel(
                     httpConfiguration,
                     reporter,
@@ -126,7 +126,7 @@ public class Application {
                 throws TransformerException, ParserConfigurationException, IOException, SAXException, IllegalDocumentStructureException {
             // TODO add information about sender to reporter?!
             final VaasReporter reporter = new VaasReporter(vaasConfiguration);
-            final ValidatorFactory.RegularOperations operations = ValidatorFactory.newRegularOperations(reporter, URI.create(vaasConfiguration.getJsonURI()));
+            final ValidatorFactory.RegularOperations operations = ValidatorFactory.newRegularOperations(reporter, URI.create(vaasConfiguration.getProtoSchemaAndProjectStructureURI()));
             new VaasCamel(
                     vaasConfiguration,
                     reporter,
@@ -142,7 +142,7 @@ public class Application {
         public Object visit(final SoapConfiguration soapConfiguration)
                 throws TransformerException, ParserConfigurationException, IOException, SAXException, IllegalDocumentStructureException {
             final ReporterBase reporter = new ReporterBase(soapConfiguration);
-            final ValidatorFactory.RegularOperations operations = ValidatorFactory.newRegularOperations(reporter, URI.create(soapConfiguration.getJsonURI()));
+            final ValidatorFactory.RegularOperations operations = ValidatorFactory.newRegularOperations(reporter, URI.create(soapConfiguration.getProtoSchemaAndProjectStructureURI()));
             new SoapCamel(
                     soapConfiguration,
                     reporter,
