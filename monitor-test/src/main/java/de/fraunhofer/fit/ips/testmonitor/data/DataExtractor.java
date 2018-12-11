@@ -5,6 +5,7 @@ import de.fraunhofer.fit.ips.model.simple.Function;
 import de.fraunhofer.fit.ips.model.simple.Project;
 import de.fraunhofer.fit.ips.model.simple.Service;
 import de.fraunhofer.fit.ips.testmonitor.routing.messagebased.MessageBasedFunctionInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 
@@ -27,6 +28,7 @@ import java.util.function.Consumer;
 /**
  * @author Fabian Ohler <fabian.ohler1@rwth-aachen.de>
  */
+@Slf4j
 public class DataExtractor {
     public static String generateFunctionSchema(final Source dataTypeSchema,
                                                 final Project project,
@@ -53,8 +55,12 @@ public class DataExtractor {
                 final String functionNcname = function.getName();
                 final QName functionElementName = new QName(schemaNode.targetNamespace, functionNcname);
                 final String functionTypeName = functionElementName.getLocalPart() + "Type";
-                @Nullable final QName inputElementName = function.getRequestType(); // FIXME data type or element ???
-                @Nullable final QName outputElementName = function.getResponseType(); // FIXME data type or element ???
+                @Nullable final QName inputElementName = function.getRequestParticle();
+                if (null == inputElementName) {
+                    log.error("no input element given for function {}", functionNcname);
+                    continue;
+                }
+                @Nullable final QName outputElementName = function.getResponseParticle();
                 final List<Assertion> assertions = function.getAssertions();
                 // construct functionInfo and publish to consumer
                 if (null != functionInfoConsumer) {
