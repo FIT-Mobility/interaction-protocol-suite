@@ -11,6 +11,9 @@ import de.fraunhofer.fit.ips.proto.structure.Level;
 import de.fraunhofer.fit.ips.proto.structure.MultilingualPlaintext;
 import de.fraunhofer.fit.ips.proto.structure.MultilingualRichtext;
 import de.fraunhofer.fit.ips.proto.structure.Project;
+import de.fraunhofer.fit.ips.proto.structure.QName;
+import de.fraunhofer.fit.ips.proto.structure.Request;
+import de.fraunhofer.fit.ips.proto.structure.Response;
 import de.fraunhofer.fit.ips.proto.structure.Service;
 import de.fraunhofer.fit.ips.proto.structure.Text;
 import de.fraunhofer.fit.ips.proto.xsd.Schema;
@@ -57,8 +60,21 @@ public class SimpleTest {
                                                                   .addLanguages(PRIMARY_LANGUAGE)
                                                                   .addLanguages(ADDITIONAL_LANGUAGE)
                                                                   .build());
-        final String xsd = "<?xml version=\"1.0\"?>\n" +
-                "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\" targetNamespace=\"http://www.myshuttle.io\" xmlns:io=\"http://www.myshuttle.io\"></xs:schema>";
+        final String xsd = "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\"\n" +
+                "           targetNamespace=\"http://www.myshuttle.io\" xmlns:io=\"http://www.myshuttle.io\">\n" +
+                "    <xs:complexType name=\"ExampleRequestStructure\">\n" +
+                "        <xs:sequence>\n" +
+                "            <xs:element name=\"RequestElement\" type=\"xs:nonNegativeInteger\"/>\n" +
+                "        </xs:sequence>\n" +
+                "    </xs:complexType>\n" +
+                "    <xs:complexType name=\"ExampleResponseStructure\">\n" +
+                "        <xs:sequence>\n" +
+                "            <xs:element name=\"ResponseElement\" type=\"xs:nonNegativeInteger\"/>\n" +
+                "        </xs:sequence>\n" +
+                "    </xs:complexType>\n" +
+                "    <xs:element name=\"ExampleRequest\" type=\"io:ExampleRequestStructure\"/>\n" +
+                "    <xs:element name=\"ExampleResponse\" type=\"io:ExampleResponseStructure\"/>\n" +
+                "</xs:schema>";
         final Project.Builder projectBuilder = Project.newBuilder();
         {
             projectBuilder.setIdentifier(UUID.randomUUID().toString());
@@ -136,13 +152,38 @@ public class SimpleTest {
                                                                                                   .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Beispielzusicherung")
                                                                                                   .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "example assertion")
                                                                                                   .build())
-                                                            .setTest("every $offer in GetOffersResponse/offer satisfies $offer/ArrivalTime/Deviation le GetOffersRequest/TimeFlexibility")
+                                                            // .setTest("every $offer in GetOffersResponse/offer satisfies $offer/ArrivalTime/Deviation le GetOffersRequest/TimeFlexibility")
+                                                            .setTest("ExampleRequest/RequestElement le ExampleResponse/ResponseElement")
                                                             .setXpathDefaultNamespace("##targetNamespace")
                                                             .setDescription(MultilingualRichtext
                                                                     .newBuilder()
                                                                     .putLanguageToRichtext(PRIMARY_LANGUAGE, "Erklärung zur Zusicherung")
                                                                     .putLanguageToRichtext(ADDITIONAL_LANGUAGE, "Explanation of the assertion")
                                                                     .build())
+                                                            .build())
+                                                    .build())
+                                            .addChildren(Function.FunctionChild
+                                                    .newBuilder()
+                                                    .setRequest(Request
+                                                            .newBuilder()
+                                                            .setIdentifier(UUID.randomUUID().toString())
+                                                            .setHeadingTitle(MultilingualPlaintext.newBuilder()
+                                                                                                  .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Beispielanfrage")
+                                                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "example request")
+                                                                                                  .build())
+                                                            .setQName(QName.newBuilder().setNamespaceUri("http://www.myshuttle.io").setNcName("ExampleRequest").build())
+                                                            .build())
+                                                    .build())
+                                            .addChildren(Function.FunctionChild
+                                                    .newBuilder()
+                                                    .setResponse(Response
+                                                            .newBuilder()
+                                                            .setIdentifier(UUID.randomUUID().toString())
+                                                            .setHeadingTitle(MultilingualPlaintext.newBuilder()
+                                                                                                  .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Beispielantwort")
+                                                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "example response")
+                                                                                                  .build())
+                                                            .setQName(QName.newBuilder().setNamespaceUri("http://www.myshuttle.io").setNcName("ExampleResponse").build())
                                                             .build())
                                                     .build())
                                             .build())
