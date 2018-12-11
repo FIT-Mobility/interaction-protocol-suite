@@ -38,17 +38,21 @@ message Level {
             Text text = 1;
             Particle particle = 2;
             Level level = 3;
-            // may occur within a function at most once
+            // should occur within a function exactly once
             Request request = 4;
-            // may occur within a function at most once
+            // should occur within a function exactly once
             Response response = 5;
             Function function = 6;
             Service service = 7;
         }
     }
+    // unique identifier (at least within the scope of a single project structure)
     string identifier = 1;
+    // child elements of this structural element
     repeated LevelChild children = 2;
+    // multilingual title of the heading (in plaintext)
     MultilingualPlaintext heading_title = 3;
+    // suppresses numbering of the heading for this level
     bool suppressNumbering = 4;
 }
 
@@ -60,7 +64,9 @@ message Request {
             Level level = 3;
         }
     }
+    // unique identifier (at least within the scope of a single project structure)
     string identifier = 1;
+    // child elements of this structural element
     repeated RequestResponseChild children = 2;
     // the qualified name of the request data type / element
     QName q_name = 3;
@@ -69,7 +75,9 @@ message Request {
 }
 
 message Response {
+    // unique identifier (at least within the scope of a single project structure)
     string identifier = 1;
+    // child elements of this structural element
     repeated Request.RequestResponseChild children = 2;
     // the qualified name of the response data type / element
     QName q_name = 3;
@@ -83,7 +91,7 @@ message Function {
         string test = 1;
         // the xpath default namespace to be used for the test in case it should differ from the one of the schema
         string xpath_default_namespace = 2;
-        // a title given to the test (targeted at humans)
+        // multilingual title of the heading (in plaintext)
         MultilingualPlaintext heading_title = 3;
         // a description for the test (targeted at humans)
         MultilingualRichtext description = 4;
@@ -95,16 +103,20 @@ message Function {
             Text text = 1;
             Particle particle = 2;
             Level level = 3;
-            // may occur within a function at most once
+            // should occur within a function exactly once
             Request request = 4;
-            // may occur within a function at most once
+            // should occur within a function exactly once
             Response response = 5;
             Assertion assertion = 6;
         }
     }
+    // unique identifier (at least within the scope of a single project structure)
     string identifier = 1;
+    // child elements of this structural element
     repeated FunctionChild children = 2;
+    // this name is supposed to be used by the protocol at specification level (and maybe even on the wire, so certain restrictions w.r.t. the format may apply
     string name = 3;
+    // multilingual title of the heading (in plaintext)
     MultilingualPlaintext heading_title = 4;
 }
 
@@ -117,9 +129,13 @@ message Service {
             Function function = 4;
         }
     }
+    // unique identifier (at least within the scope of a single project structure)
     string identifier = 1;
+    // child elements of this structural element
     repeated ServiceChild children = 2;
+    // this name is supposed to be used by the protocol at specification level (and maybe even on the wire), so certain restrictions w.r.t. the format may apply
     string name = 3;
+    // multilingual title of the heading (in plaintext)
     MultilingualPlaintext heading_title = 4;
 }
 
@@ -130,7 +146,10 @@ message Project {
             Service service = 2;
         }
     }
+    // unique identifier (at least within the scope of a single project structure)
     string identifier = 1;
+    // child elements of this structural element
     repeated ProjectChild children = 2;
+    // project title
     string title = 3;
 }
