@@ -14,8 +14,8 @@
     </parent>
 
     <properties>
-        <!--<json-project.uri>http://127.0.0.1:8081/api/content/json/4b83950d-262e-4cb0-9c69-e84da8a1ce92</json-project.uri>-->
-        <json-project.uri>file:///${project.basedir}/src/main/resources/plugfest-test-proto.ser</json-project.uri>
+        <!--<protoSchemaAndProjectStructurePath>http://127.0.0.1:8081/api/content/json/4b83950d-262e-4cb0-9c69-e84da8a1ce92</protoSchemaAndProjectStructurePath>-->
+        <protoSchemaAndProjectStructurePath>file:///${project.basedir}/src/main/resources/plugfest-test-proto.ser</protoSchemaAndProjectStructurePath>
         <hostname-in-wsdl>http://localhost:8080</hostname-in-wsdl>
 
         <mainClass>de.fraunhofer.fit.ips.demoserver.Application</mainClass>
@@ -148,7 +148,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jsonProject>${json-project.uri}</jsonProject>
+                    <protoSchemaAndProjectStructurePath>${protoSchemaAndProjectStructurePath}</protoSchemaAndProjectStructurePath>
                     <hostname>${hostname-in-wsdl}</hostname>
                     <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
                 </configuration>
