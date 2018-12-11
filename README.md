@@ -23,3 +23,5 @@ Since our template makes use of proprietary fonts that we can't bundle with our 
 
 ## structural overview
 ![structural overview graphics](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2FFIT-Mobility%2Finteraction-protocol-suite%2Fmaster%2Fstructural-overview.gv)
+
+Solid lines stand for build dependencies, dotted lines depict interaction at runtime.
