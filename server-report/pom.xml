@@ -15,8 +15,6 @@
     </parent>
 
     <properties>
-        <mainClass>de.fraunhofer.fit.ips.reportgenerator.Application</mainClass>
-
         <xdocreport.groupId>com.github.FIT-Mobility.xdocreport</xdocreport.groupId>
         <xdocreport.version>c5cd1401b5</xdocreport.version>
         <!--<xdocreport.groupId>fr.opensagres.xdocreport</xdocreport.groupId>-->
@@ -27,182 +25,10 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
-
-            <!-- http://www.mojohaus.org/xml-maven-plugin/ -->
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>xml-maven-plugin</artifactId>-->
-            <!--<version>1.0</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<goals>-->
-            <!--<goal>transform</goal>-->
-            <!--</goals>-->
-            <!--<phase>generate-resources</phase>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-            <!--<transformationSets>-->
-            <!--<transformationSet>-->
-            <!--<dir>${project.build.testSourceDirectory}/../resources/schematron-test/</dir>-->
-            <!--<includes>-->
-            <!--<include>example.xsd</include>-->
-            <!--</includes>-->
-            <!--<stylesheet>${project.build.testSourceDirectory}/../resources/schematron/ExtractSchFromXSD-2.xsl</stylesheet>-->
-            <!--<outputDir>${project.build.directory}/generated-resources/schematron-test</outputDir>-->
-            <!--<fileMappers>-->
-            <!--<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.MergeFileMapper">-->
-            <!--<targetName>extracted.sch</targetName>-->
-            <!--</fileMapper>-->
-            <!--</fileMappers>-->
-            <!--</transformationSet>-->
-            <!--<transformationSet>-->
-            <!--<dir>${project.build.directory}/generated-resources/schematron-test/</dir>-->
-            <!--<includes>-->
-            <!--<include>extracted.sch</include>-->
-            <!--</includes>-->
-            <!--<stylesheet>${project.build.testSourceDirectory}/../resources/schematron/iso_svrl_for_xslt2.xsl</stylesheet>-->
-            <!--<outputDir>${project.build.directory}/generated-resources/schematron-test</outputDir>-->
-            <!--<fileMappers>-->
-            <!--<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.MergeFileMapper">-->
-            <!--<targetName>validator.xsl</targetName>-->
-            <!--</fileMapper>-->
-            <!--</fileMappers>-->
-            <!--</transformationSet>-->
-            <!--<transformationSet>-->
-            <!--<dir>${project.build.testSourceDirectory}/../resources/xsd11-test/</dir>-->
-            <!--<includes>-->
-            <!--<include>example-instance?.xml</include>-->
-            <!--</includes>-->
-            <!--<stylesheet>${project.build.directory}/generated-resources/schematron-test/validator.xsl</stylesheet>-->
-            <!--<outputDir>${project.build.directory}/generated-resources/schematron-test</outputDir>-->
-            <!--<fileMappers>-->
-            <!--<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.MergeFileMapper">-->
-            <!--<targetName>result.svrl</targetName>-->
-            <!--</fileMapper>-->
-            <!--</fileMappers>-->
-            <!--</transformationSet>-->
-            <!--</transformationSets>-->
-            <!--</configuration>-->
-            <!--<dependencies>-->
-            <!--<dependency>-->
-            <!--<groupId>net.sf.saxon</groupId>-->
-            <!--<artifactId>Saxon-HE</artifactId>-->
-            <!--<version>9.6.0-4</version>-->
-            <!--</dependency>-->
-            <!--</dependencies>-->
-            <!--</plugin>-->
-
-            <!--<plugin>-->
-            <!--<groupId>com.helger.maven</groupId>-->
-            <!--<artifactId>ph-schematron-maven-plugin</artifactId>-->
-            <!--<version>5.0.1</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<phase>process-resources</phase>-->
-            <!--<goals>-->
-            <!--<goal>validate</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-            <!--<schematronFile>${project.build.directory}/generated-resources/schematron-test/extracted.sch</schematronFile>-->
-            <!--<xmlDirectory>${project.build.testSourceDirectory}/../resources/schematron-test/</xmlDirectory>-->
-            <!--&lt;!&ndash;<svrlDirectory>${project.build.directory}/testing/svrl</svrlDirectory>&ndash;&gt;-->
-            <!--&lt;!&ndash;<svrlErrorDirectory>${project.build.directory}/testing/svrl-error</svrlErrorDirectory>&ndash;&gt;-->
-            <!--</configuration>-->
-            <!--</plugin>-->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.0.2</version>
-                <executions>
-                    <execution>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <useBaseVersion>false</useBaseVersion>
-                    <overWriteReleases>false</overWriteReleases>
-                    <overWriteSnapshots>true</overWriteSnapshots>
-                    <includeScope>runtime</includeScope>
-                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
-                <configuration>
-                    <archive>
-                        <addMavenDescriptor>true</addMavenDescriptor>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>${mainClass}</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
-
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-shade-plugin</artifactId>-->
-            <!--<version>3.1.0</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<phase>package</phase>-->
-            <!--<goals>-->
-            <!--<goal>shade</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-            <!--<minimizeJar>false</minimizeJar>-->
-            <!--<createDependencyReducedPom>false</createDependencyReducedPom>-->
-            <!--<transformers>-->
-            <!--<transformer-->
-            <!--implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
-            <!--<mainClass>${mainClass}</mainClass>-->
-            <!--</transformer>-->
-
-            <!--&lt;!&ndash; https://issues.apache.org/jira/browse/LOG4J2-673 &ndash;&gt;-->
-            <!--&lt;!&ndash; https://issues.apache.org/jira/browse/LOG4J2-1659 &ndash;&gt;-->
-            <!--<transformer implementation="com.github.edwgiz.mavenShadePlugin.log4j2CacheTransformer.PluginsCacheFileTransformer"/>-->
-            <!--</transformers>-->
-            <!--<filters>-->
-            <!--<filter>-->
-            <!--<artifact>*:*</artifact>-->
-            <!--<excludes>-->
-            <!--<exclude>META-INF/maven/**</exclude>-->
-            <!--<exclude>META-INF/*.SF</exclude>-->
-            <!--<exclude>META-INF/*.DSA</exclude>-->
-            <!--<exclude>META-INF/*.RSA</exclude>-->
-            <!--<exclude>/*.txt</exclude>-->
-            <!--<exclude>LICENSE</exclude>-->
-            <!--<exclude>NOTICE</exclude>-->
-            <!--</excludes>-->
-            <!--</filter>-->
-            <!--</filters>-->
-            <!--</configuration>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<dependencies>-->
-            <!--<dependency>-->
-            <!--<groupId>com.github.edwgiz</groupId>-->
-            <!--<artifactId>maven-shade-plugin.log4j2-cachefile-transformer</artifactId>-->
-            <!--<version>${log4j.version}</version>-->
-            <!--</dependency>-->
-            <!--</dependencies>-->
-            <!--</plugin>-->
-
         </plugins>
     </build>
 
@@ -272,11 +98,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
         </dependency>
 
         <!-- XDocReport -->
