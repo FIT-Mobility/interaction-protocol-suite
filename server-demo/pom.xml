@@ -271,7 +271,6 @@
             <groupId>de.fraunhofer.fit</groupId>
             <artifactId>vaas-info</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
