@@ -53,7 +53,7 @@ public class Application {
         final JCommander jCommander = JCommander.newBuilder()
                                                 .addObject(app)
                                                 .build();
-        jCommander.setProgramName("omp-test-monitor");
+        jCommander.setProgramName("ips-test-monitor");
         try {
             jCommander.parse(args);
         } catch (final RuntimeException e) {
