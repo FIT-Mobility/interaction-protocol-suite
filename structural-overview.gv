@@ -1,15 +1,17 @@
 digraph G {
+    proto [label="proto", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/proto"];
+    mongo_db [label="mongo-db", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/blob/master/docker-compose.yml"];
+    node [color="blue"]; // typescript
     frontend [label="frontend", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/frontend"];
     js_backend [label="server-js", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/server-js"];
     shared_js [label="shared-js", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/shared-js"];
+    proto_node [label="proto-node", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/proto_node"];
+    node [color="orange"]; // java
     grpc_server [label="server-grpc", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/server-grpc"];
     xsd_validator [label="xsd-validator", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/xsd-validator"];
     report_generator [label="server-report", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/server-report"];
     server_particle_assigner [label="server-\nparticle-\nassigner", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/server-particle-assigner"];
     proto_beans [label="proto-beans", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/proto-beans"];
-    proto [label="proto", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/proto"];
-    proto_node [label="proto-node", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/proto_node"];
-    mongo_db [label="mongo-db", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/blob/master/docker-compose.yml"];
     maven_plugin [label="maven-\nplugin-\nproject2wsdl", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/maven-plugin-project2wsdl"];
     monitor_test [label="monitor-test", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/monitor-test"];
     server_base [label="server-base", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/server-base"];
