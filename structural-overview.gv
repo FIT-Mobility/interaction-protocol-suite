@@ -1,22 +1,22 @@
 digraph G {
-    frontend [label="frontend"];
-    js_backend [label="server-js"];
-    shared_js [label="shared-js"];
-    grpc_server [label="server-grpc"];
-    xsd_validator [label="xsd-validator"];
-    report_generator [label="server-report"];
-    server_particle_assigner [label="server-\nparticle-\nassigner"];
-    proto_beans [label="proto-beans"];
-    proto [label="proto"];
-    proto_node [label="proto-node"];
-    mongo_db [label="mongo-db"];
-    maven_plugin [label="maven-\nplugin-\nproject2wsdl"];
-    monitor_test [label="monitor-test"];
-    server_base [label="server-base"];
-    server_converter_model [label="server-\nconverter-\nmodel"];
-    server_converter_xsd [label="server-\nconverter-\nxsd"];
-    server_demo [label="server-demo"];
-    vaas_info [label="vaas-info"];
+    frontend [label="frontend", URL="./frontend"];
+    js_backend [label="server-js", URL="./server-js"];
+    shared_js [label="shared-js", URL="./shared-js"];
+    grpc_server [label="server-grpc", URL="./server-grpc"];
+    xsd_validator [label="xsd-validator", URL="./xsd-validator"];
+    report_generator [label="server-report", URL="./server-report"];
+    server_particle_assigner [label="server-\nparticle-\nassigner", URL="./server-particle-assigner"];
+    proto_beans [label="proto-beans", URL="./proto-beans"];
+    proto [label="proto", URL="./proto"];
+    proto_node [label="proto-node", URL="./proto_node"];
+    mongo_db [label="mongo-db", URL="./docker-compose.yml"];
+    maven_plugin [label="maven-\nplugin-\nproject2wsdl", URL="./maven-plugin-project2wsdl"];
+    monitor_test [label="monitor-test", URL="./monitor-test"];
+    server_base [label="server-base", URL="./server-base"];
+    server_converter_model [label="server-\nconverter-\nmodel", URL="./server-converter-model"];
+    server_converter_xsd [label="server-\nconverter-\nxsd", URL="./server-converter-xsd"];
+    server_demo [label="server-demo", URL="./server-demo"];
+    vaas_info [label="vaas-info", URL="./vaas-info"];
 
     subgraph { rank=same; report_generator; xsd_validator; server_particle_assigner; }
     subgraph { rank=same; proto_beans; proto_node; }
