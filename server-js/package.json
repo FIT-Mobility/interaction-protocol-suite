@@ -1,7 +1,7 @@
 {
-  "name": "omp-server",
+  "name": "ips-js-server",
   "version": "0.1.0",
-  "description": "The OMP's backend server",
+  "description": "The IPS's js backend server",
   "repository": "https://github.com/FIT-Mobility/interaction-protocol-suite",
   "author": "Fraunhofer FIT",
   "private": true,

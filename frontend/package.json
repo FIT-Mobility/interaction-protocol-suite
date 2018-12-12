@@ -1,7 +1,7 @@
 {
-  "name": "OMP",
+  "name": "ips-site",
   "version": "1.0.0",
-  "description": "OMP tools site",
+  "description": "Interaction Protocol Specification and Validation Suite site",
   "main": "src/index.tsx",
   "repository": "https://github.com/FIT-Mobility/interaction-protocol-suite",
   "author": "Fraunhofer FIT",
