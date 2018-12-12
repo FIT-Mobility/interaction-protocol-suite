@@ -35,8 +35,8 @@ public class NestedListFixer {
     private static final String INDENTATION = "ql-indent-";
     private static final String CLASS_ATTRIBUTE = "class";
 
-    private static final String PSEUDO_ROOT_START = "<omp>";
-    private static final String PSEUDO_ROOT_END = "</omp>";
+    private static final String PSEUDO_ROOT_START = "<ROOT>";
+    private static final String PSEUDO_ROOT_END = "</ROOT>";
 
     private static final Pattern LIST_PATTERN = Pattern.compile("(.*)(<ol>|<ul>)(.*)");
 
