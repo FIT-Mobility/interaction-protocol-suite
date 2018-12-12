@@ -79,7 +79,6 @@ public class DataExtractor {
                                                                                            .setAttribute("name", functionTypeName);
 
                 final DocumentWrapper.SchemaWrapper.ElementWrapper sequence = complexType.addElement(XMLConstants.W3C_XML_SCHEMA_NS_URI, "sequence");
-                // TODO: in case the type has an output element only, this information is currently lost here, preserve in case we allow omitting one of the elements
                 createElementRef(sequence, inputElementName);
                 createElementRef(sequence, outputElementName);
 
