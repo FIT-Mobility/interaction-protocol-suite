@@ -6,6 +6,15 @@ matrix:
       script:
         - docker-compose build
 
+    - name: "frontend"
+      language: node_js
+      node_js: "10"
+      before_script:
+        - cd frontend
+        - yarn install
+      script:
+        - yarn build
+
     - name: "grpc server"
       language: java
       jdk: openjdk11
