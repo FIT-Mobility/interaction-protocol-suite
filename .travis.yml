@@ -1,5 +1,11 @@
 matrix:
   include:
+    - name: "docker compose"
+      language: generic
+      services: docker
+      script:
+        - docker-compose build
+
     - name: "nodejs proto files"
       language: node_js
       node_js: "node"
