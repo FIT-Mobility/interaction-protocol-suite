@@ -39,3 +39,12 @@ matrix:
       jdk: openjdk11
       install: mvn clean install -DskipTests -pl grpc-server -am -Djdk.tls.client.protocols="TLSv1,TLSv1.1,TLSv1.2"
       script: mvn test -pl grpc-server -am -Djdk.tls.client.protocols="TLSv1,TLSv1.1,TLSv1.2"
+
+    - name: "server JS"
+      language: node_js
+      node_js: "8"
+      before_script:
+        - cd server-js
+        - yarn install
+      script:
+        - yarn build
