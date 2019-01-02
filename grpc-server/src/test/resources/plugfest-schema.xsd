@@ -1,0 +1,359 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.myshuttle.io" xmlns:io="http://www.myshuttle.io" xpathDefaultNamespace="##targetNamespace" xmlns:fn="http://www.w3.org/2005/xpath-functions">
+    <xs:complexType name="GeneralErrorType">
+        <xs:sequence>
+            <xs:element name="SystemMessage" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Language must be English.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="UserMessage" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Language should be as configured by the customer.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="GetOffersRequest" type="io:GetOffersRequestType"></xs:element>
+    <xs:complexType name="GetOffersRequestType">
+        <xs:annotation>
+            <xs:documentation>Request datatype for GetOffers function</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="From" type="io:FlexibleGeoLocationType">
+                <xs:annotation>
+                    <xs:documentation>The (flexible) location the customer wants to be picked up from.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="To" type="io:FlexibleGeoLocationType">
+                <xs:annotation>
+                    <xs:documentation>The (flexible) location the customer wants to be brought to.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:choice>
+                <xs:element name="DepartureTime" type="xs:dateTime">
+                    <xs:annotation>
+                        <xs:documentation>The requested departure time.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="ArrivalTime" type="xs:dateTime">
+                    <xs:annotation>
+                        <xs:documentation>The requested arrival time.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+            <xs:element name="TimeFlexibility" type="xs:duration">
+                <xs:annotation>
+                    <xs:documentation>The customer's time flexiblity. Pick up has to be within [departureTime, departureTime + timeFlexibility], drop off has to be within [arrivalTime - timeFlexibility, arrivalTime].</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumberOfPassengers" type="xs:positiveInteger">
+                <xs:annotation>
+                    <xs:documentation>The number of passengers that should be transported.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FlexibleGeoLocationType">
+        <xs:annotation>
+            <xs:documentation>Type representing a flexible Geolocation.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Location" type="io:GeoLocationType">
+                <xs:annotation>
+                    <xs:documentation>Actual location.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="FlexibilityInMeters" type="xs:positiveInteger">
+                <xs:annotation>
+                    <xs:documentation>The spatial flexiblity of the user in meters. The actual location has to be within the radius of flexibilityInMeters around location.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GeoLocationType">
+        <xs:annotation>
+            <xs:documentation>Type for Geolocations.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Longitude" type="io:LongitudeType">
+                <xs:annotation>
+                    <xs:documentation>Longitudinal value of the Geolocation.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Latitude" type="io:LatitudeType">
+                <xs:annotation>
+                    <xs:documentation>Latitudinal value of the geolocation.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="LatitudeType">
+        <xs:annotation>
+            <xs:documentation>Type for latitudinal values.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:double">
+            <xs:minInclusive value="-90"></xs:minInclusive>
+            <xs:maxInclusive value="90"></xs:maxInclusive>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="LongitudeType">
+        <xs:annotation>
+            <xs:documentation>Type for longitudinal values.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:double">
+            <xs:minInclusive value="-180"></xs:minInclusive>
+            <xs:maxInclusive value="180"></xs:maxInclusive>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="GetOffersResponse" type="io:GetOffersResponseType"></xs:element>
+    <xs:complexType name="GetOffersResponseType">
+        <xs:annotation>
+            <xs:documentation> Response type for GetOffers function.</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="GetOffersSuccess" type="io:GetOffersSuccessResponseType">
+                <xs:annotation>
+                    <xs:documentation>Success element of GetOffersResponse</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="GetOffersError" type="io:GetOffersErrorResponseType">
+                <xs:annotation>
+                    <xs:documentation>Error element of GetOffersResponse</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="GetOffersSuccessResponseType">
+        <xs:annotation>
+            <xs:documentation>Success response type of the GetOffersFunction</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Offer" type="io:OfferType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Might be empty e.g. in case no offer can be made matching the requirements (e.g. we can't bring the user to his target in time)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="OfferType">
+        <xs:annotation>
+            <xs:documentation>Type containing all aspects of an offer.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="OfferID" type="xs:normalizedString">
+                <xs:annotation>
+                    <xs:documentation>ID of the offer.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="From" type="io:ActualGeoLocationType">
+                <xs:annotation>
+                    <xs:documentation>Actual pickup location.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="To" type="io:ActualGeoLocationType">
+                <xs:annotation>
+                    <xs:documentation>Actual dropoff location.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DepartureTime" type="io:ActualTimeType">
+                <xs:annotation>
+                    <xs:documentation>Actual departure time.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ArrivalTime" type="io:ActualTimeType">
+                <xs:annotation>
+                    <xs:documentation>Actual arrival time.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PriceInEuroCents" type="xs:nonNegativeInteger">
+                <xs:annotation>
+                    <xs:documentation>Price in Eurocents.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OfferValidUntil" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>Point in time until which the offer is valid.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ActualGeoLocationType">
+        <xs:annotation>
+            <xs:documentation>Type to represent an actual pick up or drop off location including the walkway from the desired location.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Location" type="io:GeoLocationType">
+                <xs:annotation>
+                    <xs:documentation>Actual location</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="WalkWayInMeters" type="xs:nonNegativeInteger">
+                <xs:annotation>
+                    <xs:documentation>Meters the passenger(s) have to walk to/from the location</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ActualTimeType">
+        <xs:annotation>
+            <xs:documentation>Type to represent an actual departure of arrival time including the deviation from the desired time.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Time" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>Actual time.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Deviation" type="xs:duration">
+                <xs:annotation>
+                    <xs:documentation>Deviation from the desired time.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GetOffersErrorResponseType">
+        <xs:annotation>
+            <xs:documentation>Error response type of GetOffersFunction</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="io:GeneralErrorType">
+                <xs:sequence>
+                    <xs:element name="Reason" type="io:GetOffersErrorCodeType">
+                        <xs:annotation>
+                            <xs:documentation>Error code</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="GetOffersErrorCodeType">
+        <xs:annotation>
+            <xs:documentation>Enumeration for the GetOffersFunction error codes.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="FROM_OUTSIDE_OF_SERVICE_AREA">
+                <xs:annotation>
+                    <xs:documentation>From location is outside of service area.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TO_OUTSIDE_OF_SERVICE_AREA">
+                <xs:annotation>
+                    <xs:documentation>To location is outside of service area.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DEPARTURE_IN_THE_PAST">
+                <xs:annotation>
+                    <xs:documentation>Departure time lies in the past.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ARRIVAL_IN_THE_PAST">
+                <xs:annotation>
+                    <xs:documentation>Arrival time lies in the past.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="OUTSIDE_OF_SERVICE_HOURS">
+                <xs:annotation>
+                    <xs:documentation>Request is outside of service hours.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="INTERNAL_SERVER_ERROR">
+                <xs:annotation>
+                    <xs:documentation>Internal server error.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="BookingRequest" type="io:BookingRequestType"></xs:element>
+    <xs:complexType name="BookingRequestType">
+        <xs:annotation>
+            <xs:documentation>Request datatype for the BookingFunction</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="OfferID" type="xs:normalizedString">
+                <xs:annotation>
+                    <xs:documentation>ID of an offer obtained via the GetOffersFunction</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CustomerID" type="xs:normalizedString">
+                <xs:annotation>
+                    <xs:documentation>ID of the customer</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="BookingResponse" type="io:BookingResponseType"></xs:element>
+    <xs:complexType name="BookingResponseType">
+        <xs:annotation>
+            <xs:documentation>ResponseType of the BookingFunction</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="BookingSuccess" type="io:BookingSuccessResponseType">
+                <xs:annotation>
+                    <xs:documentation>Success element</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BookingError" type="io:BookingErrorResponseType">
+                <xs:annotation>
+                    <xs:documentation>Error element</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="BookingSuccessResponseType">
+        <xs:annotation>
+            <xs:documentation>Success response type of the BookingFunction</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="VehicleID" type="xs:normalizedString">
+                <xs:annotation>
+                    <xs:documentation>Information for the customer to identify the vehicle, e.g. license plate or something more abstract like bus line 33.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BookingID" type="xs:normalizedString">
+                <xs:annotation>
+                    <xs:documentation>Information for the driver / operator to identify the customer.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BookingErrorResponseType">
+        <xs:annotation>
+            <xs:documentation>Error response type of the BookingFunction</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="io:GeneralErrorType">
+                <xs:sequence>
+                    <xs:element name="Reason" type="io:BookingErrorCodeType">
+                        <xs:annotation>
+                            <xs:documentation>Error code</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="BookingErrorCodeType">
+        <xs:annotation>
+            <xs:documentation>Enumeration for the BookingFunction error codes.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="UNKNOWN_OFFER_ID">
+                <xs:annotation>
+                    <xs:documentation>Offer ID unknown.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="UNKNOWN_CUSTOMER_ID">
+                <xs:annotation>
+                    <xs:documentation>Customer ID unknown.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="OFFER_EXPIRED">
+                <xs:annotation>
+                    <xs:documentation>Offer expired.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
