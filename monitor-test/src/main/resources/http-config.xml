@@ -8,7 +8,7 @@
             <user>jooq</user>
             <password>jooq</password>
         </databaseConfig>
-        <protoSchemaAndProjectStructureURI>http://127.0.0.1:8081/api/content/json/afbcec0d-cfc0-4720-8736-10c989c2a5a7</protoSchemaAndProjectStructureURI>
+        <protoSchemaAndProjectStructureURI>file:./server-demo/src/main/resources/plugfest-test-proto.ser</protoSchemaAndProjectStructureURI>
         <localHost>0.0.0.0</localHost>
         <localPort>8080</localPort>
         <wsURI>http://localhost:9090</wsURI>
