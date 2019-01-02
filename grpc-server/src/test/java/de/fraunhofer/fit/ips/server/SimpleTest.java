@@ -6,16 +6,7 @@ import de.fraunhofer.fit.ips.proto.javabackend.CreateReportResponse;
 import de.fraunhofer.fit.ips.proto.javabackend.JavaBackendGrpc;
 import de.fraunhofer.fit.ips.proto.javabackend.ReportType;
 import de.fraunhofer.fit.ips.proto.javabackend.SchemaAndProjectStructure;
-import de.fraunhofer.fit.ips.proto.structure.Function;
-import de.fraunhofer.fit.ips.proto.structure.Level;
-import de.fraunhofer.fit.ips.proto.structure.MultilingualPlaintext;
-import de.fraunhofer.fit.ips.proto.structure.MultilingualRichtext;
 import de.fraunhofer.fit.ips.proto.structure.Project;
-import de.fraunhofer.fit.ips.proto.structure.QName;
-import de.fraunhofer.fit.ips.proto.structure.Request;
-import de.fraunhofer.fit.ips.proto.structure.Response;
-import de.fraunhofer.fit.ips.proto.structure.Service;
-import de.fraunhofer.fit.ips.proto.structure.Text;
 import de.fraunhofer.fit.ips.proto.xsd.Schema;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
@@ -27,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,11 +45,10 @@ public class SimpleTest {
                 grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build()));
 
 
+        final Helper helper = new Helper(PRIMARY_LANGUAGE, ADDITIONAL_LANGUAGE);
+
         final CreateReportRequest.Builder builder = CreateReportRequest.newBuilder();
-        builder.setConfiguration(CreateReportRequest.Configuration.newBuilder()
-                                                                  .addLanguages(PRIMARY_LANGUAGE)
-                                                                  .addLanguages(ADDITIONAL_LANGUAGE)
-                                                                  .build());
+        builder.setConfiguration(helper.getDefaultConfiguration());
         final String xsd = "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\"\n" +
                 "           targetNamespace=\"http://www.myshuttle.io\" xmlns:io=\"http://www.myshuttle.io\">\n" +
                 "    <xs:complexType name=\"ExampleRequestStructure\">\n" +
@@ -77,119 +66,37 @@ public class SimpleTest {
                 "</xs:schema>";
         final Project.Builder projectBuilder = Project.newBuilder();
         {
-            projectBuilder.setIdentifier(UUID.randomUUID().toString());
+            projectBuilder.setIdentifier(Util.newIdentifier());
             projectBuilder.setTitle("Test-Projekt");
-            projectBuilder.addChildren(Project.ProjectChild
-                    .newBuilder()
-                    .setLevel(Level
-                            .newBuilder()
-                            .setIdentifier(UUID.randomUUID().toString())
-                            .setSuppressNumbering(true)
-                            .setHeadingTitle(MultilingualPlaintext.newBuilder()
-                                                                  .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Test-Level")
-                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "test level with malicious comment-start-tag [#--")
-                                                                  .build())
-                            .addChildren(Level.LevelChild
-                                    .newBuilder()
-                                    .setText(Text
-                                            .newBuilder()
-                                            .setRtContent(MultilingualRichtext
-                                                    .newBuilder()
-                                                    .putLanguageToRichtext(PRIMARY_LANGUAGE, "<p xmlns=\"http://www.w3.org/1999/xhtml\">Der Buchungsdienst ${octopod} bietet zwei Funktionen:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Buchung</li><li>Stornierung</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>")
-                                                    .putLanguageToRichtext(ADDITIONAL_LANGUAGE, "<p xmlns=\"http://www.w3.org/1999/xhtml\">The Booking service offers two functions:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Booking</li><li>Cancellation</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>")
-                                                    .build())
-                                            .build())
-                                    .build())
-                            .build())
-                    .build());
-            projectBuilder.addChildren(Project.ProjectChild
-                    .newBuilder()
-                    .setLevel(Level
-                            .newBuilder()
-                            .setIdentifier(UUID.randomUUID().toString())
-                            .setHeadingTitle(MultilingualPlaintext.newBuilder()
-                                                                  .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Test-Level mit Nummerierung")
-                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "test level with numbering")
-                                                                  .build())
-                            .addChildren(Level.LevelChild
-                                    .newBuilder()
-                                    .setText(Text
-                                            .newBuilder()
-                                            .setRtContent(MultilingualRichtext
-                                                    .newBuilder()
-                                                    .putLanguageToRichtext(PRIMARY_LANGUAGE, "<p xmlns=\"http://www.w3.org/1999/xhtml\">Der Buchungsdienst bietet zwei Funktionen:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Buchung</li><li>Stornierung</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>")
-                                                    .putLanguageToRichtext(ADDITIONAL_LANGUAGE, "<p xmlns=\"http://www.w3.org/1999/xhtml\">The Booking service offers two functions:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Booking</li><li>Cancellation</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>")
-                                                    .build())
-                                            .build())
-                                    .build())
-                            .build())
-                    .build());
-            projectBuilder.addChildren(Project.ProjectChild
-                    .newBuilder()
-                    .setService(Service
-                            .newBuilder()
-                            .setIdentifier(UUID.randomUUID().toString())
-                            .setName("ExampleService")
-                            .setHeadingTitle(MultilingualPlaintext.newBuilder()
-                                                                  .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Beispieldienst")
-                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "example service")
-                                                                  .build())
-                            .addChildren(Service.ServiceChild
-                                    .newBuilder()
-                                    .setFunction(Function
-                                            .newBuilder()
-                                            .setIdentifier(UUID.randomUUID().toString())
-                                            .setName("ExampleFunction")
-                                            .setHeadingTitle(MultilingualPlaintext.newBuilder()
-                                                                                  .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Beispielfunktion")
-                                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "example function")
-                                                                                  .build())
-                                            .addChildren(Function.FunctionChild
-                                                    .newBuilder()
-                                                    .setAssertion(Function.Assertion
-                                                            .newBuilder()
-                                                            .setHeadingTitle(MultilingualPlaintext.newBuilder()
-                                                                                                  .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Beispielzusicherung")
-                                                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "example assertion")
-                                                                                                  .build())
-                                                            // .setTest("every $offer in GetOffersResponse/offer satisfies $offer/ArrivalTime/Deviation le GetOffersRequest/TimeFlexibility")
-                                                            .setTest("ExampleRequest/RequestElement le ExampleResponse/ResponseElement")
-                                                            .setXpathDefaultNamespace("##targetNamespace")
-                                                            .setDescription(MultilingualRichtext
-                                                                    .newBuilder()
-                                                                    .putLanguageToRichtext(PRIMARY_LANGUAGE, "Erklärung zur Zusicherung")
-                                                                    .putLanguageToRichtext(ADDITIONAL_LANGUAGE, "Explanation of the assertion")
-                                                                    .build())
-                                                            .build())
-                                                    .build())
-                                            .addChildren(Function.FunctionChild
-                                                    .newBuilder()
-                                                    .setRequest(Request
-                                                            .newBuilder()
-                                                            .setIdentifier(UUID.randomUUID().toString())
-                                                            .setHeadingTitle(MultilingualPlaintext.newBuilder()
-                                                                                                  .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Beispielanfrage")
-                                                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "example request")
-                                                                                                  .build())
-                                                            .setQName(QName.newBuilder().setNamespaceUri("http://www.myshuttle.io").setNcName("ExampleRequest").build())
-                                                            .build())
-                                                    .build())
-                                            .addChildren(Function.FunctionChild
-                                                    .newBuilder()
-                                                    .setResponse(Response
-                                                            .newBuilder()
-                                                            .setIdentifier(UUID.randomUUID().toString())
-                                                            .setHeadingTitle(MultilingualPlaintext.newBuilder()
-                                                                                                  .putLanguageToPlaintext(PRIMARY_LANGUAGE, "Beispielantwort")
-                                                                                                  .putLanguageToPlaintext(ADDITIONAL_LANGUAGE, "example response")
-                                                                                                  .build())
-                                                            .setQName(QName.newBuilder().setNamespaceUri("http://www.myshuttle.io").setNcName("ExampleResponse").build())
-                                                            .build())
-                                                    .build())
-                                            .build())
-                                    .build())
-                            .build())
-                    .build());
+            projectBuilder.addChildren(Util.newPLevel(true, l ->
+                    l.setHeadingTitle(helper.mlPlaintext("Test-Level", "test level with malicious comment-start-tag [#--"))
+                     .addChildren(Util.newLText(helper.mlRichtext(
+                             "<p xmlns=\"http://www.w3.org/1999/xhtml\">Der Buchungsdienst ${octopod} bietet zwei Funktionen:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Buchung</li><li>Stornierung</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+                             "<p xmlns=\"http://www.w3.org/1999/xhtml\">The Booking service offers two functions:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Booking</li><li>Cancellation</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>"
+                     )))));
+            projectBuilder.addChildren(Util.newPLevel(l ->
+                    l.setHeadingTitle(helper.mlPlaintext("Test-Level mit Nummerierung", "test level with numbering"))
+                     .addChildren(Util.newLText(helper.mlRichtext(
+                             "<p xmlns=\"http://www.w3.org/1999/xhtml\">Der Buchungsdienst bietet zwei Funktionen:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Buchung</li><li>Stornierung</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>",
+                             "<p xmlns=\"http://www.w3.org/1999/xhtml\">The Booking service offers two functions:</p><ol xmlns=\"http://www.w3.org/1999/xhtml\"><li>Booking</li><li>Cancellation</li></ol><p xmlns=\"http://www.w3.org/1999/xhtml\"><br /></p>"
+                     )))));
+            projectBuilder.addChildren(Util.newService("ExampleService", s ->
+                    s.setHeadingTitle(helper.mlPlaintext("Beispieldienst", "example service"))
+                     .addChildren(Util.newFunction("ExampleFunction", fb ->
+                             fb.setHeadingTitle(helper.mlPlaintext("Beispielfunktion", "example function"))
+                               .addChildren(Util.newAssertion(a ->
+                                       a.setHeadingTitle(helper.mlPlaintext("Beispielzusicherung", "example assertion"))
+                                        // .setTest("every $offer in GetOffersResponse/offer satisfies $offer/ArrivalTime/Deviation le GetOffersRequest/TimeFlexibility")
+                                        .setTest("ExampleRequest/RequestElement le ExampleResponse/ResponseElement")
+                                        .setXpathDefaultNamespace("##targetNamespace")
+                                        .setDescription(helper.mlRichtext("Erklärung zur Zusicherung", "Explanation of the assertion"))))
+                               .addChildren(Util.newRequest(req ->
+                                       req.setHeadingTitle(helper.mlPlaintext("Beispielanfrage", "example request"))
+                                          .setQName(Util.newQName("http://www.myshuttle.io", "ExampleRequest"))))
+                               .addChildren(Util.newResponse(res ->
+                                       res.setHeadingTitle(helper.mlPlaintext("Beispielantwort", "example response"))
+                                          .setQName(Util.newQName("http://www.myshuttle.io", "ExampleResponse"))))
+                     ))));
         }
         final Project project = projectBuilder.build();
         builder.setSchemaAndProjectStructure(SchemaAndProjectStructure.newBuilder()
