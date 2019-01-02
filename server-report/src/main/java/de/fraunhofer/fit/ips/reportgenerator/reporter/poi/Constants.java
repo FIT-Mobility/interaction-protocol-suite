@@ -3,9 +3,11 @@ package de.fraunhofer.fit.ips.reportgenerator.reporter.poi;
 import de.fraunhofer.fit.ips.model.xsd.Documentations;
 import de.fraunhofer.fit.ips.model.xsd.Schema;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,14 +47,22 @@ public class Constants {
         return prefix + ":" + name.getLocalPart();
     }
 
-    public static @Nullable
+    public static @Nonnull
     List<String> getDocs(final Context context, final Documentations documentations) {
-        return getDocs(context.getReportConfiguration().getXsdDocumentationLanguage(), documentations);
+        final List<String> docs = getDocs(context.getReportConfiguration().getXsdDocumentationLanguage(), documentations);
+        if (null == docs) {
+            return Collections.emptyList();
+        }
+        return docs;
     }
 
     public static @Nullable
     List<String> getDocs(final String language, final Documentations documentations) {
-        return documentations.getContent(language);
+        final List<String> content = documentations.getContent(language);
+        if (null != content) {
+            return content;
+        }
+        return documentations.getContent("");
     }
 
     public static @Nullable
