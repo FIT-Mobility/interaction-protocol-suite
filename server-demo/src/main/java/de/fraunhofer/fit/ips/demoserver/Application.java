@@ -36,7 +36,7 @@ public class Application {
         final JCommander jCommander = JCommander.newBuilder()
                                                 .addObject(app)
                                                 .build();
-        jCommander.setProgramName("omp-demo-server");
+        jCommander.setProgramName("ips-demo-server");
         try {
             jCommander.parse(args);
         } catch (final RuntimeException e) {
