@@ -1,5 +1,5 @@
+import { Service } from '@ips/shared-js';
 import { Dictionary } from 'lodash';
-import { Service } from 'omp-schema';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 

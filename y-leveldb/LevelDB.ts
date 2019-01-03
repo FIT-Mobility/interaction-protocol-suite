@@ -290,7 +290,8 @@ function extend (Y) {
   })
 }
 
-module.exports = extend
+export = extend;
+
 if (typeof Y !== 'undefined') {
   extend(Y)
 }

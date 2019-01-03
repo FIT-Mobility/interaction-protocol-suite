@@ -1,4 +1,4 @@
-import { Sequence } from 'omp-schema';
+import { Sequence } from '@ips/shared-js';
 import { connect } from 'react-redux';
 
 import { nameChanged } from '../../actions/components/editor/editor-sequences';

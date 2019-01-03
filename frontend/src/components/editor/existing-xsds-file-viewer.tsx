@@ -1,3 +1,4 @@
+import { ProjectRevision } from '@ips/shared-js';
 import Button from '@material-ui/core/es/Button';
 import Dialog from '@material-ui/core/es/Dialog';
 import DialogActions from '@material-ui/core/es/DialogActions';
@@ -14,7 +15,6 @@ import FileCopy from '@material-ui/icons/FileCopy';
 import 'brace';
 import 'brace/mode/text';
 import 'brace/mode/xml';
-import { ProjectRevision } from 'omp-schema';
 import * as React from 'react';
 import Ace from 'react-ace';
 import { connect } from 'react-redux';

@@ -1,11 +1,11 @@
+import { XsdElement } from '@ips/shared-js';
+import { AttributeTypes, ElementTypes } from '@ips/shared-js/schema-tree';
 import List from '@material-ui/core/es/List';
 import ListItem from '@material-ui/core/es/ListItem';
 import ListSubheader from '@material-ui/core/es/ListSubheader';
 import Paper from '@material-ui/core/es/Paper';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/es/styles';
 import classNames from 'classnames';
-import { XsdElement } from 'omp-schema';
-import { AttributeTypes, ElementTypes } from 'omp-schema/schema-tree';
 import * as React from 'react';
 import { DragDropContext } from 'react-dnd';
 import Html5Backend from 'react-dnd-html5-backend';

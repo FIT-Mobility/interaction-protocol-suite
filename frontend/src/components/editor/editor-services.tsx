@@ -1,9 +1,9 @@
+import { Function as Fn, Sequence, Service } from '@ips/shared-js';
 import Checkbox from '@material-ui/core/es/Checkbox';
 import List from '@material-ui/core/es/List';
 import ListItem from '@material-ui/core/es/ListItem';
 import Subheader from '@material-ui/core/es/ListSubheader';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/es/styles';
-import { Function as Fn, Sequence, Service } from 'omp-schema';
 import * as React from 'react';
 
 import SingleLineText from '../utils/single-line-listitem';

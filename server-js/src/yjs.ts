@@ -8,7 +8,7 @@ import {
     XsdOperationType,
 } from '@ips/shared-js';
 import schema, { AttributeTypes, ElementTypes } from '@ips/shared-js/schema-tree';
-import * as yLeveldb from '@ips/y-leveldb';
+import yLeveldb = require('@ips/y-leveldb');
 import * as dateformat from 'dateformat';
 import { RequestHandler } from 'express';
 import * as session from 'express-socket.io-session';

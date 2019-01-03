@@ -1,4 +1,4 @@
-import { DataType } from 'omp-schema';
+import { DataType } from '@ips/shared-js';
 import { connect } from 'react-redux';
 
 import DataTypesEditor, { DataTypesEditorProps } from '../../components/editor/editor-data-types';

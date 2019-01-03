@@ -1,5 +1,5 @@
-import { Project, ProjectRevision } from "omp-schema";
-import { xsdToString } from 'omp-schema/xsd';
+import { Project, ProjectRevision } from "@ips/shared-js";
+import { xsdToString } from '@ips/shared-js/xsd';
 import { push as nativePush } from 'redux-little-router';
 import { ThunkAction } from 'redux-thunk';
 

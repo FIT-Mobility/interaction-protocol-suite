@@ -1,8 +1,8 @@
+import { XsdElement } from '@ips/shared-js';
+import { xsdRootElementSelector, xsdToString } from '@ips/shared-js/xsd';
 import { le } from 'binary-search-bounds';
 import { Dictionary } from 'lodash';
 import values from 'lodash-es/values';
-import { XsdElement } from 'omp-schema';
-import { xsdRootElementSelector, xsdToString } from 'omp-schema/xsd';
 import { ThunkAction } from 'redux-thunk';
 import * as Stringifier from 'xmlbuilder/lib/XMLStringifier';
 

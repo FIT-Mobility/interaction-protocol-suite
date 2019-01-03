@@ -1,5 +1,6 @@
 // tslint:disable:object-literal-key-quotes
 
+import { Project } from '@ips/shared-js';
 import Button from '@material-ui/core/es/Button';
 import CircularProgress from '@material-ui/core/es/CircularProgress';
 import Collapse from '@material-ui/core/es/Collapse';
@@ -22,7 +23,6 @@ import TextField from '@material-ui/core/es/TextField';
 import Archive from '@material-ui/icons/Archive';
 import Unarchive from '@material-ui/icons/Unarchive';
 import classNames from 'classnames';
-import { Project } from 'omp-schema';
 import * as React from 'react';
 
 import { CreateNewProjectError, CreateNewProjectErrorType } from '../state';

@@ -1,3 +1,4 @@
+import { User } from '@ips/shared-js';
 import AppBar from '@material-ui/core/es/AppBar';
 import Button from '@material-ui/core/es/Button';
 import CircularProgress from '@material-ui/core/es/CircularProgress';
@@ -6,7 +7,6 @@ import Toolbar from '@material-ui/core/es/Toolbar';
 import Typography from '@material-ui/core/es/Typography';
 import CompareArrows from '@material-ui/icons/CompareArrows';
 import HourglassEmpty from '@material-ui/icons/HourglassEmpty';
-import { User } from 'omp-schema';
 import * as React from 'react';
 import Helmet from 'react-helmet';
 import { Fragment, Link } from 'redux-little-router';

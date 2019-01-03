@@ -1,4 +1,4 @@
-import { Project } from 'omp-schema';
+import { Project } from '@ips/shared-js';
 
 import { Action, Types } from '../actions';
 

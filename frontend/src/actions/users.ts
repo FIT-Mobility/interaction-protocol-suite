@@ -1,4 +1,4 @@
-import { User } from 'omp-schema';
+import { User } from '@ips/shared-js';
 import { ThunkAction } from 'redux-thunk';
 
 import { API_BACKEND_URL } from '../config';

@@ -62,7 +62,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "fix": "tslint -p tsconfig.json --fix --exclude \"node_modules/**/*.{j,t}s\"",
-    "lint": "tslint -p tsconfig.json --exclude \"node_modules/**/*.{j,t}s\""
+    "fix": "tslint -p tsconfig.lint.json --fix --exclude \"node_modules/**/*.{j,t}s\"",
+    "lint": "tslint -p tsconfig.lint.json --exclude \"node_modules/**/*.{j,t}s\""
   }
 }

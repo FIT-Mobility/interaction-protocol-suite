@@ -69,6 +69,7 @@ const yMapToObj = <T>(yMap): Record<string, T> => {
 };
 
 export async function getProjectData(projectRevisionId: string) {
+    /*
     const [yProjectsRoom, yProj] = await Promise.all([
         getY(PROJECT_ROOM),
         getY(projectRevisionId),
@@ -140,7 +141,7 @@ export async function getProjectData(projectRevisionId: string) {
     const services = yMapToObj<Service>(yProj.share.services);
 
     return null!;
-    /*return generateReportData(
+    return generateReportData(
         dataTypes,
         elements,
         functions,

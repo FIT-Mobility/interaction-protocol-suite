@@ -2,7 +2,7 @@
   "name": "@ips/y-leveldb",
   "version": "0.0.3",
   "description": "LevelDB database adapter for Yjs",
-  "main": "./src/LevelDB.js",
+  "main": "LevelDB.js",
   "scripts": {
     "build": "tsc",
     "postinstall": "npm run build"

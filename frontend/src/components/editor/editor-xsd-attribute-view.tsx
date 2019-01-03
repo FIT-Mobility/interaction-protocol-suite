@@ -1,7 +1,7 @@
+import { XsdAttribute, XsdElement } from '@ips/shared-js';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/es/styles';
 import Tooltip from '@material-ui/core/es/Tooltip';
 import classNames from 'classnames';
-import { XsdAttribute, XsdElement } from 'omp-schema';
 import * as React from 'react';
 
 import { ValidationError } from '../../state';

@@ -1,4 +1,5 @@
 // tslint:disable:object-literal-key-quotes
+import { ProjectRevision } from '@ips/shared-js';
 import Button from '@material-ui/core/es/Button';
 import Collapse from '@material-ui/core/es/Collapse';
 import Dialog from '@material-ui/core/es/Dialog';
@@ -25,7 +26,6 @@ import Restore from '@material-ui/icons/Restore';
 import Save from '@material-ui/icons/Save';
 import Unarchive from '@material-ui/icons/Unarchive';
 import classNames from 'classnames';
-import { ProjectRevision } from 'omp-schema';
 import * as React from 'react';
 
 import { CreateNewProjectRevisionError, CreateNewProjectRevisionErrorType, RestoreRevisionError } from "../state";

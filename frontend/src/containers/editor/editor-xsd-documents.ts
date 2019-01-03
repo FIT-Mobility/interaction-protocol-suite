@@ -1,4 +1,4 @@
-import schemaTree from 'omp-schema/schema-tree';
+import schemaTree from '@ips/shared-js/schema-tree';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 

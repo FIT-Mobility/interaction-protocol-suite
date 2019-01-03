@@ -1,3 +1,4 @@
+import { Comment, User } from '@ips/shared-js';
 import Av from '@material-ui/core/es/Avatar';
 import Button from '@material-ui/core/es/Button';
 import CardActions from '@material-ui/core/es/CardActions';
@@ -6,7 +7,6 @@ import CardHeader from '@material-ui/core/es/CardHeader';
 import Divider from '@material-ui/core/es/Divider';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/es/styles';
 import classNames from 'classnames';
-import { Comment, User } from 'omp-schema';
 import * as React from 'react';
 import * as ReactQuill from 'react-quill';
 

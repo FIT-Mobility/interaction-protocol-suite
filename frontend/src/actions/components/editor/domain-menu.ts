@@ -1,4 +1,4 @@
-import { DomainItemType } from 'omp-schema';
+import { DomainItemType } from '@ips/shared-js';
 import { ThunkAction } from 'redux-thunk';
 
 import { pushInProject, Action, PayloadAction, Types } from '../..';

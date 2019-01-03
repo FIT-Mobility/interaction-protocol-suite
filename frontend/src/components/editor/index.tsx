@@ -1,3 +1,4 @@
+import { Project } from '@ips/shared-js';
 import Button from '@material-ui/core/es/Button';
 import Checkbox from '@material-ui/core/es/Checkbox';
 import Dialog from '@material-ui/core/es/Dialog';
@@ -20,7 +21,6 @@ import Code from '@material-ui/icons/Code';
 import Description from '@material-ui/icons/Description';
 import Eye from '@material-ui/icons/RemoveRedEye';
 import classNames from 'classnames';
-import { Project } from 'omp-schema';
 import * as React from 'react';
 
 import DomainMenu from '../../containers/editor/domain-menu';

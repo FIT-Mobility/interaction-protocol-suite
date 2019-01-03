@@ -1,4 +1,4 @@
-import { Function as Fn } from 'omp-schema';
+import { Function as Fn } from '@ips/shared-js';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 

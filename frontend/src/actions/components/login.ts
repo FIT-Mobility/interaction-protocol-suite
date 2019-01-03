@@ -1,4 +1,4 @@
-import { User } from 'omp-schema';
+import { User } from '@ips/shared-js';
 import { push as routerPush } from 'redux-little-router';
 import { ThunkAction } from 'redux-thunk';
 

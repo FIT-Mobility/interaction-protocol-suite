@@ -1,4 +1,4 @@
-import { makeGenerateReportData } from 'omp-schema/report-data';
+import { makeGenerateReportData } from '@ips/shared-js/report-data';
 import Quill from 'quill';
 import { createSelector } from 'reselect';
 

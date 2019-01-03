@@ -82,8 +82,8 @@
   },
   "scripts": {
     "build": "yarn && webpack --config webpack.prod.js",
-    "fix": "tslint -p tsconfig.json --fix --exclude \"node_modules/**/*.{j,t}s\"",
-    "lint": "tslint -p tsconfig.json --exclude \"node_modules/**/*.{j,t}s\"",
+    "fix": "tslint -p tsconfig.lint.json --fix --exclude \"node_modules/**/*.{j,t}s\"",
+    "lint": "tslint -p tsconfig.lint.json --exclude \"node_modules/**/*.{j,t}s\"",
     "serve": "yarn && webpack-dev-server --config webpack.dev.js"
   },
   "resolutions": {

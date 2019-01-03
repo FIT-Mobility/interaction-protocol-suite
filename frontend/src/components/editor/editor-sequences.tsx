@@ -1,4 +1,4 @@
-import { Sequence } from 'omp-schema';
+import { Sequence } from '@ips/shared-js';
 import * as React from 'react';
 
 import { FocusableTextField } from "../utils/textfield";

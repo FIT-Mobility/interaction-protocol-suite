@@ -6,16 +6,16 @@
  * the props shallowly equal, which improves performance for us.
  */
 
-import { Dictionary } from 'lodash';
-import values from 'lodash-es/values';
 import {
     DomainItems,
     DomainItemType,
     Entity,
     Project,
     ProjectRevision,
-} from 'omp-schema';
-import { xsdRootElementSelector } from 'omp-schema/xsd';
+} from '@ips/shared-js';
+import { xsdRootElementSelector } from '@ips/shared-js/xsd';
+import { Dictionary } from 'lodash';
+import values from 'lodash-es/values';
 import { createSelector } from 'reselect';
 
 import { noItemBase } from "../actions/sync";

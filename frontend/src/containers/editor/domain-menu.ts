@@ -1,4 +1,4 @@
-import { DomainItemType } from 'omp-schema';
+import { DomainItemType } from '@ips/shared-js';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 

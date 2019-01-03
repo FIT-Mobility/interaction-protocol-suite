@@ -1,6 +1,5 @@
 /* tslint:disable:ban-types */
 
-import { Dictionary } from 'lodash';
 import {
     Comment,
     DataType,
@@ -15,8 +14,9 @@ import {
     User,
     XsdElement,
     XsdOperation,
-} from 'omp-schema';
-import { SchemaAnalysis } from 'omp-schema/xsd-analysis';
+} from '@ips/shared-js';
+import { SchemaAnalysis } from '@ips/shared-js/xsd-analysis';
+import { Dictionary } from 'lodash';
 
 /**
  * The mode of the editor view.

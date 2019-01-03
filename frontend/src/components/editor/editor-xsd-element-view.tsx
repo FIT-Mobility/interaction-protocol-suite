@@ -1,3 +1,4 @@
+import { XsdAttribute, XsdElement } from '@ips/shared-js';
 import Button from '@material-ui/core/es/Button';
 import ListItemIcon from '@material-ui/core/es/ListItemIcon';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/es/styles';
@@ -7,7 +8,6 @@ import Clear from '@material-ui/icons/Clear';
 import ListIcon from '@material-ui/icons/List';
 import classNames from 'classnames';
 import { Dictionary } from 'lodash';
-import { XsdAttribute, XsdElement } from 'omp-schema';
 import * as React from 'react';
 import {
     ConnectDragPreview,

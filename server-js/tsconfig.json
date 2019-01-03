@@ -8,7 +8,7 @@
     "sourceMap": true,
     "allowJs": true,
     "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
     "noImplicitThis": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
@@ -17,8 +17,8 @@
     "skipLibCheck": true,
     "composite": true,
   },
-  "files": [
-    "src/index.ts"
+  "include": [
+    "src/**/*"
   ],
   "types": [
     "typePatches"

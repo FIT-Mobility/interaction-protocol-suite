@@ -2,8 +2,8 @@ import {
     AddAttributeXsdOperation,
     AddNodeXsdOperation,
     XsdOperationType,
-} from 'omp-schema';
-import { ElementTypes } from 'omp-schema/schema-tree';
+} from '@ips/shared-js';
+import { ElementTypes } from '@ips/shared-js/schema-tree';
 import { ThunkAction } from 'redux-thunk';
 import { v4 as uuid } from 'uuid';
 

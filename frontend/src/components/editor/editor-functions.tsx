@@ -1,3 +1,4 @@
+import { Element, Function as Fn } from '@ips/shared-js';
 import IconButton from '@material-ui/core/es/IconButton';
 import Input from '@material-ui/core/es/Input';
 import InputLabel from '@material-ui/core/es/InputLabel';
@@ -11,7 +12,6 @@ import { createStyles, withStyles, WithStyles } from '@material-ui/core/es/style
 import TextField from '@material-ui/core/es/TextField';
 import Add from '@material-ui/icons/Add';
 import Delete from '@material-ui/icons/Delete';
-import { Element, Function as Fn } from 'omp-schema';
 import * as React from 'react';
 
 import { row } from '../utils/flex-primitives';

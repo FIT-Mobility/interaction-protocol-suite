@@ -1,9 +1,9 @@
+import { IdAble } from '@ips/shared-js';
+import schema from '@ips/shared-js/schema-tree';
+import { applyDelta } from '@ips/shared-js/xsd';
 import { Dictionary } from 'lodash';
 import mapValues from 'lodash-es/mapValues';
 import omit from 'lodash-es/omit';
-import { IdAble } from 'omp-schema';
-import schema from 'omp-schema/schema-tree';
-import { applyDelta } from 'omp-schema/xsd';
 
 import { Action, Types, Update } from '../actions';
 import { ProjectData } from '../state';

@@ -1,7 +1,9 @@
 version: '3'
 services:
   server_js:
-    build: ./server-js
+    build:
+      context: ./
+      dockerfile: server-js/Dockerfile
     links:
       - mongo
       - server_java
@@ -24,7 +26,8 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ./
+      dockerfile: frontend/Dockerfile
       args:
         - COMMIT_ID
     ports:

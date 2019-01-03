@@ -1,3 +1,4 @@
+import { DomainItems, DomainItemType, Language, OmpItem, ProjectRevision } from '@ips/shared-js';
 import Subheader from '@material-ui/core/es/ListSubheader';
 import Paper from '@material-ui/core/es/Paper';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/es/styles';
@@ -6,7 +7,6 @@ import ModeComment from '@material-ui/icons/ModeComment';
 import PieChart from '@material-ui/icons/PieChart';
 import TabUnselected from '@material-ui/icons/TabUnselected';
 import classNames from 'classnames';
-import { DomainItems, DomainItemType, Language, OmpItem, ProjectRevision } from 'omp-schema';
 import * as React from 'react';
 import { Fragment } from 'redux-little-router';
 

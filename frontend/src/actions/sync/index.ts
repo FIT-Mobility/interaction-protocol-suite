@@ -9,8 +9,8 @@ import {
     Sequence,
     Service,
     XsdOperation,
-} from 'omp-schema';
-import { SchemaAnalysis } from 'omp-schema/xsd-analysis';
+} from '@ips/shared-js';
+import { SchemaAnalysis } from '@ips/shared-js/xsd-analysis';
 
 import { PayloadAction, Types } from '..';
 import { RemoveAction, Update } from '..';

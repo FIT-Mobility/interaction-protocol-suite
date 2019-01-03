@@ -2,10 +2,10 @@
  * This redux middleware parses data type information out of arriving XSD deltas.
  */
 
+import { DataType, Element } from '@ips/shared-js';
+import { ElementTypes } from '@ips/shared-js/schema-tree';
+import { DataTypeAnalysis, ElementAnalysis, SchemaAnalysis, XsdAnalyzer } from '@ips/shared-js/xsd-analysis';
 import values from 'lodash-es/values';
-import { DataType, Element } from 'omp-schema';
-import { ElementTypes } from 'omp-schema/schema-tree';
-import { DataTypeAnalysis, ElementAnalysis, SchemaAnalysis, XsdAnalyzer } from 'omp-schema/xsd-analysis';
 import { Store } from 'redux';
 
 import { Action, Types } from '../actions';

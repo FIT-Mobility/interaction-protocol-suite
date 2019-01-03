@@ -1,4 +1,3 @@
-import { Dictionary } from 'lodash';
 import {
     yjsShareGlobalProjects,
     yjsShareProjectRevision,
@@ -14,7 +13,8 @@ import {
     Sequence,
     Service,
     XsdOperation,
-} from 'omp-schema';
+} from '@ips/shared-js';
+import { Dictionary } from 'lodash';
 import { Dispatch } from 'redux';
 import { replace as routerReplace } from 'redux-little-router';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';

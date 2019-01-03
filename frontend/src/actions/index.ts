@@ -1,4 +1,4 @@
-import { IdAble } from 'omp-schema';
+import { IdAble } from '@ips/shared-js';
 import { goBack, push as routerPush, RouterActions } from 'redux-little-router';
 
 import { ChangeEditingActions } from './components/change-editing';

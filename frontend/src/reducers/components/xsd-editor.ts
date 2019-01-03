@@ -1,4 +1,4 @@
-import { XsdOperationType } from 'omp-schema';
+import { XsdOperationType } from '@ips/shared-js';
 
 import { Action, Types } from '../../actions';
 import { XsdEditorComponentState } from '../../state';

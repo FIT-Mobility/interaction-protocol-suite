@@ -1,5 +1,5 @@
-import { XsdAttribute } from 'omp-schema';
-import { AttributeTypes, ElementTypes } from 'omp-schema/schema-tree';
+import { XsdAttribute } from '@ips/shared-js';
+import { AttributeTypes, ElementTypes } from '@ips/shared-js/schema-tree';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { createSelector } from 'reselect';

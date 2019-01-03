@@ -1,4 +1,4 @@
-import { DataType } from 'omp-schema';
+import { DataType } from '@ips/shared-js';
 
 export interface DataTypesEditorProps {
     currentItem: DataType;

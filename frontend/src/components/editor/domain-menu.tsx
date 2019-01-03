@@ -1,3 +1,4 @@
+import { DataType, DomainItemType, Function as Fn, Sequence, Service } from '@ips/shared-js';
 import Collapse from '@material-ui/core/es/Collapse';
 import IconButton from '@material-ui/core/es/IconButton';
 import List from '@material-ui/core/es/List';
@@ -14,7 +15,6 @@ import Description from '@material-ui/icons/Description';
 import Polymer from '@material-ui/icons/Polymer';
 import Timeline from '@material-ui/icons/Timeline';
 import ViewCarousel from '@material-ui/icons/ViewCarousel';
-import { DataType, DomainItemType, Function as Fn, Sequence, Service } from 'omp-schema';
 import * as React from 'react';
 
 import { hidden } from '../utils/flex-primitives';
