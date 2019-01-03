@@ -4,6 +4,7 @@
         "frontend",
         "proto-node",
         "server-js",
-        "shared-js"
+        "shared-js",
+        "y-leveldb"
     ]
 }

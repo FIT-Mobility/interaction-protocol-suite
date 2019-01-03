@@ -8,6 +8,7 @@ import {
     XsdOperationType,
 } from '@ips/shared-js';
 import schema, { AttributeTypes, ElementTypes } from '@ips/shared-js/schema-tree';
+import * as yLeveldb from '@ips/y-leveldb';
 import * as dateformat from 'dateformat';
 import { RequestHandler } from 'express';
 import * as session from 'express-socket.io-session';
@@ -16,7 +17,6 @@ import slugify from 'slugify';
 import * as socketIo from 'socket.io';
 import { v4 as uuid } from 'uuid';
 import * as yArray from 'y-array';
-import * as yLeveldb from 'y-leveldb';
 import * as yMap from 'y-map';
 import * as yRichtext from 'y-richtext';
 import * as yWebsockets from 'y-websockets-server';

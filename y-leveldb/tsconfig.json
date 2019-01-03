@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "commonjs",
+    "lib": ["dom", "es2015"],
+    "sourceMap": true,
+    "strict": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "declaration": true,
+    "composite": true,
+    "skipLibCheck": true
+  },
+  "files": [
+    "LevelDB.ts",
+  ]
+}
