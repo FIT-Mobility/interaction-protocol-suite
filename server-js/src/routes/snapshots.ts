@@ -1,6 +1,5 @@
-import slugify from "slugify";
-
 import { Express } from "express";
+import slugify from "slugify";
 
 import { ensureLoggedIn } from "../model";
 import {

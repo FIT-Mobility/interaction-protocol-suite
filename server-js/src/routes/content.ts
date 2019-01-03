@@ -1,7 +1,6 @@
 import * as decompress from 'decompress';
 import { Express } from 'express';
 import * as fs from 'fs';
-import { OMPInterfaceToolProjectSchema } from 'omp-schema/commonjs/backend';
 import * as path from 'path';
 import { promisify } from 'util';
 import { v4 as uuid } from 'uuid';
@@ -13,7 +12,7 @@ import {
     ensureObjIdValid,
     FileModel,
 } from '../model';
-import { getProjectData, getXsdString } from '../model/xsd';
+import { getXsdString } from '../model/xsd';
 
 import { handlify } from '.';
 
@@ -94,28 +93,6 @@ export default function(app: Express, base: string) {
                 groupId,
             },
         });
-    }));
-
-    app.get(`${base}/json/:revisionId`, handlify(async (req, res) => {
-        let json: OMPInterfaceToolProjectSchema | null;
-        try {
-            json = await getProjectData(req.params.revisionId);
-        } catch (err) {
-            console.error(err);
-            return res.status(500).json({
-                success: false,
-                msg: "Failed to generate report data.",
-            });
-        }
-
-        if (!json) {
-            return res.status(404).json({
-                success: false,
-                msg: "Project revision not found.",
-            });
-        }
-
-        res.json(json);
     }));
 
     app.get(`${base}/xsd/:revisionId`, handlify(async (req, res) => {

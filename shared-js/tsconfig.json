@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
     "target": "es2015",
-    "module": "es2015",
+    "module": "commonjs",
     "lib": ["dom", "es2015"],
-    "declaration": true,
     "sourceMap": true,
     "outDir": "./",
     "strict": true,
     "moduleResolution": "node",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "declaration": true,
+    "composite": true,
+    "skipLibCheck": true
   },
   "files": [
     "index.ts",

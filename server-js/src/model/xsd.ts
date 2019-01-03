@@ -1,4 +1,3 @@
-import { JSDOM } from 'jsdom';
 import {
     DataType,
     Element,
@@ -10,16 +9,16 @@ import {
     Service,
     XsdAttribute,
     XsdElement,
-} from 'omp-schema/commonjs';
-import { makeGenerateReportData } from 'omp-schema/commonjs/report-data';
-import { ElementTypes } from 'omp-schema/commonjs/schema-tree';
-import { applyDelta, xsdToString } from 'omp-schema/commonjs/xsd';
+} from '@ips/shared-js';
+import { ElementTypes } from '@ips/shared-js/schema-tree';
+import { applyDelta, xsdToString } from '@ips/shared-js/xsd';
 import {
     DataTypeAnalysis,
     ElementAnalysis,
     SchemaAnalysis,
     XsdAnalyzer,
-} from 'omp-schema/commonjs/xsd-analysis';
+} from '@ips/shared-js/xsd-analysis';
+import { JSDOM } from 'jsdom';
 
 import { getY } from '../yjs';
 
@@ -60,7 +59,7 @@ const richtextToXhtml = (() => { // Separate scope for brevity
     };
 })();
 
-const generateReportData = makeGenerateReportData(richtextToXhtml);
+// const generateReportData = makeGenerateReportData(richtextToXhtml);
 
 const yMapToObj = <T>(yMap): Record<string, T> => {
     return yMap.keys().reduce((acc, k) => {
@@ -140,7 +139,8 @@ export async function getProjectData(projectRevisionId: string) {
     const sequences = yMapToObj<Sequence>(yProj.share.sequences);
     const services = yMapToObj<Service>(yProj.share.services);
 
-    return generateReportData(
+    return null!;
+    /*return generateReportData(
         dataTypes,
         elements,
         functions,
@@ -151,7 +151,7 @@ export async function getProjectData(projectRevisionId: string) {
         project,
         projectRevision,
         yProj,
-    );
+    );*/
 }
 
 /**

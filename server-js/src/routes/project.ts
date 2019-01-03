@@ -1,13 +1,13 @@
-import { Express } from "express";
-import { readFile } from 'fs';
 import {
     AddAttributeXsdOperation,
     AddNodeXsdOperation,
     EditTextContentXsdOperation,
     XsdOperation,
     XsdOperationType,
-} from 'omp-schema/commonjs';
-import schemaTree, { ElementTypes } from "omp-schema/commonjs/schema-tree";
+} from '@ips/shared-js';
+import schemaTree, { ElementTypes } from "@ips/shared-js/schema-tree";
+import { Express } from "express";
+import { readFile } from 'fs';
 import slugify from "slugify";
 import { promisify } from 'util';
 import { v4 as uuid } from 'uuid';

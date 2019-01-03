@@ -12,10 +12,11 @@ import {
     Service,
     XsdElement,
 } from '.';
-import { OMPInterfaceToolProjectSchema } from './backend';
+//import { OMPInterfaceToolProjectSchema } from './backend';
 import { xsdToString } from './xsd';
 import { SchemaAnalysis } from './xsd-analysis';
 
+/*
 export const makeGenerateReportData = (richtextToString: (yRichtext: any) => string) => (
     dataTypes: Record<string, DataType>,
     elements: Record<string, Elt>,
@@ -108,3 +109,4 @@ export const makeGenerateReportData = (richtextToString: (yRichtext: any) => str
         }
     } as OMPInterfaceToolProjectSchema;
 };
+ */

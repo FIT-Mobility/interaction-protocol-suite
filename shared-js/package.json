@@ -7,24 +7,22 @@
   "author": "Fraunhofer FIT",
   "license": "Apache-2.0",
   "private": false,
-  "module": "./index.js",
-  "main": "./commonjs/index.js",
+  "main": "./index.js",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "npm run clean && npm run build:schema && npm run build:ts",
-    "build:schema": "npx --package json-schema-to-typescript json2ts ./omp-tool-project-schema.json backend.ts && mkdir commonjs && cp backend.* commonjs",
-    "build:ts": "npm run build:ts:es && npm run build:ts:cjs",
-    "build:ts:es": "npx --package typescript tsc",
-    "build:ts:cjs": "npx --package typescript tsc -p tsconfig.node.json",
-    "clean": "rimraf *.d.ts *.js *.js.map backend.ts ./commonjs"
+    "build": "npm run clean && npm run build:ts",
+    "build:ts": "tsc",
+    "clean": "rimraf *.d.ts *.js *.js.map",
+    "postinstall": "npm run build"
   },
   "peerDependencies": {
     "xmlbuilder": "^10.0.0"
   },
   "devDependencies": {
     "@types/xmlbuilder": "^0.0.32",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "typescript": "^3.2.2"
   }
 }

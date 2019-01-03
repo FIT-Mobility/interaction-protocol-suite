@@ -1,0 +1,9 @@
+{
+    "private": true,
+    "workspaces": [
+        "frontend",
+        "proto-node",
+        "server-js",
+        "shared-js"
+    ]
+}

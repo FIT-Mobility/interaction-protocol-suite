@@ -2,7 +2,7 @@
   "name": "@ips/proto-node",
   "author": "Fraunhofer FIT",
   "private": false,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "license": "Apache-2.0",
   "types": "index.d.ts",
   "main": "index.js",
@@ -12,7 +12,8 @@
   "scripts": {
     "build": "npm run build:js && npm run build:ts",
     "build:js": "pbjs -t static-module -w commonjs -o index.js ../proto/javabackend.proto ../proto/structure.proto ../proto/xsd.proto",
-    "build:ts": "pbts -o index.d.ts index.js"
+    "build:ts": "pbts -o index.d.ts index.js",
+    "postinstall": "npm run build"
   },
   "devDependencies": {
     "protobufjs": "^6.8.8"

@@ -14,12 +14,16 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": false,
     "experimentalDecorators": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "composite": true,
   },
   "files": [
     "src/index.ts"
   ],
   "types": [
     "typePatches"
+  ],
+  "references": [
+    { "path": "../shared-js" },
   ]
 }

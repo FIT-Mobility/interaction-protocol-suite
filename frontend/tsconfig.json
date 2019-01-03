@@ -14,9 +14,13 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": false,
     "importHelpers": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "composite": true
   },
   "files": [
     "src/index.tsx"
+  ],
+  "references": [
+    { "path": "../shared-js" }
   ]
 }

@@ -1,7 +1,3 @@
-import * as dateformat from 'dateformat';
-import { RequestHandler } from 'express';
-import * as session from 'express-socket.io-session';
-import { Server } from 'http';
 import {
     yjsShareGlobalProjects,
     yjsShareProjectRevision,
@@ -10,8 +6,12 @@ import {
     PROJECT_ROOM,
     XsdOperation,
     XsdOperationType,
-} from 'omp-schema/commonjs';
-import schema, { AttributeTypes, ElementTypes } from 'omp-schema/commonjs/schema-tree';
+} from '@ips/shared-js';
+import schema, { AttributeTypes, ElementTypes } from '@ips/shared-js/schema-tree';
+import * as dateformat from 'dateformat';
+import { RequestHandler } from 'express';
+import * as session from 'express-socket.io-session';
+import { Server } from 'http';
 import slugify from 'slugify';
 import * as socketIo from 'socket.io';
 import { v4 as uuid } from 'uuid';
