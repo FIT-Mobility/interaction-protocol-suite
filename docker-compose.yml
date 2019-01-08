@@ -8,8 +8,8 @@ services:
       - mongo
       - server_java
     volumes:
-      - "./data/leveldb:/opt/server/db"
-      - "./data/uploads:/opt/server/uploads"
+      - "./data/leveldb:/opt/server-js/db"
+      - "./data/uploads:/opt/server-js/uploads"
     restart: on-failure
 
   mongo:

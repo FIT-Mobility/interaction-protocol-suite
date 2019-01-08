@@ -19,13 +19,7 @@ COPY server-js/tsconfig.json server-js/tsconfig.lint.json server-js/tslint.json 
 COPY server-js/src /opt/server-js/src
 RUN yarn build
 
-# Use two-stage build for optimized build caching & output container size
-FROM node:8-alpine
-WORKDIR /opt/server
-
-COPY --from=0 /opt/server-js/node_modules /opt/server/node_modules
-COPY --from=0 /opt/server-js/build /opt/server/build
-COPY server-js/.env server-js/.env.example /opt/server/
+COPY server-js/.env server-js/.env.example /opt/server-js/
 
 EXPOSE 8080
-CMD node build/index.js
+CMD node build/src/index.js
