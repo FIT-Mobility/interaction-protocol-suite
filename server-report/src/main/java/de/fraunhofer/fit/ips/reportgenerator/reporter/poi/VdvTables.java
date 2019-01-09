@@ -278,7 +278,11 @@ public class VdvTables {
         particle.accept(new ComplexTypeVisitor(context, dataTypeTableHelper, context.schema));
 
         final Attributes attributes = dataType.getAttributes();
-        OuterAttributeVisitor.handle(dataTypeTableHelper, context, attributes);
+        if (context.reportConfiguration.isExpandAttributeGroups()) {
+            OuterAttributeVisitor.handle(dataTypeTableHelper, context, attributes);
+        } else {
+            InnerAttributeVisitorImpl.handle(dataTypeTableHelper, context, attributes);
+        }
     }
 
     @RequiredArgsConstructor
