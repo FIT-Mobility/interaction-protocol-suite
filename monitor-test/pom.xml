@@ -134,7 +134,8 @@
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
-                <version>3.2.1</version>
+                <!-- if migration fails, try with version 4.2.0 of this plugin to migrate the metadata table -->
+                <version>5.2.4</version>
 
                 <!-- Must be in the same phase as Jooq -->
                 <executions>
