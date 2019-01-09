@@ -36,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.namespace.QName;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,11 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class ParticleScopeAnalyzer {
+    public enum ParticleType {
+        ELEMENT, COMPLEX_TYPE, GROUP, SIMPLE_TYPE_RESTRICTION, SIMPLE_TYPE_ENUMERATION, SIMPLE_TYPE_UNION,
+        SIMPLE_TYPE_LIST, GLOBAL_ATTRIBUTE, GLOBAL_ATTRIBUTE_GROUP
+    }
+
     enum Scope {
         REQUEST_OR_RESPONSE, FUNCTION, SERVICE, PROJECT
     }
@@ -175,7 +181,8 @@ public class ParticleScopeAnalyzer {
     }
 
     public static Map<StructureBase, List<QName>> categorizeDanglingParticles(final Schema schema,
-                                                                              final Project project) {
+                                                                              final Project project,
+                                                                              final EnumSet<ParticleType> consideredParticleTypes) {
         final ProjectScope projectScope = new ProjectScope(project);
 
         // create a map from all particles within the document structure to their scope
@@ -197,12 +204,19 @@ public class ParticleScopeAnalyzer {
                 log.error("No concept found for referenced particle {}", assignedParticleName);
                 continue;
             }
-            namedConceptWithOrigin.accept(new DependenciesVisitor(schema, danglingParticle -> danglingParticleToScope.merge(danglingParticle, scope, Scoped::merge)));
+            namedConceptWithOrigin.accept(new DependenciesVisitor(schema, consideredParticleTypes,
+                    danglingParticle -> danglingParticleToScope.merge(danglingParticle, scope, Scoped::merge)));
         }
 
         // all unassigned particles not referenced within assigned particles belong to the project scope
+        final FilteringProjectScopeAssigner filteringProjectScopeAssigner = new FilteringProjectScopeAssigner(consideredParticleTypes, danglingParticleToScope, projectScope);
         for (final QName danglingParticle : Sets.difference(schema.getInternalConceptNames(), assignedParticleToScope.keySet())) {
-            danglingParticleToScope.putIfAbsent(danglingParticle, projectScope);
+            if (danglingParticleToScope.containsKey(danglingParticle)) {
+                continue;
+            }
+            final NamedConceptWithOrigin namedConceptWithOrigin = schema.getConcept(danglingParticle);
+            assert namedConceptWithOrigin != null : "Schema::internalConceptNames is supposed to be a subset of the keySet of Schema::concepts";
+            namedConceptWithOrigin.accept(filteringProjectScopeAssigner);
         }
 
         return danglingParticleToScope.entrySet().stream().collect(
@@ -211,12 +225,73 @@ public class ParticleScopeAnalyzer {
     }
 
     @RequiredArgsConstructor
+    static class FilteringProjectScopeAssigner implements NamedConceptWithOriginVisitor {
+        final EnumSet<ParticleType> consideredParticleTypes;
+        final Map<QName, Scoped> danglingParticleToScope;
+        final ProjectScope projectScope;
+
+        private void consume(final ParticleType particleType, final QName danglingParticle) {
+            if (consideredParticleTypes.contains(particleType)) {
+                danglingParticleToScope.put(danglingParticle, projectScope);
+            }
+        }
+
+        @Override
+        public void visit(final Element element) {
+            consume(ParticleType.ELEMENT, element.getName());
+        }
+
+        @Override
+        public void visit(final Type.Group group) {
+            consume(ParticleType.GROUP, group.getName());
+        }
+
+        @Override
+        public void visit(final Type.Complex complex) {
+            consume(ParticleType.COMPLEX_TYPE, complex.getName());
+        }
+
+        @Override
+        public void visit(final Type.Simple.Restriction restriction) {
+            consume(ParticleType.SIMPLE_TYPE_RESTRICTION, restriction.getName());
+        }
+
+        @Override
+        public void visit(final Type.Simple.Enumeration enumeration) {
+            consume(ParticleType.SIMPLE_TYPE_ENUMERATION, enumeration.getName());
+        }
+
+        @Override
+        public void visit(final Type.Simple.List list) {
+            consume(ParticleType.SIMPLE_TYPE_LIST, list.getName());
+        }
+
+        @Override
+        public void visit(final Type.Simple.Union union) {
+            consume(ParticleType.SIMPLE_TYPE_UNION, union.getName());
+        }
+
+        @Override
+        public void visit(final Attributes.GlobalAttributeGroupDeclaration globalAttributeGroupDeclaration) {
+            consume(ParticleType.GLOBAL_ATTRIBUTE_GROUP, globalAttributeGroupDeclaration.getName());
+        }
+
+        @Override
+        public void visit(final Attributes.GlobalAttributeDeclaration globalAttributeDeclaration) {
+            consume(ParticleType.GLOBAL_ATTRIBUTE, globalAttributeDeclaration.getName());
+        }
+    }
+
+    @RequiredArgsConstructor
     private static class DependenciesVisitor implements SequenceOrChoiceOrGroupRefOrElementListVisitor, NamedConceptWithOriginVisitor, AttributeVisitor {
         private final Schema schema;
+        final EnumSet<ParticleType> consideredParticleTypes;
         final Consumer<QName> danglingParticlesConsumer;
 
-        private void consume(final QName name) {
-            danglingParticlesConsumer.accept(name);
+        private void consume(final ParticleType particleType, final QName name) {
+            if (consideredParticleTypes.contains(particleType)) {
+                danglingParticlesConsumer.accept(name);
+            }
         }
 
         @Override
@@ -261,45 +336,45 @@ public class ParticleScopeAnalyzer {
             if (null == type || !type.getOrigin().isInternal()) {
                 return;
             }
-            consume(typeName);
+            consume(ParticleType.ELEMENT, typeName);
             type.accept(this);
         }
 
         @Override
         public void visit(final Type.Group group) {
-            consume(group.getName());
+            consume(ParticleType.GROUP, group.getName());
             group.getParticle().accept(this);
         }
 
         @Override
         public void visit(final Type.Complex complex) {
-            consume(complex.getName());
+            consume(ParticleType.COMPLEX_TYPE, complex.getName());
             complex.getParticle().accept(this);
         }
 
         @Override
         public void visit(final Type.Simple.Restriction restriction) {
-            consume(restriction.getName());
+            consume(ParticleType.SIMPLE_TYPE_RESTRICTION, restriction.getName());
         }
 
         @Override
         public void visit(final Type.Simple.Enumeration enumeration) {
-            consume(enumeration.getName());
+            consume(ParticleType.SIMPLE_TYPE_ENUMERATION, enumeration.getName());
         }
 
         @Override
         public void visit(final Type.Simple.List list) {
-            consume(list.getName());
+            consume(ParticleType.SIMPLE_TYPE_LIST, list.getName());
         }
 
         @Override
         public void visit(final Type.Simple.Union union) {
-            consume(union.getName());
+            consume(ParticleType.SIMPLE_TYPE_UNION, union.getName());
         }
 
         @Override
         public void visit(final Attributes.GlobalAttributeGroupDeclaration globalAttributeGroupDeclaration) {
-            consume(globalAttributeGroupDeclaration.getName());
+            consume(ParticleType.GLOBAL_ATTRIBUTE_GROUP, globalAttributeGroupDeclaration.getName());
             for (final Attributes.AttributeOrAttributeGroup attributeOrAttributeGroup : globalAttributeGroupDeclaration.getAttributes().values()) {
                 attributeOrAttributeGroup.accept(this);
             }
@@ -307,7 +382,7 @@ public class ParticleScopeAnalyzer {
 
         @Override
         public void visit(final Attributes.GlobalAttributeDeclaration globalAttributeDeclaration) {
-            consume(globalAttributeDeclaration.getName());
+            consume(ParticleType.GLOBAL_ATTRIBUTE, globalAttributeDeclaration.getName());
             final QName typeName = globalAttributeDeclaration.getType();
             final NamedConceptWithOrigin type = schema.getConcept(typeName);
             if (null == type || !type.getOrigin().isInternal()) {
@@ -333,7 +408,7 @@ public class ParticleScopeAnalyzer {
             if (null == attribute || !attribute.getOrigin().isInternal()) {
                 return;
             }
-            consume(attributeName);
+            consume(ParticleType.GLOBAL_ATTRIBUTE, attributeName);
             attribute.accept(this);
         }
 
@@ -344,7 +419,7 @@ public class ParticleScopeAnalyzer {
             if (null == group || !group.getOrigin().isInternal()) {
                 return;
             }
-            consume(groupName);
+            consume(ParticleType.GLOBAL_ATTRIBUTE_GROUP, groupName);
             group.accept(this);
         }
     }

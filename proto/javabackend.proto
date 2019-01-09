@@ -51,8 +51,22 @@ message CreateReportResponse {
     repeated Report reports = 1;
 }
 
+enum ParticleType {
+    PARTICLE_TYPE_UNSET = 0;
+    PARTICLE_TYPE_ELEMENT = 1;
+    PARTICLE_TYPE_COMPLEX_TYPE = 2;
+    PARTICLE_TYPE_GROUP = 3;
+    PARTICLE_TYPE_SIMPLE_TYPE_RESTRICTION = 4;
+    PARTICLE_TYPE_SIMPLE_TYPE_ENUMERATION = 5;
+    PARTICLE_TYPE_SIMPLE_TYPE_UNION = 6;
+    PARTICLE_TYPE_SIMPLE_TYPE_LIST = 7;
+    PARTICLE_TYPE_GLOBAL_ATTRIBUTE = 8;
+    PARTICLE_TYPE_GLOBAL_ATTRIBUTE_GROUP = 9;
+}
+
 message AssignParticlesRequest {
     SchemaAndProjectStructure schema_and_project_structure = 1;
+    repeated ParticleType ignoredParticleTypes = 2;
 }
 
 message AssignParticlesResponse {

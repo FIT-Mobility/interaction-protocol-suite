@@ -14,6 +14,7 @@ import de.fraunhofer.fit.ips.proto.javabackend.AssignParticlesResponse;
 import de.fraunhofer.fit.ips.proto.javabackend.CreateReportRequest;
 import de.fraunhofer.fit.ips.proto.javabackend.CreateReportResponse;
 import de.fraunhofer.fit.ips.proto.javabackend.JavaBackendGrpc;
+import de.fraunhofer.fit.ips.proto.javabackend.ParticleType;
 import de.fraunhofer.fit.ips.proto.javabackend.ReportType;
 import de.fraunhofer.fit.ips.proto.javabackend.ValidationRequest;
 import de.fraunhofer.fit.ips.proto.javabackend.ValidationResponse;
@@ -31,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,7 +172,44 @@ public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
             responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(e.getMessage()).withCause(e).asException());
             return;
         }
-        final Map<StructureBase, List<QName>> categorizedDanglingParticles = ParticleScopeAnalyzer.categorizeDanglingParticles(schema, project);
+        final EnumSet<ParticleScopeAnalyzer.ParticleType> consideredParticleTypes = EnumSet.allOf(ParticleScopeAnalyzer.ParticleType.class);
+        for (final ParticleType particleType : request.getIgnoredParticleTypesList()) {
+            switch (particleType) {
+                case PARTICLE_TYPE_ELEMENT:
+                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.ELEMENT);
+                    break;
+                case PARTICLE_TYPE_COMPLEX_TYPE:
+                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.COMPLEX_TYPE);
+                    break;
+                case PARTICLE_TYPE_GROUP:
+                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.GROUP);
+                    break;
+                case PARTICLE_TYPE_SIMPLE_TYPE_RESTRICTION:
+                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.SIMPLE_TYPE_RESTRICTION);
+                    break;
+                case PARTICLE_TYPE_SIMPLE_TYPE_ENUMERATION:
+                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.SIMPLE_TYPE_ENUMERATION);
+                    break;
+                case PARTICLE_TYPE_SIMPLE_TYPE_UNION:
+                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.SIMPLE_TYPE_UNION);
+                    break;
+                case PARTICLE_TYPE_SIMPLE_TYPE_LIST:
+                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.SIMPLE_TYPE_LIST);
+                    break;
+                case PARTICLE_TYPE_GLOBAL_ATTRIBUTE:
+                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.GLOBAL_ATTRIBUTE);
+                    break;
+                case PARTICLE_TYPE_GLOBAL_ATTRIBUTE_GROUP:
+                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.GLOBAL_ATTRIBUTE_GROUP);
+                    break;
+                case PARTICLE_TYPE_UNSET:
+                    break;
+                case UNRECOGNIZED:
+                    responseObserver.onError(Status.INVALID_ARGUMENT.augmentDescription("unrecognized particle type " + particleType).asException());
+                    return;
+            }
+        }
+        final Map<StructureBase, List<QName>> categorizedDanglingParticles = ParticleScopeAnalyzer.categorizeDanglingParticles(schema, project, consideredParticleTypes);
         final AssignParticlesResponse.Builder responseBuilder = AssignParticlesResponse.newBuilder();
         for (final Map.Entry<StructureBase, List<QName>> entry : categorizedDanglingParticles.entrySet()) {
             final AssignParticlesResponse.TargetIdentifierAndParticles.Builder tiapBuilder
