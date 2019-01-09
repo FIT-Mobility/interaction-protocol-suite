@@ -9,12 +9,12 @@ import de.fraunhofer.fit.ips.model.template.Project;
 import de.fraunhofer.fit.ips.model.template.helper.StructureBase;
 import de.fraunhofer.fit.ips.model.xsd.Schema;
 import de.fraunhofer.fit.ips.particleassignment.ParticleScopeAnalyzer;
+import de.fraunhofer.fit.ips.particleassignment.ParticleType;
 import de.fraunhofer.fit.ips.proto.javabackend.AssignParticlesRequest;
 import de.fraunhofer.fit.ips.proto.javabackend.AssignParticlesResponse;
 import de.fraunhofer.fit.ips.proto.javabackend.CreateReportRequest;
 import de.fraunhofer.fit.ips.proto.javabackend.CreateReportResponse;
 import de.fraunhofer.fit.ips.proto.javabackend.JavaBackendGrpc;
-import de.fraunhofer.fit.ips.proto.javabackend.ParticleType;
 import de.fraunhofer.fit.ips.proto.javabackend.ReportType;
 import de.fraunhofer.fit.ips.proto.javabackend.ValidationRequest;
 import de.fraunhofer.fit.ips.proto.javabackend.ValidationResponse;
@@ -172,35 +172,35 @@ public class MyJavaBackendImpl extends JavaBackendGrpc.JavaBackendImplBase {
             responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(e.getMessage()).withCause(e).asException());
             return;
         }
-        final EnumSet<ParticleScopeAnalyzer.ParticleType> consideredParticleTypes = EnumSet.allOf(ParticleScopeAnalyzer.ParticleType.class);
-        for (final ParticleType particleType : request.getIgnoredParticleTypesList()) {
+        final EnumSet<ParticleType> consideredParticleTypes = EnumSet.allOf(ParticleType.class);
+        for (final de.fraunhofer.fit.ips.proto.javabackend.ParticleType particleType : request.getIgnoredParticleTypesList()) {
             switch (particleType) {
                 case PARTICLE_TYPE_ELEMENT:
-                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.ELEMENT);
+                    consideredParticleTypes.remove(ParticleType.ELEMENT);
                     break;
                 case PARTICLE_TYPE_COMPLEX_TYPE:
-                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.COMPLEX_TYPE);
+                    consideredParticleTypes.remove(ParticleType.COMPLEX_TYPE);
                     break;
                 case PARTICLE_TYPE_GROUP:
-                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.GROUP);
+                    consideredParticleTypes.remove(ParticleType.GROUP);
                     break;
                 case PARTICLE_TYPE_SIMPLE_TYPE_RESTRICTION:
-                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.SIMPLE_TYPE_RESTRICTION);
+                    consideredParticleTypes.remove(ParticleType.SIMPLE_TYPE_RESTRICTION);
                     break;
                 case PARTICLE_TYPE_SIMPLE_TYPE_ENUMERATION:
-                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.SIMPLE_TYPE_ENUMERATION);
+                    consideredParticleTypes.remove(ParticleType.SIMPLE_TYPE_ENUMERATION);
                     break;
                 case PARTICLE_TYPE_SIMPLE_TYPE_UNION:
-                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.SIMPLE_TYPE_UNION);
+                    consideredParticleTypes.remove(ParticleType.SIMPLE_TYPE_UNION);
                     break;
                 case PARTICLE_TYPE_SIMPLE_TYPE_LIST:
-                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.SIMPLE_TYPE_LIST);
+                    consideredParticleTypes.remove(ParticleType.SIMPLE_TYPE_LIST);
                     break;
                 case PARTICLE_TYPE_GLOBAL_ATTRIBUTE:
-                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.GLOBAL_ATTRIBUTE);
+                    consideredParticleTypes.remove(ParticleType.GLOBAL_ATTRIBUTE);
                     break;
                 case PARTICLE_TYPE_GLOBAL_ATTRIBUTE_GROUP:
-                    consideredParticleTypes.remove(ParticleScopeAnalyzer.ParticleType.GLOBAL_ATTRIBUTE_GROUP);
+                    consideredParticleTypes.remove(ParticleType.GLOBAL_ATTRIBUTE_GROUP);
                     break;
                 case PARTICLE_TYPE_UNSET:
                     break;
