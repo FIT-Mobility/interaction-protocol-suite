@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.impl.xb.xmlschema.SpaceAttribute;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
@@ -17,6 +18,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShortHexNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.STFldCharTypeImpl;
 
+import javax.xml.XMLConstants;
+import javax.xml.namespace.QName;
 import java.math.BigInteger;
 import java.util.Optional;
 import java.util.function.Function;
@@ -83,7 +86,15 @@ public class ParagraphHelper {
     }
 
     private static XWPFRun internalSetText(final XWPFRun run, final String text) {
-        run.setText("${r\"" + text + "\"}");
+        // since we escape the text and hide leading and trailing spaces this way, we reproduce the logic of XWPFRun::setText here based on the unescaped text
+        final CTText ctText = run.getCTR().addNewT();
+        ctText.setStringValue("${r\"" + text + "\"}");
+        if (text != null && (text.startsWith(" ") || text.endsWith(" "))) {
+            final XmlCursor c = ctText.newCursor();
+            c.toNextToken();
+            c.insertAttributeWithValue(new QName(XMLConstants.XML_NS_URI, "space"), "preserve");
+            c.dispose();
+        }
         return run;
     }
 
