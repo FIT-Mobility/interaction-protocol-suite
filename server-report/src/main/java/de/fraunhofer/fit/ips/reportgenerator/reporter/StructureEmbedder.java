@@ -21,11 +21,13 @@ import de.fraunhofer.fit.ips.model.xsd.NamedConceptWithOrigin;
 import de.fraunhofer.fit.ips.model.xsd.NamedConceptWithOriginVisitor;
 import de.fraunhofer.fit.ips.model.xsd.Schema;
 import de.fraunhofer.fit.ips.model.xsd.Type;
+import de.fraunhofer.fit.ips.reportgenerator.reporter.poi.AttributesTableHelper;
 import de.fraunhofer.fit.ips.reportgenerator.reporter.poi.BookmarkHelper;
 import de.fraunhofer.fit.ips.reportgenerator.reporter.poi.CaptionHelper;
 import de.fraunhofer.fit.ips.reportgenerator.reporter.poi.Context;
 import de.fraunhofer.fit.ips.reportgenerator.reporter.poi.CursorHelper;
 import de.fraunhofer.fit.ips.reportgenerator.reporter.poi.ParagraphHelper;
+import de.fraunhofer.fit.ips.reportgenerator.reporter.poi.SimpleTypesTableHelper;
 import de.fraunhofer.fit.ips.reportgenerator.reporter.poi.VdvStyle;
 import de.fraunhofer.fit.ips.reportgenerator.reporter.poi.VdvTables;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +42,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.BiConsumer;
 
 /**
  * @author Fabian Ohler <fabian.ohler1@rwth-aachen.de>
@@ -278,19 +279,41 @@ public class StructureEmbedder {
                     VdvTables.processEnumeration(context, cursorHelper, captionHelper, enumeration);
                 }
 
+                // TODO really render simple types separately?
                 @Override
                 public void visit(final Type.Simple.Restriction restriction) {
-                    // TODO render simple types
+                    final String name = restriction.getName().getLocalPart();
+                    captionHelper.createTableCaption(
+                            "Description of restriction ",
+                            new BookmarkHelper("tbl_" + name, name),
+                            ""
+                    );
+                    final SimpleTypesTableHelper simpleTypesTableHelper = new SimpleTypesTableHelper(context, cursorHelper);
+                    simpleTypesTableHelper.addRestriction(restriction);
                 }
 
                 @Override
                 public void visit(final Type.Simple.List list) {
-                    // TODO render simple types
+                    final String name = list.getName().getLocalPart();
+                    captionHelper.createTableCaption(
+                            "Description of list ",
+                            new BookmarkHelper("tbl_" + name, name),
+                            ""
+                    );
+                    final SimpleTypesTableHelper simpleTypesTableHelper = new SimpleTypesTableHelper(context, cursorHelper);
+                    simpleTypesTableHelper.addList(list);
                 }
 
                 @Override
                 public void visit(final Type.Simple.Union union) {
-                    // TODO render simple types
+                    final String name = union.getName().getLocalPart();
+                    captionHelper.createTableCaption(
+                            "Description of union ",
+                            new BookmarkHelper("tbl_" + name, name),
+                            ""
+                    );
+                    final SimpleTypesTableHelper simpleTypesTableHelper = new SimpleTypesTableHelper(context, cursorHelper);
+                    simpleTypesTableHelper.addUnion(union);
                 }
 
                 @Override
@@ -299,6 +322,14 @@ public class StructureEmbedder {
 
                 @Override
                 public void visit(final Attributes.GlobalAttributeDeclaration globalAttributeDeclaration) {
+                    final String name = globalAttributeDeclaration.getName().getLocalPart();
+                    captionHelper.createTableCaption(
+                            "Description of global attribute ",
+                            new BookmarkHelper("tbl_" + name, name),
+                            ""
+                    );
+                    final AttributesTableHelper attributesTableHelper = new AttributesTableHelper(context, cursorHelper);
+                    attributesTableHelper.addAttributeDeclaration(context, globalAttributeDeclaration);
                 }
             });
         }
