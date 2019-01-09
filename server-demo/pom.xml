@@ -106,6 +106,8 @@
                     </execution>
                 </executions>
                 <dependencies>
+                    <!-- version 2.3.1 of the following dependencies doesn't work at the moment -->
+
                     <!-- https://mvnrepository.com/artifact/com.sun.xml.bind.mvn/jaxb-codemodel-parent -->
                     <dependency>
                         <groupId>com.sun.xml.bind.mvn</groupId>
@@ -206,7 +208,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -402,13 +404,13 @@
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-core</artifactId>
-            <version>1.19</version>
+            <version>1.21</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-generator-annprocess</artifactId>
-            <version>1.19</version>
+            <version>1.21</version>
             <scope>test</scope>
         </dependency>
 
