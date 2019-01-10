@@ -171,10 +171,13 @@ public class Attributes {
     @Getter
     public static abstract class Attribute extends AttributeOrAttributeGroup {
         final boolean required;
+        @Nonnull final AttributeDefaultOrFixedValue defaultOrFixedValue;
 
-        public Attribute(final Documentations docs, final boolean required) {
+        public Attribute(final Documentations docs, final boolean required,
+                         @Nonnull final AttributeDefaultOrFixedValue defaultOrFixedValue) {
             super(docs);
             this.required = required;
+            this.defaultOrFixedValue = defaultOrFixedValue;
         }
     }
 
@@ -182,15 +185,13 @@ public class Attributes {
     @Getter
     public static class LocalAttribute extends Attribute {
         @Nonnull final LocalAttributeDeclaration localAttributeDeclaration;
-        @Nonnull final AttributeDefaultOrFixedValue defaultOrFixedValue;
 
         public LocalAttribute(@Nonnull final Documentations docs,
                               final boolean required,
                               @Nonnull final LocalAttributeDeclaration localAttributeDeclaration,
                               @Nonnull final AttributeDefaultOrFixedValue defaultOrFixedValue) {
-            super(docs, required);
+            super(docs, required, defaultOrFixedValue);
             this.localAttributeDeclaration = localAttributeDeclaration;
-            this.defaultOrFixedValue = defaultOrFixedValue;
         }
 
         @Override
@@ -203,15 +204,13 @@ public class Attributes {
     @Getter
     public static class GlobalAttribute extends Attribute {
         @Nonnull final QName globalAttributeDeclarationName;
-        @Nonnull final AttributeDefaultOrFixedValue defaultOrFixedValue;
 
         public GlobalAttribute(@Nonnull final QName globalAttributeDeclarationName,
                                @Nonnull final Documentations docs,
                                final boolean required,
                                @Nonnull final AttributeDefaultOrFixedValue defaultOrFixedValue) {
-            super(docs, required);
+            super(docs, required, defaultOrFixedValue);
             this.globalAttributeDeclarationName = globalAttributeDeclarationName;
-            this.defaultOrFixedValue = defaultOrFixedValue;
         }
 
         @Override
