@@ -321,6 +321,7 @@ public class StructureEmbedder {
 
                 @Override
                 public void visit(final Attributes.GlobalAttributeGroupDeclaration globalAttributeGroupDeclaration) {
+                    VdvTables.processAttributeGroup(context, cursorHelper, captionHelper, globalAttributeGroupDeclaration);
                 }
 
                 @Override

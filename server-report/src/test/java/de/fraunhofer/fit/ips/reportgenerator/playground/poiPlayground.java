@@ -307,6 +307,7 @@ public class poiPlayground {
                 {
                     final DataTypeTableHelper dataTypeTableHelper = new DataTypeTableHelper(context, cursorHelper,
                             new QName("PassengerCountingService.RetrieveSpecificDoorDataRequest"),
+                            "+Structure",
                             Collections.singletonList("Request structure for the specific door information counting data")
                     );
                     try (final DataTypeTableHelper.GroupHelper groupHelper = dataTypeTableHelper.startGroup(new QName(""))) {
@@ -331,6 +332,7 @@ public class poiPlayground {
                 {
                     final DataTypeTableHelper dataTypeTableHelper = new DataTypeTableHelper(context, cursorHelper,
                             new QName("PassengerCountingService.RetrieveSpecificDoorDataResponse"),
+                            "+Structure",
                             Collections.singletonList("Response structure with counting data of a specific door"));
                     try (final DataTypeTableHelper.GroupHelper groupHelper = dataTypeTableHelper.startGroup(new QName(""))) {
                         try (final DataTypeTableHelper.GroupHelper.ChoiceHelper choiceHelper = groupHelper.startChoice("1:1")) {
@@ -358,6 +360,7 @@ public class poiPlayground {
                 {
                     final DataTypeTableHelper dataTypeTableHelper = new DataTypeTableHelper(context, cursorHelper,
                             new QName("PassengerCountingService.SpecificDoorData"),
+                            "+Structure",
                             Collections.singletonList("Detailed structure with counting data of a specific door"));
                     try (final DataTypeTableHelper.GroupHelper groupHelper = dataTypeTableHelper.startGroup(new QName(""))) {
                         groupHelper.addElement(

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @ToString
 @Getter
-public class Attributes {
+public class Attributes implements AttributesWrapperOrGroup {
 
     public interface AttributeDefaultOrFixedValue {
         @Nullable
@@ -82,7 +82,7 @@ public class Attributes {
     @RequiredArgsConstructor
     @ToString
     @Getter
-    public static class GlobalAttributeGroupDeclaration implements NamedConceptWithOrigin {
+    public static class GlobalAttributeGroupDeclaration implements NamedConceptWithOrigin, AttributesWrapperOrGroup {
         @Nonnull final QName name;
         @Nonnull final Origin origin;
         @Nonnull final Documentations docs;

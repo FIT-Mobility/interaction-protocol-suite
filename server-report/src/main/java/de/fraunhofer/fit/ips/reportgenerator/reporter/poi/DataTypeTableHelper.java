@@ -25,10 +25,11 @@ public class DataTypeTableHelper extends TableHelper {
     public DataTypeTableHelper(final Context context,
                                final CursorHelper cursorHelper,
                                final QName typeName,
+                               final String conceptType,
                                final List<String> description) {
         super(context, cursorHelper.createTable());
         setUpXmlTableStructure();
-        setHeaderRow(typeName, description);
+        setHeaderRow(typeName, conceptType, description);
     }
 
     private void setUpXmlTableStructure() {
@@ -62,14 +63,14 @@ public class DataTypeTableHelper extends TableHelper {
         addColumnToGrid(tableGrid, 6.98);
     }
 
-    private void setHeaderRow(final QName typeName, final List<String> description) {
+    private void setHeaderRow(final QName typeName, final String conceptType, final List<String> description) {
         assert 1 == table.getNumberOfRows() : "setHeaderRow should only be called once before everything else!";
         final XWPFTableRow row = table.getNumberOfRows() == 0 ? table.createRow() : table.getRow(0);
         // row.setRepeatHeader(true);
         smartPrettyPrint(createCellHelper(row, 0, Format.BOLD_ITALICS), Format.BOLD_ITALICS, typeName, false, false);
 //        createCellHelper(row, 0, Format.BOLD_ITALICS).text(Constants.improveCamelCaseLineBreaks(typeName));
         setGridSpan(row, 0, 4);
-        createCellHelper(row, 1, Format.ITALICS).text("+Structure");
+        createCellHelper(row, 1, Format.ITALICS).text(conceptType);
         insertDocumentation(createCellHelper(row, 2, Format.BOLD), description);
     }
 

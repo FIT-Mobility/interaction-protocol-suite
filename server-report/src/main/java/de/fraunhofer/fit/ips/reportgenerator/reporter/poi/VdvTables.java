@@ -5,6 +5,7 @@ import de.fraunhofer.fit.ips.model.template.Request;
 import de.fraunhofer.fit.ips.model.template.Response;
 import de.fraunhofer.fit.ips.model.xsd.AttributeVisitor;
 import de.fraunhofer.fit.ips.model.xsd.Attributes;
+import de.fraunhofer.fit.ips.model.xsd.AttributesWrapperOrGroup;
 import de.fraunhofer.fit.ips.model.xsd.Choice;
 import de.fraunhofer.fit.ips.model.xsd.Derivation;
 import de.fraunhofer.fit.ips.model.xsd.Documentations;
@@ -233,11 +234,11 @@ public class VdvTables {
                 new BookmarkHelper(dataType.getName().getLocalPart()),
                 ""
         );
-        // FIXME +Structure in headerRow should be +Group !?
         final DataTypeTableHelper dataTypeTableHelper = new DataTypeTableHelper(
                 context,
                 cursorHelper,
                 dataType.getName(),
+                "+Group",
                 Constants.getDocs(context, dataType.getDocs())
         );
         final SequenceOrChoiceOrGroupRef particle = dataType.getParticle();
@@ -257,6 +258,7 @@ public class VdvTables {
                 context,
                 cursorHelper,
                 dataType.getName(),
+                "+Structure",
                 Constants.getDocs(context, dataType.getDocs())
         );
         final Derivation derivation = dataType.getDerivation();
@@ -277,12 +279,35 @@ public class VdvTables {
         final SequenceOrChoiceOrGroupRef particle = dataType.getParticle();
         particle.accept(new ComplexTypeVisitor(context, dataTypeTableHelper, context.reportConfiguration.isExpandElementGroups()));
 
-        final Attributes attributes = dataType.getAttributes();
-        if (context.reportConfiguration.isExpandAttributeGroups()) {
-            OuterAttributeVisitor.handle(dataTypeTableHelper, context, attributes);
-        } else {
-            InnerAttributeVisitorImpl.handle(dataTypeTableHelper, context, attributes);
-        }
+        final AttributesHandler attributesHandler =
+                context.reportConfiguration.isExpandAttributeGroups()
+                        ? ExpandingAttributeVisitor::handle
+                        : NonExpandingAttributeVisitor::handle;
+        attributesHandler.handle(dataTypeTableHelper, context, dataType.getAttributes());
+    }
+
+    public static void processAttributeGroup(final Context context, final CursorHelper cursorHelper,
+                                             final CaptionHelper captionHelper,
+                                             final Attributes.GlobalAttributeGroupDeclaration globalAttributeGroupDeclaration) {
+        final QName groupName = globalAttributeGroupDeclaration.getName();
+        captionHelper.createTableCaption(
+                "Description of ",
+                new BookmarkHelper(groupName.getLocalPart()),
+                ""
+        );
+        final DataTypeTableHelper dataTypeTableHelper = new DataTypeTableHelper(
+                context,
+                cursorHelper,
+                groupName,
+                "+AttributeGroup",
+                Constants.getDocs(context, globalAttributeGroupDeclaration.getDocs())
+        );
+
+        final AttributesHandler attributesHandler =
+                context.reportConfiguration.isExpandAttributeGroups()
+                        ? ExpandingAttributeVisitor::handle
+                        : NonExpandingAttributeVisitor::handle;
+        attributesHandler.handle(dataTypeTableHelper, context, globalAttributeGroupDeclaration);
     }
 
     @RequiredArgsConstructor
@@ -350,7 +375,7 @@ public class VdvTables {
                     }
                 });
 
-                new InnerAttributeVisitorImpl(groupHelper, context).handle(complex.getAttributes());
+                NonExpandingAttributeVisitor.handle(groupHelper, context, complex.getAttributes());
             }
         }
 
@@ -815,15 +840,21 @@ public class VdvTables {
         );
     }
 
-    public static void processAttribute(final DataTypeTableHelper.GroupHelper attributesHelper,
+    public static void processAttribute(final DataTypeTableHelper.GroupHelper groupHelper,
                                         final boolean required, final QName attributeName, final QName typeName,
                                         final Attributes.AttributeDefaultOrFixedValue defaultOrFixedValue,
                                         final List<String> description) {
-        attributesHelper.addAttribute(required, attributeName, typeName, defaultOrFixedValue, description);
+        groupHelper.addAttribute(required, attributeName, typeName, defaultOrFixedValue, description);
+    }
+
+    interface AttributesHandler {
+        void handle(final DataTypeTableHelper dataTypeTableHelper,
+                    final Context context,
+                    final AttributesWrapperOrGroup attributesWrapperOrGroup);
     }
 
     @RequiredArgsConstructor
-    private static class OuterAttributeVisitor implements AttributeVisitor {
+    private static class ExpandingAttributeVisitor implements AttributeVisitor {
         final DataTypeTableHelper dataTypeTableHelper;
         final Context context;
         final boolean noTlWildcard;
@@ -831,20 +862,17 @@ public class VdvTables {
 
         public static void handle(final DataTypeTableHelper dataTypeTableHelper,
                                   final Context context,
-                                  final Attributes attributes) {
-            new OuterAttributeVisitor(dataTypeTableHelper, context, null == attributes.getAnyAttribute()).handle(attributes);
-        }
-
-        private void handle(final Attributes attributes) {
-            for (final Attributes.AttributeOrAttributeGroup attributeOrAttributeGroup : attributes.getAttributes().values()) {
-                attributeOrAttributeGroup.accept(this);
+                                  final AttributesWrapperOrGroup attributesWrapperOrGroup) {
+            final Attributes.AnyAttribute anyAttribute = attributesWrapperOrGroup.getAnyAttribute();
+            final ExpandingAttributeVisitor instance = new ExpandingAttributeVisitor(dataTypeTableHelper, context, null == anyAttribute);
+            for (final Attributes.AttributeOrAttributeGroup attributeOrAttributeGroup : attributesWrapperOrGroup.getAttributes().values()) {
+                attributeOrAttributeGroup.accept(instance);
             }
-            final Attributes.AnyAttribute anyAttribute = attributes.getAnyAttribute();
             if (null != anyAttribute) {
-                initGroupHelper();
-                groupHelper.addWildcard(anyAttribute);
+                instance.initGroupHelper();
+                instance.groupHelper.addWildcard(anyAttribute);
             }
-            deinitGroupHelper();
+            instance.deinitGroupHelper();
         }
 
         private void initGroupHelper() {
@@ -915,7 +943,7 @@ public class VdvTables {
 
             deinitGroupHelper();
             try (final DataTypeTableHelper.GroupHelper groupHelper = dataTypeTableHelper.startGroup(name)) {
-                final InnerAttributeVisitorImpl nestedAttributeVisitor = new InnerAttributeVisitorImpl(groupHelper, context);
+                final NonExpandingAttributeVisitor nestedAttributeVisitor = new NonExpandingAttributeVisitor(groupHelper, context);
                 for (final Attributes.AttributeOrAttributeGroup attributeOrAttributeGroup : attributes.values()) {
                     attributeOrAttributeGroup.accept(nestedAttributeVisitor);
                 }
@@ -928,36 +956,39 @@ public class VdvTables {
     }
 
     @RequiredArgsConstructor
-    private static class InnerAttributeVisitorImpl implements AttributeVisitor {
+    private static class NonExpandingAttributeVisitor implements AttributeVisitor {
         final DataTypeTableHelper.GroupHelper groupHelper;
         final Context context;
 
         public static void handle(final DataTypeTableHelper tableHelper,
                                   final Context context,
-                                  final Attributes attributes) {
-            try (final DataTypeTableHelper.GroupHelper attributesHelper = tableHelper.startGroup(EMPTY_QNAME)) {
-                new InnerAttributeVisitorImpl(attributesHelper, context).handle(attributes);
+                                  final AttributesWrapperOrGroup attributesWrapperOrGroup) {
+            try (final DataTypeTableHelper.GroupHelper groupHelper = tableHelper.startGroup(EMPTY_QNAME)) {
+                handle(groupHelper, context, attributesWrapperOrGroup);
             }
         }
 
-        private void handle(final Attributes attributes) {
-            for (final Attributes.AttributeOrAttributeGroup attributeOrAttributeGroup : attributes.getAttributes().values()) {
-                attributeOrAttributeGroup.accept(this);
+        public static void handle(final DataTypeTableHelper.GroupHelper groupHelper,
+                                  final Context context,
+                                  final AttributesWrapperOrGroup attributesWrapperOrGroup) {
+            final NonExpandingAttributeVisitor instance = new NonExpandingAttributeVisitor(groupHelper, context);
+            for (final Attributes.AttributeOrAttributeGroup attributeOrAttributeGroup : attributesWrapperOrGroup.getAttributes().values()) {
+                attributeOrAttributeGroup.accept(instance);
             }
-            final Attributes.AnyAttribute anyAttribute = attributes.getAnyAttribute();
+            final Attributes.AnyAttribute anyAttribute = attributesWrapperOrGroup.getAnyAttribute();
             if (null != anyAttribute) {
-                groupHelper.addWildcard(anyAttribute);
+                instance.groupHelper.addWildcard(anyAttribute);
             }
         }
 
         @Override
         public void visit(final Attributes.LocalAttribute localAttribute) {
-            OuterAttributeVisitor.handleLocalAttribute(context, groupHelper, localAttribute);
+            ExpandingAttributeVisitor.handleLocalAttribute(context, groupHelper, localAttribute);
         }
 
         @Override
         public void visit(final Attributes.GlobalAttribute globalAttribute) {
-            OuterAttributeVisitor.handleGlobalAttribute(context, groupHelper, globalAttribute);
+            ExpandingAttributeVisitor.handleGlobalAttribute(context, groupHelper, globalAttribute);
         }
 
         @Override
