@@ -137,7 +137,7 @@ public class VdvTables {
 
         @Override
         public void visit(final Type.Group group) {
-            processGroupDataType(context, cursorHelper, captionHelper, group);
+            processGroup(context, cursorHelper, captionHelper, group);
         }
 
         @Override
@@ -225,15 +225,16 @@ public class VdvTables {
         context.getConcept(conceptName).accept(processor);
     }
 
-    public static void processGroupDataType(final Context context,
-                                            final CursorHelper cursorHelper,
-                                            final CaptionHelper captionHelper,
-                                            final Type.Group dataType) {
+    public static void processGroup(final Context context,
+                                    final CursorHelper cursorHelper,
+                                    final CaptionHelper captionHelper,
+                                    final Type.Group dataType) {
         captionHelper.createTableCaption(
                 "Description of ",
                 new BookmarkHelper(dataType.getName().getLocalPart()),
                 ""
         );
+        // FIXME +Structure in headerRow should be +Group !?
         final DataTypeTableHelper dataTypeTableHelper = new DataTypeTableHelper(
                 context,
                 cursorHelper,

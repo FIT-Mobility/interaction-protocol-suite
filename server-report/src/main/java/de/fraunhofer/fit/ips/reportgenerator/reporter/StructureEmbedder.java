@@ -266,7 +266,7 @@ public class StructureEmbedder {
 
                 @Override
                 public void visit(final Type.Group group) {
-                    VdvTables.processGroupDataType(context, cursorHelper, captionHelper, group);
+                    VdvTables.processGroup(context, cursorHelper, captionHelper, group);
                 }
 
                 @Override
