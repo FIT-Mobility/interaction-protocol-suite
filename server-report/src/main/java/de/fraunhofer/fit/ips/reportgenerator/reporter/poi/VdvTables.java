@@ -849,10 +849,15 @@ public class VdvTables {
         @Override
         public void visit(final Attributes.LocalAttribute localAttribute) {
             initGroupHelper();
+            handleLocalAttribute(context, groupHelper, localAttribute);
+        }
 
+        private static void handleLocalAttribute(final Context context, final DataTypeTableHelper.GroupHelper groupHelper,
+                                                 final Attributes.LocalAttribute localAttribute) {
             final boolean required = localAttribute.isRequired();
             final Documentations useDocs = localAttribute.getDocs();
             final Attributes.AttributeDefaultOrFixedValue defaultOrFixedValue = localAttribute.getDefaultOrFixedValue();
+
             final Attributes.LocalAttributeDeclaration localAttributeDeclaration = localAttribute.getLocalAttributeDeclaration();
             final QName name = localAttributeDeclaration.getName();
             final Documentations declDocs = localAttributeDeclaration.getDocs();
@@ -864,15 +869,19 @@ public class VdvTables {
         @Override
         public void visit(final Attributes.GlobalAttribute globalAttribute) {
             initGroupHelper();
+            handleGlobalAttribute(context, groupHelper, globalAttribute);
+        }
 
+        private static void handleGlobalAttribute(Context context, DataTypeTableHelper.GroupHelper groupHelper,
+                                                  Attributes.GlobalAttribute globalAttribute) {
             final boolean required = globalAttribute.isRequired();
             final Documentations useDocs = globalAttribute.getDocs();
             final Attributes.AttributeDefaultOrFixedValue useDefaultOrFixedValue = globalAttribute.getDefaultOrFixedValue();
+
             final Attributes.GlobalAttributeDeclaration globalAttributeDeclaration = (Attributes.GlobalAttributeDeclaration) context.getConcept(globalAttribute.getGlobalAttributeDeclarationName());
             final QName name = globalAttributeDeclaration.getName();
             final Documentations declDocs = globalAttributeDeclaration.getDocs();
             final QName type = globalAttributeDeclaration.getType();
-            final Origin origin = globalAttributeDeclaration.getOrigin();
             final Attributes.AttributeDefaultOrFixedValue declDefaultOrFixedValue = globalAttributeDeclaration.getDefaultOrFixedValue();
 
             final Attributes.AttributeDefaultOrFixedValue defaultOrFixedValue =
@@ -884,11 +893,8 @@ public class VdvTables {
 
         @Override
         public void visit(final Attributes.AttributeGroup attributeGroup) {
-            final Documentations useDocs = attributeGroup.getDocs();
             final Attributes.GlobalAttributeGroupDeclaration globalAttributeGroupDeclaration = (Attributes.GlobalAttributeGroupDeclaration) context.getConcept(attributeGroup.getAttributeGroupDeclarationName());
             final QName name = globalAttributeGroupDeclaration.getName();
-            final Documentations declDocs = globalAttributeGroupDeclaration.getDocs();
-            final Origin origin = globalAttributeGroupDeclaration.getOrigin();
             final LinkedHashMap<QName, Attributes.AttributeOrAttributeGroup> attributes = globalAttributeGroupDeclaration.getAttributes();
             final Attributes.AnyAttribute anyAttribute = globalAttributeGroupDeclaration.getAnyAttribute();
 
@@ -931,34 +937,12 @@ public class VdvTables {
 
         @Override
         public void visit(final Attributes.LocalAttribute localAttribute) {
-            final boolean required = localAttribute.isRequired();
-            final Documentations useDocs = localAttribute.getDocs();
-            final Attributes.AttributeDefaultOrFixedValue defaultOrFixedValue = localAttribute.getDefaultOrFixedValue();
-            final Attributes.LocalAttributeDeclaration localAttributeDeclaration = localAttribute.getLocalAttributeDeclaration();
-            final QName name = localAttributeDeclaration.getName();
-            final Documentations declDocs = localAttributeDeclaration.getDocs();
-            final QName type = localAttributeDeclaration.getType();
-
-            processAttribute(groupHelper, required, name, type, defaultOrFixedValue, Constants.getDocs(context, useDocs, declDocs));
+            OuterAttributeVisitor.handleLocalAttribute(context, groupHelper, localAttribute);
         }
 
         @Override
         public void visit(final Attributes.GlobalAttribute globalAttribute) {
-            final boolean required = globalAttribute.isRequired();
-            final Documentations useDocs = globalAttribute.getDocs();
-            final Attributes.AttributeDefaultOrFixedValue useDefaultOrFixedValue = globalAttribute.getDefaultOrFixedValue();
-            final Attributes.GlobalAttributeDeclaration globalAttributeDeclaration = (Attributes.GlobalAttributeDeclaration) context.getConcept(globalAttribute.getGlobalAttributeDeclarationName());
-            final QName name = globalAttributeDeclaration.getName();
-            final Documentations declDocs = globalAttributeDeclaration.getDocs();
-            final QName type = globalAttributeDeclaration.getType();
-            final Origin origin = globalAttributeDeclaration.getOrigin();
-            final Attributes.AttributeDefaultOrFixedValue declDefaultOrFixedValue = globalAttributeDeclaration.getDefaultOrFixedValue();
-
-            final Attributes.AttributeDefaultOrFixedValue defaultOrFixedValue =
-                    Attributes.AttributeDefaultOrFixedValue.NONE != useDefaultOrFixedValue ?
-                            useDefaultOrFixedValue : declDefaultOrFixedValue;
-
-            processAttribute(groupHelper, required, name, type, defaultOrFixedValue, Constants.getDocs(context, useDocs, declDocs));
+            OuterAttributeVisitor.handleGlobalAttribute(context, groupHelper, globalAttribute);
         }
 
         @Override
@@ -967,9 +951,6 @@ public class VdvTables {
             final Attributes.GlobalAttributeGroupDeclaration globalAttributeGroupDeclaration = (Attributes.GlobalAttributeGroupDeclaration) context.getConcept(attributeGroup.getAttributeGroupDeclarationName());
             final QName name = globalAttributeGroupDeclaration.getName();
             final Documentations declDocs = globalAttributeGroupDeclaration.getDocs();
-            final Origin origin = globalAttributeGroupDeclaration.getOrigin();
-            final LinkedHashMap<QName, Attributes.AttributeOrAttributeGroup> attributes = globalAttributeGroupDeclaration.getAttributes();
-            final Attributes.AnyAttribute anyAttribute = globalAttributeGroupDeclaration.getAnyAttribute();
 
             processAttribute(groupHelper, true, name, name, Attributes.AttributeDefaultOrFixedValue.NONE, Constants.getDocs(context, useDocs, declDocs));
         }
