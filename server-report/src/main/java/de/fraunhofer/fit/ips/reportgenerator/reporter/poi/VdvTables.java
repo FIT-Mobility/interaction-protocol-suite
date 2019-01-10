@@ -13,7 +13,6 @@ import de.fraunhofer.fit.ips.model.xsd.ElementList;
 import de.fraunhofer.fit.ips.model.xsd.GroupRef;
 import de.fraunhofer.fit.ips.model.xsd.NamedConceptWithOrigin;
 import de.fraunhofer.fit.ips.model.xsd.NamedConceptWithOriginVisitor;
-import de.fraunhofer.fit.ips.model.xsd.Origin;
 import de.fraunhofer.fit.ips.model.xsd.Sequence;
 import de.fraunhofer.fit.ips.model.xsd.SequenceOrChoice;
 import de.fraunhofer.fit.ips.model.xsd.SequenceOrChoiceOrGroupRef;
@@ -40,6 +39,7 @@ import java.util.Optional;
  */
 @Slf4j
 public class VdvTables {
+    private static final QName EMPTY_QNAME = new QName("");
 
     public static void handleFunctionWithoutHeading(final Context context,
                                                     final CursorHelper cursorHelper,
@@ -437,7 +437,7 @@ public class VdvTables {
         @Override
         public void visit(final Choice choice) {
             final List<SequenceOrChoiceOrGroupRefOrElementList> children = choice.getParticleList();
-            try (final DataTypeTableHelper.GroupHelper groupHelper = dataTypeTableHelper.startGroup(new QName(""))) {
+            try (final DataTypeTableHelper.GroupHelper groupHelper = dataTypeTableHelper.startGroup(EMPTY_QNAME)) {
                 try (final DataTypeTableHelper.GroupHelper.ChoiceHelper choiceHelper = groupHelper.startChoice(choice.getCardinality())) {
                     final ChoiceInComplexTypeVisitor visitor = new ChoiceInComplexTypeVisitor(context, choiceHelper);
                     for (final SequenceOrChoiceOrGroupRefOrElementList child : children) {
@@ -478,7 +478,7 @@ public class VdvTables {
         @Override
         public void visit(final Choice choice) {
             // anon choice
-            try (final DataTypeTableHelper.GroupHelper groupHelper = dataTypeTableHelper.startGroup(new QName(""))) {
+            try (final DataTypeTableHelper.GroupHelper groupHelper = dataTypeTableHelper.startGroup(EMPTY_QNAME)) {
                 try (final DataTypeTableHelper.GroupHelper.ChoiceHelper choiceHelper = groupHelper.startChoice(choice.getCardinality())) {
                     final ChoiceInSequenceVisitor visitor = new ChoiceInSequenceVisitor(context, choiceHelper);
                     for (final SequenceOrChoiceOrGroupRefOrElementList child : choice.getParticleList()) {
@@ -500,7 +500,7 @@ public class VdvTables {
         @Override
         public void visit(final ElementList elementList) {
             // new anon group
-            try (final DataTypeTableHelper.GroupHelper groupHelper = dataTypeTableHelper.startGroup(new QName(""))) {
+            try (final DataTypeTableHelper.GroupHelper groupHelper = dataTypeTableHelper.startGroup(EMPTY_QNAME)) {
                 for (final Element element : elementList.getElements()) {
                     processGroupElement(context, groupHelper, element);
                 }
@@ -835,7 +835,7 @@ public class VdvTables {
 
         private void initGroupHelper() {
             if (null == groupHelper) {
-                groupHelper = dataTypeTableHelper.startGroup(new QName(""));
+                groupHelper = dataTypeTableHelper.startGroup(EMPTY_QNAME);
             }
         }
 
@@ -852,7 +852,8 @@ public class VdvTables {
             handleLocalAttribute(context, groupHelper, localAttribute);
         }
 
-        private static void handleLocalAttribute(final Context context, final DataTypeTableHelper.GroupHelper groupHelper,
+        private static void handleLocalAttribute(final Context context,
+                                                 final DataTypeTableHelper.GroupHelper groupHelper,
                                                  final Attributes.LocalAttribute localAttribute) {
             final boolean required = localAttribute.isRequired();
             final Documentations useDocs = localAttribute.getDocs();
@@ -920,7 +921,7 @@ public class VdvTables {
         public static void handle(final DataTypeTableHelper tableHelper,
                                   final Context context,
                                   final Attributes attributes) {
-            try (final DataTypeTableHelper.GroupHelper attributesHelper = tableHelper.startGroup(new QName(""))) {
+            try (final DataTypeTableHelper.GroupHelper attributesHelper = tableHelper.startGroup(EMPTY_QNAME)) {
                 new InnerAttributeVisitorImpl(attributesHelper, context).handle(attributes);
             }
         }
