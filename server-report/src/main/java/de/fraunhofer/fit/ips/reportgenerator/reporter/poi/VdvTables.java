@@ -241,7 +241,7 @@ public class VdvTables {
                 Constants.getDocs(context, dataType.getDocs())
         );
         final SequenceOrChoiceOrGroupRef particle = dataType.getParticle();
-        particle.accept(new ComplexTypeVisitor(context, dataTypeTableHelper));
+        particle.accept(new ComplexTypeVisitor(context, dataTypeTableHelper, true));
     }
 
     public static void processComplexDataType(final Context context,
@@ -275,7 +275,7 @@ public class VdvTables {
                 break;
         }
         final SequenceOrChoiceOrGroupRef particle = dataType.getParticle();
-        particle.accept(new ComplexTypeVisitor(context, dataTypeTableHelper));
+        particle.accept(new ComplexTypeVisitor(context, dataTypeTableHelper, context.reportConfiguration.isExpandElementGroups()));
 
         final Attributes attributes = dataType.getAttributes();
         if (context.reportConfiguration.isExpandAttributeGroups()) {
@@ -424,6 +424,7 @@ public class VdvTables {
     static class ComplexTypeVisitor implements SequenceOrChoiceOrGroupRefVisitor {
         final Context context;
         final DataTypeTableHelper dataTypeTableHelper;
+        final boolean expandElementGroup;
 
         @Override
         public void visit(final Sequence sequence) {
@@ -449,11 +450,24 @@ public class VdvTables {
 
         @Override
         public void visit(final GroupRef groupRef) {
-            final QName refName = groupRef.getRefName();
-            final Type.Group group = (Type.Group) context.getConcept(refName);
-            final SequenceOrChoice particle = group.getParticle();
-            final GroupRefInComplexTypeVisitor visitor = new GroupRefInComplexTypeVisitor(context, dataTypeTableHelper, refName);
-            particle.accept(visitor);
+            if (expandElementGroup) {
+                // auspacken
+                final QName refName = groupRef.getRefName();
+                final Type.Group group = (Type.Group) context.getConcept(refName);
+                final SequenceOrChoice particle = group.getParticle();
+                final GroupRefInComplexTypeVisitor visitor = new GroupRefInComplexTypeVisitor(context, dataTypeTableHelper, refName);
+                particle.accept(visitor);
+            } else {
+                // als element
+                try (final DataTypeTableHelper.GroupHelper groupHelper = dataTypeTableHelper.startGroup(EMPTY_QNAME)) {
+                    groupHelper.addElement(
+                            groupRef.getCardinality(),
+                            groupRef.getRefName(),
+                            groupRef.getRefName(),
+                            Constants.getDocs(context, groupRef.getDocs())
+                    );
+                }
+            }
         }
 
         @Override
