@@ -100,7 +100,7 @@ public class poiPlayground {
                 final CaptionHelper captionHelper = new CaptionHelper(cursorHelper, bookmarkRegistry);
 
                 // FIXME: create context with actual stuff
-                final Context context = new Context(null, null, null, document);
+                final Context context = new Context(null, null, null, null, document);
 
                 paragraphHelper.createHeading(VdvStyle.HEADING_1,
                         "Dienst PassengerCountingService");

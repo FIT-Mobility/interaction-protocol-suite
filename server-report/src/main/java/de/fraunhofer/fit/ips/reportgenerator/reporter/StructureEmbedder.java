@@ -36,11 +36,13 @@ import org.apache.poi.xwpf.usermodel.PositionInParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
+import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -50,8 +52,9 @@ import java.util.UUID;
 public class StructureEmbedder {
     public static Reporter.RichtextMarkerManager embed(final Schema schema, final Project project,
                                                        final ReportConfiguration reportConfiguration,
+                                                       final Set<QName> assignedParticles,
                                                        final XWPFDocument document) {
-        final Context context = new Context(schema, project, reportConfiguration, document);
+        final Context context = new Context(schema, project, reportConfiguration, assignedParticles, document);
 
         final PositionInParagraph pseudoStartPos = new PositionInParagraph();
         for (final XWPFParagraph paragraph : ImmutableList.copyOf(document.getParagraphs())) {
@@ -368,43 +371,4 @@ public class StructureEmbedder {
         }
     }
 
-    interface DefaultStructureVisitor extends StructureVisitor {
-        void fallback(final StructureBase structureBase);
-
-        default void visit(final Assertion assertion) {
-            fallback(assertion);
-        }
-
-        default void visit(final Particle datatype) {
-            fallback(datatype);
-        }
-
-        default void visit(final Function function) {
-            fallback(function);
-        }
-
-        default void visit(final Level level) {
-            fallback(level);
-        }
-
-        default void visit(final Project project) {
-            fallback(project);
-        }
-
-        default void visit(final Request request) {
-            fallback(request);
-        }
-
-        default void visit(final Response response) {
-            fallback(response);
-        }
-
-        default void visit(final Service service) {
-            fallback(service);
-        }
-
-        default void visit(final Text text) {
-            fallback(text);
-        }
-    }
 }

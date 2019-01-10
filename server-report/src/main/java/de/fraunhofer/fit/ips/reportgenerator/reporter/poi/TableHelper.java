@@ -138,7 +138,7 @@ public class TableHelper {
     }
 
 
-    protected ParagraphHelper.RunHelper dumbPrettyPrint(final ParagraphHelper.RunHelper run,
+    private ParagraphHelper.RunHelper dumbPrettyPrint(final ParagraphHelper.RunHelper run,
                                                         final Format format,
                                                         final QName qname,
                                                         final boolean prependSymbol,
@@ -190,8 +190,8 @@ public class TableHelper {
             if (concept instanceof Attributes.GlobalAttributeDeclaration || concept instanceof Element) {
                 // this is a REF to a global, internal attribute or element
                 // this SHOULD be prefixed
-                // this COULD be given a bookmark-thingy
-                return dumbPrettyPrint(run, format, qname, prependSymbol, true, true);
+                // this COULD be given a bookmark-thingy, so we do it in case it is contained in the document
+                return dumbPrettyPrint(run, format, qname, prependSymbol, true, context.assignedParticles.contains(qname));
             } else {
                 // if this is an enumeration, consider inlining it
                 if ((context.reportConfiguration.isInlineEnums() && considerInlining) && concept instanceof Type.Simple.Enumeration) {
@@ -204,8 +204,8 @@ public class TableHelper {
                 }
                 // this is the name of a global, internal concept where we don't need the prefix
                 // this SHOULD NOT be prefixed
-                // this COULD be given a bookmark-thingy
-                return dumbPrettyPrint(run, format, qname, prependSymbol, false, true);
+                // this COULD be given a bookmark-thingy, so we do it in case it is contained in the document
+                return dumbPrettyPrint(run, format, qname, prependSymbol, false, context.assignedParticles.contains(qname));
             }
         } else {
             // this is a TYPE or a ref to a FOREIGN GlobalAttributeDeclaration or a ref to a FOREIGN Element

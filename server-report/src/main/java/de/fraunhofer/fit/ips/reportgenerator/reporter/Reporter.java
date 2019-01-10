@@ -12,6 +12,7 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import lombok.Data;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
+import javax.xml.namespace.QName;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -38,10 +40,13 @@ public class Reporter {
                                       final ReportConfiguration reportConfiguration,
                                       final ReportMetadata reportMetadata,
                                       final byte[] template) {
+        // identify assigned particles, unassigned particles have to be printed without the bookmarking magic
+        final Set<QName> assignedParticles = AssignedParticlesGatherer.gather(project);
+
         // put template into apache poi
         // create all the stuff in the document according to structure
         // leave placeholders for rich-text and gather field names into map within context
-        final PreparationResult result = process(template, document -> StructureEmbedder.embed(schema, project, reportConfiguration, document));
+        final PreparationResult result = process(template, document -> StructureEmbedder.embed(schema, project, reportConfiguration, assignedParticles, document));
 
         // put current document state into XDocReport
         // mark all the markers as QUILL
