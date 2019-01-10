@@ -1,6 +1,6 @@
 package de.fraunhofer.fit.ips.testmonitor;
 
-import de.fraunhofer.fit.ips.model.Converter;
+import de.fraunhofer.fit.ips.model.SimpleConverter;
 import de.fraunhofer.fit.ips.model.IllegalDocumentStructureException;
 import de.fraunhofer.fit.ips.model.simple.Project;
 import de.fraunhofer.fit.ips.proto.javabackend.CreateReportRequest;
@@ -29,7 +29,7 @@ public class ParserTester {
             throws IOException, TransformerException, ParserConfigurationException, IllegalDocumentStructureException {
         final Project project;
         try (final FileInputStream fileInputStream = new FileInputStream(SERIALIZED_CREATE_REPORT_REQUEST)) {
-            project = Converter.convert(CreateReportRequest.parseFrom(fileInputStream).getSchemaAndProjectStructure().getProject());
+            project = SimpleConverter.convert(CreateReportRequest.parseFrom(fileInputStream).getSchemaAndProjectStructure().getProject());
         }
         final HashMap<QName, MessageBasedFunctionInfo> lookup = new HashMap<>();
         final String functionSchema = DataExtractor.generateFunctionSchema(

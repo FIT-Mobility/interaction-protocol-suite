@@ -1,6 +1,6 @@
 package de.fraunhofer.fit.ips.testmonitor.data;
 
-import de.fraunhofer.fit.ips.model.Converter;
+import de.fraunhofer.fit.ips.model.SimpleConverter;
 import de.fraunhofer.fit.ips.model.IllegalDocumentStructureException;
 import de.fraunhofer.fit.ips.model.simple.Project;
 import de.fraunhofer.fit.ips.proto.javabackend.SchemaAndProjectStructure;
@@ -85,7 +85,7 @@ public class ValidatorFactory {
                 try (final InputStream inputStream = protoSchemaAndProjectStructureURI.toURL().openStream()) {
                     final SchemaAndProjectStructure schemaAndProjectStructure = SchemaAndProjectStructure.parseDelimitedFrom(inputStream);
                     dataTypeSchema = schemaAndProjectStructure.getSchema().getXsd();
-                    project = Converter.convert(schemaAndProjectStructure.getProject());
+                    project = SimpleConverter.convert(schemaAndProjectStructure.getProject());
                 }
 
                 functionSchema = DataExtractor.generateFunctionSchema(

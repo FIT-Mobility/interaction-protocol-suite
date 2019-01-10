@@ -1,7 +1,7 @@
 package de.fraunhofer.fit.ips.project2wsdl;
 
 import com.google.common.base.Charsets;
-import de.fraunhofer.fit.ips.model.Converter;
+import de.fraunhofer.fit.ips.model.SimpleConverter;
 import de.fraunhofer.fit.ips.model.IllegalDocumentStructureException;
 import de.fraunhofer.fit.ips.model.simple.Function;
 import de.fraunhofer.fit.ips.model.simple.Project;
@@ -64,7 +64,7 @@ public class ProjectToWsdlConverter {
         final Schema schema;
         try (final InputStream inputStream = protoSchemaAndProjectStructureURL.openStream()) {
             final SchemaAndProjectStructure createReportRequest = SchemaAndProjectStructure.parseDelimitedFrom(inputStream);
-            project = Converter.convert(createReportRequest.getProject());
+            project = SimpleConverter.convert(createReportRequest.getProject());
             schema = createReportRequest.getSchema();
         }
 

@@ -20,7 +20,7 @@ import java.util.List;
  * @author Fabian Ohler <fabian.ohler1@rwth-aachen.de>
  */
 @UtilityClass
-public class Converter {
+public class SimpleConverter {
     public static Project convert(@Nonnull final de.fraunhofer.fit.ips.proto.structure.Project project)
             throws IllegalDocumentStructureException {
         final ServiceFinder serviceFinder = ServiceFinder.find(project);
