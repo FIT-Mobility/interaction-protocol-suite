@@ -14,7 +14,6 @@ import de.fraunhofer.fit.ips.model.xsd.GroupRef;
 import de.fraunhofer.fit.ips.model.xsd.NamedConceptWithOrigin;
 import de.fraunhofer.fit.ips.model.xsd.NamedConceptWithOriginVisitor;
 import de.fraunhofer.fit.ips.model.xsd.Origin;
-import de.fraunhofer.fit.ips.model.xsd.Schema;
 import de.fraunhofer.fit.ips.model.xsd.Sequence;
 import de.fraunhofer.fit.ips.model.xsd.SequenceOrChoice;
 import de.fraunhofer.fit.ips.model.xsd.SequenceOrChoiceOrGroupRef;
@@ -242,7 +241,7 @@ public class VdvTables {
                 Constants.getDocs(context, dataType.getDocs())
         );
         final SequenceOrChoiceOrGroupRef particle = dataType.getParticle();
-        particle.accept(new ComplexTypeVisitor(context, dataTypeTableHelper, context.schema));
+        particle.accept(new ComplexTypeVisitor(context, dataTypeTableHelper));
     }
 
     public static void processComplexDataType(final Context context,
@@ -276,7 +275,7 @@ public class VdvTables {
                 break;
         }
         final SequenceOrChoiceOrGroupRef particle = dataType.getParticle();
-        particle.accept(new ComplexTypeVisitor(context, dataTypeTableHelper, context.schema));
+        particle.accept(new ComplexTypeVisitor(context, dataTypeTableHelper));
 
         final Attributes attributes = dataType.getAttributes();
         if (context.reportConfiguration.isExpandAttributeGroups()) {
@@ -313,7 +312,7 @@ public class VdvTables {
             // we are on our way back up in the recursion hierarchy, now print the content
             try (final DataTypeTableHelper.GroupHelper groupHelper = tableHelper.startGroup(complex.getName())) {
                 if (Derivation.Type.RESTRICTION == derivation.getType()) {
-                    // only print restriction line if we don't restrict xs:anyType
+                    // only print restriction line if we don't restrict xs:anyType (which would be Derivation.Type.NONE)
                     groupHelper.addRestrictionRow(baseName);
                 }
                 complex.getParticle().accept(new SequenceOrChoiceOrGroupRefOrElementListVisitor() {
@@ -425,12 +424,11 @@ public class VdvTables {
     static class ComplexTypeVisitor implements SequenceOrChoiceOrGroupRefVisitor {
         final Context context;
         final DataTypeTableHelper dataTypeTableHelper;
-        final Schema schema;
 
         @Override
         public void visit(final Sequence sequence) {
             final List<SequenceOrChoiceOrGroupRefOrElementList> children = sequence.getParticleList();
-            final SequenceInComplexTypeVisitor visitor = new SequenceInComplexTypeVisitor(context, dataTypeTableHelper, schema);
+            final SequenceInComplexTypeVisitor visitor = new SequenceInComplexTypeVisitor(context, dataTypeTableHelper);
             for (final SequenceOrChoiceOrGroupRefOrElementList child : children) {
                 child.accept(visitor);
             }
@@ -441,7 +439,7 @@ public class VdvTables {
             final List<SequenceOrChoiceOrGroupRefOrElementList> children = choice.getParticleList();
             try (final DataTypeTableHelper.GroupHelper groupHelper = dataTypeTableHelper.startGroup(new QName(""))) {
                 try (final DataTypeTableHelper.GroupHelper.ChoiceHelper choiceHelper = groupHelper.startChoice(choice.getCardinality())) {
-                    final ChoiceInComplexTypeVisitor visitor = new ChoiceInComplexTypeVisitor(context, choiceHelper, schema);
+                    final ChoiceInComplexTypeVisitor visitor = new ChoiceInComplexTypeVisitor(context, choiceHelper);
                     for (final SequenceOrChoiceOrGroupRefOrElementList child : children) {
                         child.accept(visitor);
                     }
@@ -452,7 +450,7 @@ public class VdvTables {
         @Override
         public void visit(final GroupRef groupRef) {
             final QName refName = groupRef.getRefName();
-            final Type.Group group = (Type.Group) schema.getConcepts().get(refName);
+            final Type.Group group = (Type.Group) context.getConcept(refName);
             final SequenceOrChoice particle = group.getParticle();
             final GroupRefInComplexTypeVisitor visitor = new GroupRefInComplexTypeVisitor(context, dataTypeTableHelper, refName);
             particle.accept(visitor);
@@ -468,7 +466,6 @@ public class VdvTables {
     static class SequenceInComplexTypeVisitor implements SequenceOrChoiceOrGroupRefOrElementListVisitor {
         final Context context;
         final DataTypeTableHelper dataTypeTableHelper;
-        final Schema schema;
 
         @Override
         public void visit(final Sequence sequence) {
@@ -495,7 +492,7 @@ public class VdvTables {
         public void visit(final GroupRef groupRef) {
             // kinder hochziehen
             final QName refName = groupRef.getRefName();
-            final Type.Group group = (Type.Group) schema.getConcepts().get(refName);
+            final Type.Group group = (Type.Group) context.getConcept(refName);
             final SequenceOrChoice particle = group.getParticle();
             particle.accept(new GroupRefInSequenceVisitor(context, dataTypeTableHelper, refName));
         }
@@ -515,7 +512,6 @@ public class VdvTables {
     static class ChoiceInComplexTypeVisitor implements SequenceOrChoiceOrGroupRefOrElementListVisitor {
         final Context context;
         final DataTypeTableHelper.GroupHelper.ChoiceHelper choiceHelper;
-        final Schema schema;
 
         @Override
         public void visit(final Sequence sequence) {
