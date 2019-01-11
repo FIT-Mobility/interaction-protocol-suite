@@ -40,12 +40,12 @@ module.exports = {
         }),
         new FaviconPlugin('./src/icon.png'),
         new CopyPlugin([{
-            from: './node_modules/quill/dist/*.css'
+            from: '../node_modules/quill/dist/*.css'
         }, {
-            from: './node_modules/material-design-icons/editor/svg',
+            from: '../node_modules/material-design-icons/editor/svg',
             to: 'node_modules/material-design-icons/editor/svg'
         }, {
-            from: './node_modules/react-virtualized/*.css',
+            from: '../node_modules/react-virtualized/*.css',
         }]),
         new webpack.DefinePlugin({
             'process.env.COMMIT_ID': JSON.stringify(process.env.COMMIT_ID),
