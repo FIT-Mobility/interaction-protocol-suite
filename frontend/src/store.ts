@@ -62,7 +62,7 @@ export const store = createStore(
 const initialLocation = store.getState().router;
 if (initialLocation) {
     store.dispatch(initializeCurrentLocation(initialLocation));
-    pushInProject(store.getState().router.pathname);
+    pushInProject(store.getState().router.pathname!);
 }
 
 const anyStore = store as Store<State, any>;
