@@ -8,7 +8,7 @@ import Divider from '@material-ui/core/es/Divider';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/es/styles';
 import classNames from 'classnames';
 import * as React from 'react';
-import * as ReactQuill from 'react-quill';
+import ReactQuill from 'react-quill';
 
 import { API_BACKEND_URL } from '../../config';
 import Card from '../utils/card';
