@@ -3,7 +3,7 @@
 This module contains a simple demonstration server that generates a web service skeleton based on a protocol specification developed using this tool suite.
 Additionally, the test classes may easily resemble client logic.
 Here, the communication basis is SOAP 1.2 which is added to the actual protocol specification by the omp-project2wsdl-maven-plugin module.
-Therefore, the protocol project file (json) as well as the hostname to be published in the generated WSDL file have to be specified in the project pom.xml.
+Therefore, the protocol project file (length-delimited protobuf) as well as the hostname to be published in the generated WSDL file have to be specified in the project pom.xml.
 The web server server logic is augmented with a so-called interceptor that forwards all incoming and outgoing messages to a test-monitor running in VaaS mode.
 To start the demo-server, one therefore has to configure the local endpoint to listen on as well as the validation endpoint to send the messages to.
 For example, a configuration might look like this:

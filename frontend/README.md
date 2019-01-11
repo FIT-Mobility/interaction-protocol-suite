@@ -8,4 +8,4 @@
 
 ## Production
 
-Head over to ../server-js and view the instructions there.
+See the main README
