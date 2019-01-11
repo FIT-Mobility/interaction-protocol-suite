@@ -112,7 +112,7 @@ class YQuill extends React.Component<YQuillProps & WithStyles<typeof styles>> {
                         this.quill.format('ref', uuid());
                     }
 
-                    const sel = this.quill.getSelection();
+                    const sel = this.quill.getSelection()!;
                     const txt = this.quill.getText(sel.index, sel.length);
                     const formats = this.quill.getFormat(sel);
                     handler && handler(formats.ref, txt);
