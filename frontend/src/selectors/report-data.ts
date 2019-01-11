@@ -1,4 +1,3 @@
-import { makeGenerateReportData } from '@ips/shared-js/report-data';
 import Quill from 'quill';
 import { createSelector } from 'reselect';
 
@@ -28,7 +27,7 @@ export const generateReportData = createSelector(
     currentProjectSelector,
     currentProjectRevisionSelector,
     getYProjectRevision,
-    makeGenerateReportData(richtextToString),
+    () => {}, // TODO: Add real protobuf generation code here
 );
 
 let quillElt: HTMLElement;
