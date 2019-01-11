@@ -9,9 +9,13 @@ matrix:
     - name: "frontend"
       language: node_js
       node_js: "10"
+      env:
+        global:
+          - BACKEND_URL="http://127.0.0.1:8081"
+          - NODE_ENV="production"
       before_script:
         - cd frontend
-        - echo "BACKEND_URL=\"http://127.0.0.1:8081\"" > .env.prod
+        - touch .env.prod
         - yarn install
       script:
         - yarn build
