@@ -11,8 +11,7 @@ matrix:
       node_js: "10"
       before_script:
         - cd frontend
-        - echo "NODE_ENV=\"production\"\nBACKEND_URL=\"http://127.0.0.1:8081\"" > .env.prod
-        - cat .env.prod
+        - echo "BACKEND_URL=\"http://127.0.0.1:8081\"" > .env.prod
         - yarn install
       script:
         - yarn build
