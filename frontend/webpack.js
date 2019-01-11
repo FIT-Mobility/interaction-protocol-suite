@@ -35,7 +35,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'OMP',
+            title: 'Interaction Protocol Specification and Validation Suite',
             template: 'src/index.html'
         }),
         new FaviconPlugin('./src/icon.png'),

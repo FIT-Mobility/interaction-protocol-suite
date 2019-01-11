@@ -1,4 +1,4 @@
-# DiMo tool suite front-end
+# Interaction protocol suite front-end
 
 ## Development
 
@@ -8,4 +8,4 @@
 
 ## Production
 
-Head over to ../server and view the instructions there.
+Head over to ../server-js and view the instructions there.
