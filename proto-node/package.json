@@ -12,7 +12,7 @@
   "scripts": {
     "build:js": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./ --grpc_out=. --plugin=protoc-gen-grpc=./node_modules/.bin/grpc_tools_node_protoc_plugin --proto_path ../proto ../proto/*.proto",
     "build:ts": "grpc_tools_node_protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=. -I ../proto ../proto/*.proto",
-    "postinstall": "npm run build:js && npm run build:ts"
+    "postinstall": "yarn && npm run build:js && npm run build:ts"
   },
   "devDependencies": {
     "grpc-tools": "^1.6.6",
