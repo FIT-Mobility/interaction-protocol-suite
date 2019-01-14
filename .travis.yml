@@ -58,3 +58,12 @@ matrix:
       #  provider: npm
       #  email: $NPM_DPL_EMAIL
       #  api_key: $NPM_DPL_TOKEN
+
+    - name: "y-leveldb"
+      language: node_js
+      node_js: "10"
+      before_script:
+        - cd y-leveldb
+        - yarn install
+      script:
+        - yarn build
