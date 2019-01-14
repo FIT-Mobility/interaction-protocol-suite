@@ -29,7 +29,7 @@ matrix:
         - cd proto-node
         - yarn install
       script:
-        - yarn build
+        - yarn postinstall
       #deploy:
       #  skip_cleanup: true
       #  provider: npm
