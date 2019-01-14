@@ -15,7 +15,7 @@
     "build": "npm run clean && npm run build:ts",
     "build:ts": "tsc",
     "clean": "rimraf *.d.ts *.js *.js.map",
-    "postinstall": "npm run build"
+    "postinstall": "yarn && npm run build"
   },
   "peerDependencies": {
     "xmlbuilder": "^10.0.0"
