@@ -5,7 +5,7 @@
   "main": "LevelDB.js",
   "scripts": {
     "build": "tsc",
-    "postinstall": "yarn && npm run build"
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
