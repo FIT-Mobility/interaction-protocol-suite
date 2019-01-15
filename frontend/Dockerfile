@@ -18,7 +18,7 @@ COPY frontend/package.json /opt/frontend/
 RUN yarn install
 
 # Copy exactly the files needed to build the server to improve docker build caching
-COPY frontend/*.js frontend/*.env* frontend/tsconfig.json frontend/tsconfig.lint.json frontend/tslint.json /opt/frontend/
+COPY frontend/*.js frontend/.env* frontend/tsconfig.json frontend/tsconfig.lint.json frontend/tslint.json /opt/frontend/
 COPY frontend/src /opt/frontend/src
 
 ARG COMMIT_ID
