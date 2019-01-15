@@ -19,7 +19,7 @@ COPY server-js/tsconfig.json server-js/tsconfig.lint.json server-js/tslint.json 
 COPY server-js/src /opt/server-js/src
 RUN yarn build
 
-COPY server-js/.env server-js/.env.example /opt/server-js/
+COPY server-js/.env* /opt/server-js/
 
 EXPOSE 8080
 CMD node build/src/index.js
