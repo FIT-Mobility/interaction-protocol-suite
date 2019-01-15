@@ -27,6 +27,7 @@
   },
   "homepage": "http://y-js.org",
   "devDependencies": {
+    "@types/node": "^10.12.18",
     "typescript": "^3.2.2"
   },
   "peerDependencies": {
