@@ -24,7 +24,7 @@ matrix:
 
     - name: "nodejs proto files"
       language: node_js
-      node_js: "node"
+      node_js: "10"
       before_script:
         - cd proto-node
         - yarn install
@@ -38,7 +38,7 @@ matrix:
 
     - name: "server JS"
       language: node_js
-      node_js: "8"
+      node_js: "10"
       before_script:
         - cd server-js
         - yarn install
