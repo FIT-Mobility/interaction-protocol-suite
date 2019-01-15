@@ -30,6 +30,7 @@ services:
       dockerfile: frontend/Dockerfile
       args:
         - COMMIT_ID
+        - BACKEND_URL
     ports:
       - "8081:80"
     restart: on-failure
