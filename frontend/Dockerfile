@@ -13,7 +13,7 @@ COPY proto /opt/proto
 COPY proto-node /opt/proto-node
 COPY y-leveldb /opt/y-leveldb
 
-COPY frontend/package.json /opt/frontend
+COPY frontend/package.json /opt/frontend/
 
 RUN yarn install
 
@@ -31,4 +31,4 @@ COPY --from=0 /opt/frontend/build /usr/share/nginx/html/
 
 # The path inside the container _must not_ be changed because we
 # overwrite the default config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
