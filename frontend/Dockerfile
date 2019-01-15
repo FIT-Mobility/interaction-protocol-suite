@@ -1,9 +1,9 @@
-FROM node:8-alpine
+FROM node:10
 
 WORKDIR /opt/frontend
 
-RUN apk --no-cache --update add --virtual native-deps \
-  git g++ gcc libgcc libstdc++ linux-headers make python
+#RUN apk --no-cache --update add --virtual native-deps \
+#  git g++ gcc libgcc libstdc++ linux-headers make python
 RUN yarn global add node-gyp
 
 # Copy package files first to enable caching

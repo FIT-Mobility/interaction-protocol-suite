@@ -1,8 +1,8 @@
-FROM node:8-alpine
+FROM node:10
 WORKDIR /opt/server-js
 
-RUN apk --no-cache --update add --virtual native-deps \
-  git g++ gcc libgcc libstdc++ linux-headers make python
+#RUN apk --no-cache --update add --virtual native-deps \
+#  git g++ gcc libgcc libstdc++ linux-headers make python
 
 # Copy package files first to enable caching
 COPY package.json yarn.lock /opt/
