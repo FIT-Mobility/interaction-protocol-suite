@@ -9,7 +9,7 @@ matrix:
     - name: "frontend"
       language: node_js
       node_js: "10"
-      before_install:
+      before_script:
         - cd frontend
       script:
         - echo "BACKEND_URL=\"http://127.0.0.1:8081\"" > .env.prod
@@ -24,7 +24,7 @@ matrix:
     - name: "nodejs proto files"
       language: node_js
       node_js: "10"
-      before_install:
+      before_script:
         - cd proto-node
       script:
         - yarn prepare
@@ -32,7 +32,7 @@ matrix:
     - name: "server JS"
       language: node_js
       node_js: "10"
-      before_install:
+      before_script:
         - cd server-js
       script:
         - yarn build
@@ -40,7 +40,7 @@ matrix:
     - name: "shared JS"
       language: node_js
       node_js: "node"
-      before_install:
+      before_script:
         - cd shared-js
       script:
         - yarn build
@@ -48,7 +48,7 @@ matrix:
     - name: "y-leveldb"
       language: node_js
       node_js: "10"
-      before_install:
+      before_script:
         - cd y-leveldb
       script:
         - yarn prepare
