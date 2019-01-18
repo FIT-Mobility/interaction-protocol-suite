@@ -11,8 +11,8 @@ matrix:
       node_js: "10"
       before_script:
         - cd frontend
-      script:
         - echo "BACKEND_URL=\"http://127.0.0.1:8081\"" > .env.prod
+      script:
         - yarn build
 
     - name: "grpc server"
@@ -34,6 +34,7 @@ matrix:
       node_js: "10"
       before_script:
         - cd server-js
+        - yarn install
       script:
         - yarn build
 
