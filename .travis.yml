@@ -9,11 +9,10 @@ matrix:
     - name: "frontend"
       language: node_js
       node_js: "10"
-      before_script:
+      before_install:
         - cd frontend
-        - echo "BACKEND_URL=\"http://127.0.0.1:8081\"" > .env.prod
-        - yarn install
       script:
+        - echo "BACKEND_URL=\"http://127.0.0.1:8081\"" > .env.prod
         - yarn build
 
     - name: "grpc server"
@@ -25,45 +24,31 @@ matrix:
     - name: "nodejs proto files"
       language: node_js
       node_js: "10"
-      before_script:
+      before_install:
         - cd proto-node
-        - yarn install
       script:
-        - yarn postinstall
-      #deploy:
-      #  skip_cleanup: true
-      #  provider: npm
-      #  email: $NPM_DPL_EMAIL
-      #  api_key: $NPM_DPL_TOKEN
+        - yarn prepare
 
     - name: "server JS"
       language: node_js
       node_js: "10"
-      before_script:
+      before_install:
         - cd server-js
-        - yarn install
       script:
         - yarn build
 
     - name: "shared JS"
       language: node_js
       node_js: "node"
-      before_script:
+      before_install:
         - cd shared-js
-        - yarn install
       script:
         - yarn build
-      #deploy:
-      #  skip_cleanup: true
-      #  provider: npm
-      #  email: $NPM_DPL_EMAIL
-      #  api_key: $NPM_DPL_TOKEN
 
     - name: "y-leveldb"
       language: node_js
       node_js: "10"
-      before_script:
+      before_install:
         - cd y-leveldb
-        - yarn install
       script:
-        - yarn build
+        - yarn prepare
