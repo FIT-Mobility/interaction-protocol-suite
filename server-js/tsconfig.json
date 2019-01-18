@@ -24,7 +24,6 @@
   ],
   "references": [
     { "path": "../shared-js" },
-    { "path": "../proto-node" },
     { "path": "../y-leveldb" }
   ]
 }
