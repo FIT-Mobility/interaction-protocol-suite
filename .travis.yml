@@ -12,7 +12,6 @@ matrix:
       before_script:
         - cd frontend
         - echo "BACKEND_URL=\"http://127.0.0.1:8081\"" > .env.prod
-        - yarn install
       script:
         - yarn build
 
@@ -27,21 +26,14 @@ matrix:
       node_js: "10"
       before_script:
         - cd proto-node
-        - yarn install
       script:
-        - yarn postinstall
-      #deploy:
-      #  skip_cleanup: true
-      #  provider: npm
-      #  email: $NPM_DPL_EMAIL
-      #  api_key: $NPM_DPL_TOKEN
+        - yarn prepare
 
     - name: "server JS"
       language: node_js
       node_js: "10"
       before_script:
         - cd server-js
-        - yarn install
       script:
         - yarn build
 
@@ -50,20 +42,13 @@ matrix:
       node_js: "node"
       before_script:
         - cd shared-js
-        - yarn install
       script:
         - yarn build
-      #deploy:
-      #  skip_cleanup: true
-      #  provider: npm
-      #  email: $NPM_DPL_EMAIL
-      #  api_key: $NPM_DPL_TOKEN
 
     - name: "y-leveldb"
       language: node_js
       node_js: "10"
       before_script:
         - cd y-leveldb
-        - yarn install
       script:
-        - yarn build
+        - yarn prepare
