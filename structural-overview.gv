@@ -5,7 +5,6 @@ digraph G {
     frontend [label="frontend", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/frontend"];
     js_backend [label="server-js", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/server-js"];
     shared_js [label="shared-js", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/shared-js"];
-    proto_node [label="proto-node", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/proto_node"];
     node [color="orange"]; // java
     grpc_server [label="server-grpc", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/server-grpc"];
     xsd_validator [label="xsd-validator", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/xsd-validator"];
@@ -21,7 +20,7 @@ digraph G {
     vaas_info [label="vaas-info", URL="https://github.com/FIT-Mobility/interaction-protocol-suite/tree/master/vaas-info"];
 
     subgraph { rank=same; report_generator; xsd_validator; server_particle_assigner; }
-    subgraph { rank=same; proto_beans; proto_node; }
+    subgraph { rank=same; proto_beans; }
     subgraph { rank=same; monitor_test; server_demo; }
 
     // build dependencies
@@ -35,8 +34,7 @@ digraph G {
     // grpc_server -> server_base;
 
     proto_beans -> proto;
-    proto_node -> proto;
-    js_backend -> proto_node;
+    js_backend -> proto;
 
     server_demo -> maven_plugin;
     server_demo -> vaas_info;
