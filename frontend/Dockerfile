@@ -10,7 +10,6 @@ RUN yarn global add node-gyp
 COPY package.json yarn.lock /opt/
 COPY shared-js /opt/shared-js
 COPY proto /opt/proto
-COPY proto-node /opt/proto-node
 COPY y-leveldb /opt/y-leveldb
 
 COPY frontend/package.json /opt/frontend/
