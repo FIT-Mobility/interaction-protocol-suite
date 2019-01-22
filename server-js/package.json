@@ -58,7 +58,7 @@
     "@types/uuid": "^3.4.3",
     "@types/xmlbuilder": "^0.0.32",
     "tslint": "^5.8.0",
-    "typescript": "^2.5.3"
+    "typescript": "^3.2.4"
   },
   "scripts": {
     "build": "tsc",
