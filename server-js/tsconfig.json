@@ -6,7 +6,6 @@
     "lib": ["es2016", "dom"],
     "typeRoots": ["node_modules/@types"],
     "sourceMap": true,
-    "allowJs": true,
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": false,
     "noImplicitThis": true,
