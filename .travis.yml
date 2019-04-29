@@ -38,7 +38,7 @@ matrix:
 
     - name: "shared JS"
       language: node_js
-      node_js: "node"
+      node_js: "10"
       before_install:
         - cd shared-js
         - export NODE_ENV=development # prevent environment from messing with our build
