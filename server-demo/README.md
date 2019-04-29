@@ -20,6 +20,3 @@ Currently, the logic implemented fits the protocol specification located in `src
 Also, in the file Application.java the address suffix `ShuttleService` is hard-coded.
 This has to be adjusted accordingly in case of other protocol specifications (or just be implemented more generically).
 The test classes create a local instance of the server. The address used there should match the address written into the WSDL file configured via the pom.xml.
-
-# KNOWN ISSUES
-Java 11 does not work with apache-cxf-codegen 3.2.6. The current snapshot of 3.3 already resolves this, update as soon as it is released.
