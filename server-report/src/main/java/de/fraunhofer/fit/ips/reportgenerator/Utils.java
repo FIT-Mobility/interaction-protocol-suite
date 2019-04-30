@@ -7,6 +7,7 @@ import org.apache.commons.lang3.SystemUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -113,7 +114,9 @@ public final class Utils {
                     public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs)
                             throws IOException {
                         final File target = tempDirectory.resolve(cleanupInputString(file)).toFile();
-                        de.fraunhofer.fit.ips.Utils.writeToFile(file.toString(), target);
+                        try (final InputStream inputStream = Files.newInputStream(file)) {
+                            de.fraunhofer.fit.ips.Utils.writeToFile(inputStream, target);
+                        }
                         return super.visitFile(file, attrs);
                     }
                 });

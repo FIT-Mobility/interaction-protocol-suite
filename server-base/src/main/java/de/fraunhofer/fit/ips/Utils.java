@@ -16,14 +16,14 @@ public class Utils {
     private Utils() {
     }
 
-    public static byte[] readResourceIntoByteArray(@Nonnull final String resourceName) throws IOException {
-        try (final InputStream inputStream = Utils.class.getResourceAsStream(resourceName)) {
+    public static byte[] readResourceIntoByteArray(@Nonnull final String absoluteResourceName) throws IOException {
+        try (final InputStream inputStream = Utils.class.getResourceAsStream(absoluteResourceName)) {
             return readIntoByteArray(inputStream);
         }
     }
 
-    public static String readResourceIntoString(@Nonnull final String resourceName) throws IOException {
-        try (final InputStream inputStream = Utils.class.getResourceAsStream(resourceName)) {
+    public static String readResourceIntoString(@Nonnull final String absoluteResourceName) throws IOException {
+        try (final InputStream inputStream = Utils.class.getResourceAsStream(absoluteResourceName)) {
             return readIntoString(inputStream);
         }
     }
@@ -49,10 +49,6 @@ public class Utils {
         while ((length = inputStream.read(buffer)) != -1) {
             out.write(buffer, 0, length);
         }
-    }
-
-    public static void writeToFile(@Nonnull final String resourceName, @Nonnull final File target) throws IOException {
-        writeToFile(Utils.class.getResourceAsStream(resourceName), target);
     }
 
     public static void writeToFile(@Nonnull final InputStream inputStream, @Nonnull final File target)
