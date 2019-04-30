@@ -26,7 +26,7 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <lombok.version>1.18.4</lombok.version>
+        <lombok.version>1.18.6</lombok.version>
         <log4j.version>2.11.1</log4j.version>
         <saxon-he.version>9.9.0-2</saxon-he.version>
         <jackson.version>2.9.8</jackson.version>
