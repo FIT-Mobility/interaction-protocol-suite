@@ -14,7 +14,11 @@ COPY y-leveldb /opt/y-leveldb
 
 COPY frontend/package.json /opt/frontend/
 
-RUN yarn install
+# Installing material-design-icons comes with a excessively long unpacking phase due to a high number of files.
+# On slower machines, this leads to wrong error messages concerning the network connection.
+# Therefore, set the timeout to 10 min.
+# see https://github.com/yarnpkg/yarn/issues/6221#issuecomment-412844630
+RUN yarn install --network-timeout=600000
 
 # Copy exactly the files needed to build the server to improve docker build caching
 COPY frontend/*.js frontend/.env* frontend/tsconfig.json frontend/tsconfig.lint.json frontend/tslint.json /opt/frontend/
