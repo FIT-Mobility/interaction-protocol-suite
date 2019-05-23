@@ -17,7 +17,7 @@ module.exports = merge(base, {
         new Dotenv({
             path: './.env.prod',
             safe: true,
-            systemvars: true
+            defaults: true
         }),
         new Minify({
             cache: true,

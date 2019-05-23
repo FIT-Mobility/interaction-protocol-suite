@@ -25,7 +25,6 @@ COPY frontend/*.js frontend/.env* frontend/tsconfig.json frontend/tsconfig.lint.
 COPY frontend/src /opt/frontend/src
 
 ARG COMMIT_ID
-ARG BACKEND_URL
 
 RUN yarn build
 

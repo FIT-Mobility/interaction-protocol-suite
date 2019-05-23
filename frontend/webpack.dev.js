@@ -12,7 +12,8 @@ module.exports = merge(base, {
     plugins: [
         new Dotenv({
             path: './.env.dev',
-            safe: true
+            safe: true,
+            defaults: true
         }),
     ],
 });
