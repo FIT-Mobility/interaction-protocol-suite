@@ -23,7 +23,7 @@
 
         <mainClass>de.fraunhofer.fit.ips.testmonitor.Application</mainClass>
 
-        <apache-camel.version>2.23.2</apache-camel.version>
+        <apache-camel.version>2.24.0</apache-camel.version>
 
         <!-- https://jdbc.postgresql.org/documentation/80/connect.html
              jdbc:postgresql://host:port/database -->
