@@ -221,7 +221,7 @@ export function applyDelta(
                     return xsd;
                 }
 
-                const nodesToRemove = new Set();
+                const nodesToRemove = new Set<string>();
                 collectNodesToRemove(xsd, op.elementId, nodesToRemove);
 
                 const newXsd: Record<string, XsdElement> = {};
