@@ -29,7 +29,7 @@
         <lombok.version>1.18.6</lombok.version>
         <log4j.version>2.11.1</log4j.version>
         <saxon-he.version>9.9.0-2</saxon-he.version>
-        <jackson.version>2.9.9</jackson.version>
+        <jackson.version>2.10.0.pr3</jackson.version>
         <cxf.version>3.3.1</cxf.version>
         <cxf-xjc.version>3.2.3</cxf-xjc.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
