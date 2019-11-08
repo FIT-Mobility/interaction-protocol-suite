@@ -30,7 +30,7 @@
         <log4j.version>2.11.1</log4j.version>
         <saxon-he.version>9.9.0-2</saxon-he.version>
         <jackson.version>2.9.9</jackson.version>
-        <cxf.version>3.3.1</cxf.version>
+        <cxf.version>3.3.4</cxf.version>
         <cxf-xjc.version>3.2.3</cxf-xjc.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
         <grpc.version>1.17.1</grpc.version>
