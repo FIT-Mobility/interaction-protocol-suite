@@ -14,7 +14,7 @@
     "connect-mongo": "^2.0.0",
     "cors": "^2.8.4",
     "dateformat": "^3.0.3",
-    "decompress": "^4.2.0",
+    "decompress": "^4.2.1",
     "dotenv-safe": "^4.0.4",
     "express": "^4.16.1",
     "express-session": "^1.15.6",
