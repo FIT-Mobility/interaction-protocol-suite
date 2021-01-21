@@ -26,7 +26,7 @@
     "multer": "^1.3.0",
     "parse5": "^5.1.0",
     "slugify": "^1.3.0",
-    "socket.io": "^2.0.3",
+    "socket.io": "^2.4.0",
     "uuid": "^3.2.1",
     "xml-js": "^1.6.4",
     "xmlbuilder": "^10.0.0",
