@@ -19,7 +19,7 @@
         <xdocreport.version>c5cd1401b5</xdocreport.version>
         <!--<xdocreport.groupId>fr.opensagres.xdocreport</xdocreport.groupId>-->
         <!--<xdocreport.version>2.0.2-SNAPSHOT</xdocreport.version>-->
-        <apache-poi.version>3.17</apache-poi.version>
+        <apache-poi.version>4.1.1</apache-poi.version>
     </properties>
 
     <build>
